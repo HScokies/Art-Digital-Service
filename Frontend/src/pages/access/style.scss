@@ -1,0 +1,112 @@
+@import 'styles/variables.scss';
+
+.accesspage {
+    width: 100vw;
+    min-height: 100vh;
+    height: 100%;
+    background: linear-gradient(270deg, #e3e5f3, #d8dbf3);
+    background-size: 400% 400%;
+    -webkit-animation: BackgroundAnimation 30s ease infinite;
+    -moz-animation: BackgroundAnimation 30s ease infinite;
+    animation: BackgroundAnimation 30s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &_modal {
+        margin: auto;
+        padding: 5vmin 5vmin 10vmin;
+        min-width: 50vw;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        background-color: $Anti-Flash-White;
+        @media (max-width: 799px) {
+            width: 100%;
+            height: 100vh;
+        }
+        &-logo {
+            min-width: 10em;
+            width: 7vmax;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        &-title {
+            margin-top: .5em;
+            text-align: center;
+            font-size: calc(2vmin + 2vmax);
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+        &>.input{
+            margin-top: 5em;
+            min-width: 50vw;
+            width: 100%;
+            @media (max-width: 799px) {
+                & label{
+                    font-size: 6vw;
+                    &.active{
+                        font-size: 5.5vw;
+                    }
+                }
+                & input{
+                    font-size: 6vw;
+                }
+                .input-error{
+                    height: 6.5vh;
+                    font-size: 6vw;
+                }
+             
+            }
+        }
+        &>.button{
+            margin-top: 3vh;
+            width: 100%;
+            height: 10vh;
+        }
+    }
+}
+
+
+@-webkit-keyframes BackgroundAnimation {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@-moz-keyframes BackgroundAnimation {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@keyframes BackgroundAnimation {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}

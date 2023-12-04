@@ -1,5 +1,8 @@
 @import 'styles/variables.scss';
 .button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: $Glaucous;
     color: white;
     text-transform: uppercase;
@@ -7,5 +10,11 @@
     padding: .2em 2em;
     border-radius: 15px;
     font-weight: 600;
-    font-size: 3vh; 
+    font-size: 3vh;
+    cursor: pointer;
+    transition: all ease-in-out .2s;
+    &.disabled{
+        cursor: not-allowed;
+        opacity: .5;
+    }
 }

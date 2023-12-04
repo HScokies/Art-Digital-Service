@@ -3,22 +3,23 @@
     &_wrapper {
         position: relative;
         height: 10vh;
-        border: 1px solid rgba(0, 0, 0, 0.32);
+        outline: .1vmin solid rgba(0, 0, 0, 0.32);
         border-radius: 5px;
         display: flex;
         flex-flow: column;
         justify-content: center;
         padding-inline: 1.5vmin;
         &.error{
-            border-color: #DE3341;
+            outline-color: #DE3341;
         }
 
         &-field {
             display: block;
             font-size: 3.5vh;
-            visibility: collapse;
+            display: none;
             &.active{
-                visibility: visible;
+                display: block;
+                margin-top: 1vh;
             }
         }
 
@@ -34,6 +35,7 @@
                 position: absolute;
                 transform: translateY(-3.1vh);
                 font-size: 2.5vh;
+                font-weight: bold;
                 color: rgba(0, 0, 0, 0.72); 
             }
         }
@@ -41,8 +43,10 @@
     &-error{
         color: #DE3341;
         font-size: 3.5vh;
-        visibility: collapse;
-        transform: translateX(-200%);
+        visibility: hidden;
+        min-height: 5vh;
+        max-width: 100%;
+        transform: translateY(-10%);
         transition: all ease-in-out .2s;
         -moz-transition: all ease-in-out .2s;
         -webkit-transition: all ease-in-out .2s;

@@ -1,15 +1,15 @@
-import { Button, Input } from "./components/index";
-import { Validator } from "./services";
-
+import { AccessPage } from "./pages"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
 function App() {
 
-  return(
-    <>
-    <Input label={"Адрес электронной почты"} type={"email"} name={"email"} required={true} validator={Validator.validateEmail} />
-    <Button clickHandler={() => console.debug("testButton")}>test</Button>
-    </>
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AccessPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

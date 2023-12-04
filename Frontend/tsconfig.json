@@ -25,6 +25,7 @@
       "components/*": ["./src/components/*"],
       "pages/*": ["./src/pages/*"],
       "styles/*": ["./src/assets/styles/*"],
+      "services/*": ["./src/services/*"]
     }
   },
   "include": ["src"],

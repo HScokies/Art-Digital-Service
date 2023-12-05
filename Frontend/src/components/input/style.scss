@@ -6,17 +6,32 @@
         outline: .1vmin solid rgba(0, 0, 0, 0.32);
         border-radius: 5px;
         display: flex;
-        flex-flow: column;
-        justify-content: center;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
         padding-inline: 1.5vmin;
         &.error{
             outline-color: #DE3341;
         }
-
+        &-show{
+            height: 50%;
+            transition: all ease-in-out 1S;
+            cursor: pointer;
+            margin-left: 2vw;
+            @media (max-width: 799px) {
+                height: 35%;
+                margin-inline: 1vw;
+                margin-top: 1vh;
+            }
+        }
         &-field {
             display: block;
             font-size: 3.5vh;
             display: none;
+            width: 100%;
+            &::-ms-reveal{
+                display: none;
+            }
             &.active{
                 display: block;
                 margin-top: 1vh;
@@ -27,6 +42,7 @@
             cursor: text;
             font-size: 3.5vh;
             color: rgba(0, 0, 0, 0.32); 
+            user-select: none;
             transition: all ease-in-out .2s;
             -moz-transition: all ease-in-out .2s;
             -webkit-transition: all ease-in-out .2s;

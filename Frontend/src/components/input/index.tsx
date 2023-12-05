@@ -7,21 +7,23 @@ interface props {
     name: string,
     required: boolean,
     validator?: (value: string) => string,
-    onChange?: (e:React.ChangeEvent<HTMLInputElement>) => void
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    defaultValue?: any,
+    maxlength?: number
 }
 
-const Input = ({ label, type, name, required = false, validator, onChange }: props) => {
+const Input = ({ label, type, name, required = false, validator, onChange, defaultValue, maxlength }: props) => {
 
     const [error, setError] = useState<string | undefined>()
-    const [active, setActive] = useState(false)
-
+    const [active, setActive] = useState(defaultValue ? true : false)
+    const [value, setValue] = useState(defaultValue)
 
     const EnableField = async () => {
         await setActive(true)
         await setError(undefined)
         document.getElementById(name)?.focus()
     }
-    const handleBlur = async() => {
+    const handleBlur = async () => {
         const field = document.getElementById(name) as HTMLInputElement
         if (field?.value.length < 1) {
             if (required) {
@@ -29,8 +31,8 @@ const Input = ({ label, type, name, required = false, validator, onChange }: pro
             }
             return setActive(false)
         }
-        if (validator){
-            await setError(validator(field?.value)); 
+        if (validator) {
+            await setError(validator(field?.value));
         }
 
     }
@@ -38,7 +40,7 @@ const Input = ({ label, type, name, required = false, validator, onChange }: pro
     return (
         <div className="input">
             <div className={`input_wrapper ${error ? 'error' : ''}`} onClick={() => EnableField()}>
-                <input onChange={(e) => {if (onChange) onChange(e)}} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={name} name={name} type={type} />
+                <input maxLength={maxlength} value={value} onChange={(e) => { if (onChange) onChange(e); setValue(e.target.value) }} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={name} name={name} type={type} />
                 <label className={`input_wrapper-label${active ? ' active' : ''}`} htmlFor={name}>{label}</label>
             </div>
 

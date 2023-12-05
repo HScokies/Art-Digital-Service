@@ -1,6 +1,6 @@
 @import 'styles/variables.scss';
 
-.accesspage {
+.authpage {
     width: 100vw;
     min-height: 100vh;
     height: 100%;
@@ -33,14 +33,14 @@
 
         &-title {
             margin-top: .5em;
+           margin-bottom: 5vh; 
             text-align: center;
             font-size: calc(2vmin + 2vmax);
             font-style: normal;
             font-weight: 600;
             line-height: normal;
         }
-        &>.input{
-            margin-top: 5em;
+        & .input{
             min-width: 50vw;
             width: 100%;
             @media (max-width: 799px) {
@@ -54,7 +54,7 @@
                     font-size: 6vw;
                 }
                 .input-error{
-                    height: 6.5vh;
+                    // height: 6.5vh;
                     font-size: 6vw;
                 }
              
@@ -67,7 +67,6 @@
         }
     }
 }
-
 
 @-webkit-keyframes BackgroundAnimation {
     0% {

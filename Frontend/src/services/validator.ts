@@ -9,4 +9,19 @@ export class Validator{
             return "Неверный адрес электронной почты"
         return ""
     }
+
+    static validatePassword = (password: string): string => {
+        const numberRegEx = /\d/
+        const letterRegEx = /[a-zA-Z]/g
+
+        if (password.length < 7)
+            return "Слишком короткий"
+        if (password.indexOf(" ") != -1)
+            return "Не должен содержать пробелы";
+        if (!numberRegEx.test(password))
+            return "Должен содержать цифры"
+        if (!letterRegEx.test(password))
+            return "Должен содержать латинские буквы"
+        return "";
+    }
 }

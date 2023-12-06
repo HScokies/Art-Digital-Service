@@ -22,7 +22,9 @@ const AccessPage = () => {
     const handleSubmit = () => {
         console.debug(email)
         console.debug("*api call*")
-        navigate(`/login/${email}`)
+        if (email == "exists@email.com")
+            navigate(`/login/${email}`)
+        else navigate(`/register/${email}`)
     }
 
     return (

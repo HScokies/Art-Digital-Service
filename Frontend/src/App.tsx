@@ -1,4 +1,4 @@
-import { AccessPage, LoginPage } from "./pages"
+import { AccessPage, LoginPage, RegisterPage } from "./pages"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -9,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AccessPage />} />
         <Route path="login/:Email" element={<LoginPage/>}/>
+        <Route path="register/:Email" element={<RegisterPage/>}/>
       </Routes>
     </BrowserRouter>
   )

@@ -23,6 +23,9 @@
         &-input {
             font-size: 3.5vh;
             height: auto;
+            & select{
+                background-color: #EEF0FB;
+            }
         }
     }
 }

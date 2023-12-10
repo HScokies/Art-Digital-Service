@@ -15,8 +15,8 @@ interface props {
 const Input = ({ label, type, name, required = false, validator, onChange, defaultValue = "", maxlength }: props) => {
 
     const [error, setError] = useState<string>()
-    const [active, setActive] = useState(defaultValue ? true : false)
     const [value, setValue] = useState(defaultValue)
+    const [active, setActive] = useState(defaultValue? true : false)
 
     const [showPassword, setShowPassword] = useState(false)
 
@@ -25,6 +25,7 @@ const Input = ({ label, type, name, required = false, validator, onChange, defau
         await setError(undefined)
         document.getElementById(name)?.focus()
     }
+    
     const handleBlur = async () => {
         const field = document.getElementById(name) as HTMLInputElement
         if (field?.value.length < 1) {

@@ -1,6 +1,12 @@
 @import 'styles/variables.scss';
 
 .authpage_modal{
+    &-reset{
+        font-size: calc(10px + 2vmax);
+        margin: 1vh 0 2vh 0;
+        color: $Glaucous !important;
+        text-decoration: underline !important;
+    }   
     &>form{
         width: 100%;
         display: flex;

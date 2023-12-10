@@ -1,0 +1,40 @@
+@import 'styles/variables.scss';
+.form-message{
+    display: none;
+    border-radius: 1em;
+    min-width: 50%;
+    max-width: 50vmax;
+    margin-top: 4vh;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: $Lavender;
+    gap: 2vw;
+    padding: 2vh;
+    user-select: none;
+    & svg{
+        height: calc(3em + 2vh);
+    }
+    & p{
+        font-size: 2vh;
+        width: 70%;
+    }
+    &.active{
+        display: flex;
+    }
+    &.error{
+        color: #DE3341; 
+        fill: #DE3341;
+    }
+
+    @media (max-width: 799px) {
+        max-width: 100%;
+        & p{
+            width: inherit;
+            font-size: calc(100%);
+        }
+        & svg{
+            min-height: calc(3em + 15vmin);
+        }
+    }
+}

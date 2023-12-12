@@ -5,15 +5,18 @@ interface props {
     label: string,
     type: string,
     name: string,
-    required: boolean,
+    required: true | undefined,
     validator?: (value: string) => string,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void,
     defaultValue?: any,
     maxlength?: number,
     datalist?: string,
+    min?: number,
+    max?: number
 }
 
-const Input = ({ label, type, name, required = false, validator, onChange, defaultValue = "", maxlength, datalist = "" }: props) => {
+const Input = ({ label, type, name, required = undefined, validator, onChange, onKeyUp, defaultValue = "", maxlength, datalist = "", min, max }: props) => {
 
     const [error, setError] = useState<string>()
     const [value, setValue] = useState(defaultValue)
@@ -31,7 +34,7 @@ const Input = ({ label, type, name, required = false, validator, onChange, defau
         await setValue(value.trim())
         const field = document.getElementById(name) as HTMLInputElement
         if (field?.value.length < 1) {
-            if (required) {              
+            if (required) {           
                 setError("Обязательно")
             }
             return setActive(false)
@@ -45,7 +48,7 @@ const Input = ({ label, type, name, required = false, validator, onChange, defau
     return (
         <div className="input">
             <div className={`input_wrapper ${error ? 'error' : ''}`} onClick={() => EnableField()}>
-                <input list={datalist} maxLength={maxlength} value={value} onChange={(e) => { if (onChange) onChange(e); setValue(e.target.value) }} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={name} name={name} type={showPassword ? "text" : type} />
+                <input list={datalist} maxLength={maxlength} value={value} onChange={(e) => { if (onChange) onChange(e); setValue(e.target.value) }} onKeyUp={(e) => {if (onKeyUp) onKeyUp(e)}} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={name} name={name} type={showPassword ? "text" : type} min={min} max={max} required={required} />
                 <label className={`input_wrapper-label${active ? ' active' : ''}`} htmlFor={name}>{label}</label>
                 {
                     type == "password" && value?.length > 0 ?

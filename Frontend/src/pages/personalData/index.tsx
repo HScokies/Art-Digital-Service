@@ -62,14 +62,12 @@ const PersonalDataPage = () => {
     }
 
     const validateFields = () => {
-        
     }
 
-    const validateNumberField = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isNaN(+e.target.value)){
-            e.target.value = ""
-        }
-        validateFields()
+    const validateGrade = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const numberInput = e.target as HTMLInputElement;
+        if (!numberInput.value.match(/^-?\d+$/))
+            numberInput.value = ""
     }
 
     return (
@@ -77,7 +75,7 @@ const PersonalDataPage = () => {
             <div className="authpage_modal">
                 <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
                 <h1 className='authpage_modal-title'>Персональные данные</h1>
-                <form id='personaldata-form'>
+                <form id='personaldata-form' onSubmit={() => console.debug("submit")}>
                     {
                         dbdata.isAdult ?
                             null :
@@ -99,16 +97,16 @@ const PersonalDataPage = () => {
                     {
                         dbdata.isAdult ?
                             <>
-                                <Input onChange={validateNumberField} label='Курс' type='number' name='grade' required={true} validator={Validator.validateGradeStudent} />
+                                <Input onKeyUp={validateGrade} label='Курс' type='number' name='grade' required={true} validator={Validator.validateGradeStudent} min={1} max={10} />
                                 <Input onChange={validateFields} label='Специальность' type='text' name='speciality' required={true} />
                             </> :
-                            <>                                
-                                <Input onChange={validateNumberField} label='Класс' type='text' name='grade' required={true} validator={Validator.validateGradeSchool} />
+                            <>
+                                <Input label='Класс' type='text' name='grade' required={true} validator={Validator.validateGradeSchool} min={0} max={10} />
                             </>
                     }
                     <Combobox label='Направление' options={dbdata.cases} />
+                    <Button isActive={!hasErrors}>Продолжить</Button>
                 </form>
-                <Button isActive={!hasErrors}>Продолжить</Button>
             </div>
         </div>
     )

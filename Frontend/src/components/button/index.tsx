@@ -7,9 +7,9 @@ interface props{
 }
 
 const Button = ({children, clickHandler = () => {}, isActive}: props) => (
-    <a className={isActive? 'button' : 'button disabled'} onClick={isActive? () => clickHandler() : undefined}>
+    <button className={isActive? 'button' : 'button disabled'} onClick={isActive? () => clickHandler() : undefined}>
         {children}
-    </a>
+    </button>
 )
 
 export default Button

@@ -10,7 +10,7 @@ interface props {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
     defaultValue?: any,
     maxlength?: number,
-    datalist?: string
+    datalist?: string,
 }
 
 const Input = ({ label, type, name, required = false, validator, onChange, defaultValue = "", maxlength, datalist = "" }: props) => {
@@ -28,9 +28,10 @@ const Input = ({ label, type, name, required = false, validator, onChange, defau
     }
     
     const handleBlur = async () => {
+        await setValue(value.trim())
         const field = document.getElementById(name) as HTMLInputElement
         if (field?.value.length < 1) {
-            if (required) {
+            if (required) {              
                 setError("Обязательно")
             }
             return setActive(false)

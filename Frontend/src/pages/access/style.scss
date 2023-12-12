@@ -24,7 +24,7 @@
         @media (max-width: 799px) {
             width: 100%;
             padding: 2vh 2vw;
-            height: 100vh;
+            min-height: 100vh;
         }
         &-logo {
             min-width: 10em;

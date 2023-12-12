@@ -24,4 +24,18 @@ export class Validator{
             return "Должен содержать латинские буквы"
         return "";
     }
+
+    static validateGradeStudent = (_grade: string): string => {
+        const grade = +_grade;
+        if (isNaN(grade) || grade < 1 || grade > 11)
+            return "Укажите корректный номер курса";
+        return ""
+    }
+
+    static validateGradeSchool = (_grade: string): string => {
+        const grade = +_grade;
+        if (isNaN(grade) || grade < 1 || grade > 11)
+            return "Укажите корректный класс";
+        return ""
+    }
 }

@@ -26,20 +26,20 @@ const RegisterPage = () => {
     const handleChange = () => {
 
     }
-    
+
     return (
         <div className="authpage">
-        <div className="authpage_modal">
-            <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
-            <h1 className='authpage_modal-title'>Зарегистрироваться</h1>
-            <form id='login-form'>
-            <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange}  defaultValue={Email} />
-            <Combobox label='Тип учетной записи' options={userTypes} />
-            <Input label='Пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
-            </form>
-            <Button isActive={!hasErrors}>Продолжить</Button>
+            <div className="authpage_modal">
+                <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
+                <h1 className='authpage_modal-title'>Зарегистрироваться</h1>
+                <form id='login-form'>
+                    <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={Email} />
+                    <Combobox label='Тип учетной записи' options={userTypes} />
+                    <Input label='Пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
+                </form>
+                <Button isActive={!hasErrors}>Продолжить</Button>
+            </div>
         </div>
-    </div>
     )
 }
 

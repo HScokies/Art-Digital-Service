@@ -1,6 +1,6 @@
 .input {
     cursor: text;
-    min-height: 14.5vh;
+    min-height: 13.5vh;
     &_wrapper {
         position: relative;
         height: 10vh;
@@ -28,18 +28,17 @@
         &-field {
             display: block;
             font-size: 3.5vh;
-            display: none;
             width: 100%;
             &::-ms-reveal{
                 display: none;
             }
             &.active{
-                display: block;
                 margin-top: 2vh;
             }
         }
 
         &-label {
+            position: absolute;
             cursor: text;
             font-size: 3.5vh;
             color: rgba(0, 0, 0, 0.32); 
@@ -48,8 +47,7 @@
             -moz-transition: all ease-in-out .2s;
             -webkit-transition: all ease-in-out .2s;
 
-            &.active{
-                position: absolute;
+            &.active{                
                 transform: translateY(-3.1vh);
                 font-size: 2.5vh;
                 font-weight: bold;
@@ -59,7 +57,7 @@
     }
     &-error{
         color: #DE3341;
-        font-size: 3.5vh;
+        font-size: 2.5vh;
         visibility: hidden;
         max-width: 100%;
         transform: translateY(-10%);

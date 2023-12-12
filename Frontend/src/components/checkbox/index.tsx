@@ -5,9 +5,10 @@ interface props {
     children: any,
     name: string,
     defaultValue?: boolean,
+    checkedChanged?: ()=>void
 }
 
-const Checkbox = ({ children, name, defaultValue = false }: props) => {
+const Checkbox = ({ children, name, defaultValue = false, checkedChanged }: props) => {
     const [checked, setChecked] = useState(defaultValue)
 
     return (
@@ -18,7 +19,7 @@ const Checkbox = ({ children, name, defaultValue = false }: props) => {
                 }
             </label>
             <input onChange={() => setChecked(!checked)} className='checkbox-input' type='checkbox' id={name} name={name} checked={checked} />
-            <span onClick={() => setChecked(!checked)} className={'checkbox-input_box'}>
+            <span onClick={async() => {await setChecked(!checked); if (checkedChanged) checkedChanged()}} className={'checkbox-input_box'}>
                 {
                     checked ?
                         <svg viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">

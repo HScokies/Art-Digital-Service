@@ -38,4 +38,11 @@ export class Validator{
             return "Укажите корректный класс";
         return ""
     }
+
+    static validatePhoneNumber = (phone: string): string => {
+        if (!phone.match("^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$")){
+            return "Неверный номер телефона"
+        }
+        return ""
+    }
 }

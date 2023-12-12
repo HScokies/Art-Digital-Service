@@ -2,10 +2,14 @@
 
 .authpage_modal{
     &-reset{
+        margin-top: 1vh;
         font-size: 3.5vmin;
         text-align: center;
         color: $Glaucous !important;
         text-decoration: underline !important;
+        @media (max-width: 799px) {
+            font-size: 6vmin;
+        }
     }   
     &>form{
         width: 100%;

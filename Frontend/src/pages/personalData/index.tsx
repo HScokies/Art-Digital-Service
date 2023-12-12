@@ -97,16 +97,19 @@ const PersonalDataPage = () => {
                     {
                         dbdata.isAdult ?
                             <>
-                                <Input onKeyUp={validateGrade} label='Курс' type='number' name='grade' required={true} validator={Validator.validateGradeStudent} min={1} max={10} />
+                                <Input onKeyUp={validateGrade} label='Курс' type='number' name='grade' required={true} validator={Validator.validateGradeStudent} min={1} max={11} />
                                 <Input onChange={validateFields} label='Специальность' type='text' name='speciality' required={true} />
                             </> :
                             <>
-                                <Input label='Класс' type='text' name='grade' required={true} validator={Validator.validateGradeSchool} min={0} max={10} />
+                                <Input onKeyUp={validateGrade} label='Класс' type='number' name='grade' required={true} validator={Validator.validateGradeSchool} min={1} max={11} />
                             </>
                     }
                     <Combobox label='Направление' options={dbdata.cases} />
                     <Checkbox name='acceptedPrivacyPolicy'>
-                    Ознакомлен с <a target='_blank' href='https://disk.yandex.ru/i/FrvixFf4IKNtwg'>политикой&nbsp;конфиденциальности</a>
+                        Ознакомлен с <a target='_blank' href='https://disk.yandex.ru/i/FrvixFf4IKNtwg'>политикой&nbsp;конфиденциальности</a>
+                    </Checkbox>
+                    <Checkbox name='acceptedProcessing'>
+                        Даю согласие на обработку <a target='_blank' href='https://disk.yandex.ru/i/brJofU0LLzyn6w'>персональных&nbsp;данных</a>
                     </Checkbox>
                     <Button isActive={!hasErrors}>Продолжить</Button>
                 </form>

@@ -29,11 +29,11 @@ const ForgotPasswordPage = () => {
                 <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
                 <FormMessage type='info' text={"Проверьте свою электронную почту на наличие ссылки для сброса пароля. Если оно не появится в течение нескольких минут, проверьте папку «Спам»."} isActive={showMessage}/>                
                 <h1 className='authpage_modal-title'>Забыли пароль?</h1>
-                <form id='login-form'>
+                <form id='forgot-form'>
                     <span className={`authpage_modal-tip ${showMessage? 'disabled' : ''}`}>Введите адрес электронной почты вашей учетной записи, и мы вышлем вам ссылку для сброса пароля.</span>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} defaultValue={Email} onChange={handleChange} />
-                </form>
-                <Button isActive={!hasErrors} clickHandler={handleSubmit}>Отправить</Button>
+                    <Button isActive={!hasErrors} clickHandler={handleSubmit}>Отправить</Button>
+                </form>                
             </div>
         </div>
     )

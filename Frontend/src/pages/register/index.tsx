@@ -36,8 +36,8 @@ const RegisterPage = () => {
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={Email} />
                     <Combobox label='Тип учетной записи' options={userTypes} />
                     <Input label='Пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
+                    <Button isActive={!hasErrors}>Продолжить</Button>
                 </form>
-                <Button isActive={!hasErrors}>Продолжить</Button>
             </div>
         </div>
     )

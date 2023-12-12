@@ -47,17 +47,17 @@
             width: 100%;
             @media (max-width: 799px) {
                 & label{
-                    font-size: 6vw;
+                    font-size: 6vmin;//vw
                     &.active{
-                        font-size: 5.5vw;
+                        font-size: 5.5vmin;//vw
                     }
                 }
                 & input{
-                    font-size: 6vw;
+                    font-size: 6vmin;//vw
                 }
                 .input-error{
                     // height: 6.5vh;
-                    font-size: 6vw;
+                    font-size: 6vmin;//vw
                 }
              
             }

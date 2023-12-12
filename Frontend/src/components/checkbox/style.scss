@@ -12,13 +12,12 @@
         position: absolute;
         visibility: collapse;
         &_box{
+            margin-left: .1vw;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: .5em;
             aspect-ratio: 1;
-            min-height: 3.5vmin;
-            align-self: stretch;
+            min-height: 5vmin;
             background: $Lavender;
             &:hover{
                border: .3em solid #746E6E0A; 
@@ -31,11 +30,15 @@
 
     &-label {
         color: #746E6E;
-        font-size: 3.5vmin;
+        font-size: 3.7vmin;
         max-width: 75%;
 
-        & a:link {
+        & a, a:link {
             text-decoration: underline;
-        }      
+        } 
+        
+        @media (max-width: 799px) {
+            font-size: 4.5vmin;
+        }
     }
 }

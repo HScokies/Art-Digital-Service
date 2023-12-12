@@ -2,8 +2,8 @@
 
 .authpage_modal{
     &-reset{
-        font-size: calc(10px + 2vmax);
-        margin: 1vh 0 2vh 0;
+        font-size: 3.5vmin;
+        text-align: center;
         color: $Glaucous !important;
         text-decoration: underline !important;
     }   
@@ -11,6 +11,5 @@
         width: 100%;
         display: flex;
         flex-flow: column nowrap;
-        gap: .5vh;
     }
 }

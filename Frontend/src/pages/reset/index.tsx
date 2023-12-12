@@ -45,8 +45,8 @@ const PasswordResetPage = () => {
             <h1 className='authpage_modal-title'>Обновление пароля</h1>
             <form id='login-form'>
             <Input label='Новый пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
-            </form>
             <Button isActive={!hasErrors} clickHandler={handleSubmit}>Продолжить</Button>
+            </form>            
         </div>
     </div>
     )

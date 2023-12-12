@@ -27,20 +27,26 @@
         }
         &-field {
             display: block;
-            font-size: 3.5vh;
+            font-size: 3.5vmin; //vh
             width: 100%;
             &::-ms-reveal{
                 display: none;
             }
-            &.active{
+            &:not(:placeholder-shown),&.active{
                 margin-top: 2vh;
+            }
+            &:not(:placeholder-shown) + .input_wrapper-label{
+                transform: translateY(-3.1vh);
+                font-size: 2.5vmin;//vh
+                font-weight: bold;
+                color: rgba(0, 0, 0, 0.72); 
             }
         }
 
         &-label {
             position: absolute;
             cursor: text;
-            font-size: 3.5vh;
+            font-size: 3.5vmin; //vh
             color: rgba(0, 0, 0, 0.32); 
             user-select: none;
             transition: all ease-in-out .2s;
@@ -49,7 +55,7 @@
 
             &.active{                
                 transform: translateY(-3.1vh);
-                font-size: 2.5vh;
+                font-size: 2.5vmin;//vh
                 font-weight: bold;
                 color: rgba(0, 0, 0, 0.72); 
             }
@@ -57,7 +63,7 @@
     }
     &-error{
         color: #DE3341;
-        font-size: 2.5vh;
+        font-size: 2.5vmin; //vh
         visibility: hidden;
         max-width: 100%;
         transform: translateY(-10%);

@@ -48,7 +48,7 @@ const Input = ({ label, type, name, required = undefined, validator, onChange, o
     return (
         <div className="input">
             <div className={`input_wrapper ${error ? 'error' : ''}`} onClick={() => EnableField()}>
-                <input list={datalist} maxLength={maxlength} value={value} onChange={(e) => { if (onChange) onChange(e); setValue(e.target.value) }} onKeyUp={(e) => {if (onKeyUp) onKeyUp(e)}} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={name} name={name} type={showPassword ? "text" : type} min={min} max={max} required={required} />
+                <input placeholder='' list={datalist} maxLength={maxlength} value={value} onChange={(e) => { if (onChange) onChange(e); setValue(e.target.value) }} onKeyUp={(e) => {if (onKeyUp) onKeyUp(e)}} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={name} name={name} type={showPassword ? "text" : type} min={min} max={max} required={required} />
                 <label className={`input_wrapper-label${active ? ' active' : ''}`} htmlFor={name}>{label}</label>
                 {
                     type == "password" && value?.length > 0 ?

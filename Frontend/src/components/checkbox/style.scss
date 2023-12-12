@@ -1,0 +1,41 @@
+@import 'styles/variables.scss';
+
+.checkbox {
+    position: relative;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+
+    &-input {
+        position: absolute;
+        visibility: collapse;
+        &_box{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: .5em;
+            aspect-ratio: 1;
+            min-height: 3.5vmin;
+            align-self: stretch;
+            background: $Lavender;
+            &:hover{
+               border: .3em solid #746E6E0A; 
+            }
+            &>svg{
+                height: 50%;
+            }
+        }
+    }
+
+    &-label {
+        color: #746E6E;
+        font-size: 3.5vmin;
+        max-width: 75%;
+
+        & a:link {
+            text-decoration: underline;
+        }      
+    }
+}

@@ -7,7 +7,7 @@ interface props{
 }
 
 const Button = ({children, clickHandler = () => {}, isActive}: props) => (
-    <button className={isActive? 'button' : 'button disabled'} onClick={isActive? () => clickHandler() : undefined}>
+    <button className={isActive? 'button' : 'button disabled'} disabled={isActive? undefined : true} onClick={isActive? () => clickHandler() : undefined}>
         {children}
     </button>
 )

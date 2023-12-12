@@ -1,14 +1,14 @@
 import './style.scss'
 import Logo from 'images/logo.webp'
 import { useState } from 'react'
-import { Button, Combobox, Input } from 'src/components'
+import { Button, Combobox, Input, Checkbox } from 'src/components'
 import { Validator } from 'src/services'
 
 const PersonalDataPage = () => {
     const [hasErrors, setHasErrors] = useState(true);
 
     const dbdata = {
-        isAdult: true,
+        isAdult: false,
         cases: [
             {
                 value: 0,
@@ -105,6 +105,9 @@ const PersonalDataPage = () => {
                             </>
                     }
                     <Combobox label='Направление' options={dbdata.cases} />
+                    <Checkbox name='acceptedPrivacyPolicy'>
+                    Ознакомлен с <a target='_blank' href='https://disk.yandex.ru/i/FrvixFf4IKNtwg'>политикой&nbsp;конфиденциальности</a>
+                    </Checkbox>
                     <Button isActive={!hasErrors}>Продолжить</Button>
                 </form>
             </div>

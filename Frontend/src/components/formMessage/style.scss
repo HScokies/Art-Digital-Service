@@ -1,26 +1,29 @@
 @import 'styles/variables.scss';
 .form-message{
-    display: none;
+    display: flex;
+    position: absolute;
+    transform: translateX(-200%);
     border-radius: 1em;
-    min-width: 50%;
-    max-width: 50vmax;
-    margin-top: 4vh;
+    width: 95%;
+    margin-top: 1em;
     flex-flow: row nowrap;
     justify-content: space-evenly;
     align-items: center;
     background-color: $Lavender;
     gap: 2vw;
-    padding: 2vh;
+    padding: 1em;
     user-select: none;
     & svg{
-        height: calc(3em + 2vh);
+        width: calc(2.5em + 1vw);
+        aspect-ratio: 1;
     }
     & p{
-        font-size: 2vh;
+        font-size: calc(1em + .5vw);
         width: 70%;
     }
     &.active{
-        display: flex;
+        transform: translateX(0);
+        position: relative;
     }
     &.error{
         color: #DE3341; 
@@ -28,13 +31,11 @@
     }
 
     @media (max-width: 799px) {
+        position: absolute !important;
+        transition: transform ease-in-out .1s;
         max-width: 100%;
         & p{
             width: inherit;
-            font-size: calc(100%);
-        }
-        & svg{
-            min-height: calc(3em + 15vmin);
         }
     }
 }

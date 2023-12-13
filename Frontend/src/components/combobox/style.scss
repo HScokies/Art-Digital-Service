@@ -1,29 +1,31 @@
 .combobox {
-    min-height: 13.5vh;
+    position: relative;
+    height: 5.5em;
     &_wrapper {
-        background: rgba(238, 240, 251, 0.00); 
-        outline: .1vmin solid rgba(0, 0, 0, 0.32);
-        border-radius: 5px;
-        height: 10vh;
         position: relative;
         display: flex;
-        flex-direction: column;
-        justify-content: start;
-        padding-inline: 1.5vmin;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        outline: .1vmin solid rgba(0, 0, 0, 0.32);
+        padding: .3em .5em;
+        border-radius: 5px;
+        height: 4em;
 
 
         &-label {
-            // position: fixed;
+            position: absolute;
+            transform: translateY(-1em);
+            font-size: 1em;
             font-weight: bold;
-            // transform: translateY(-3.1vh);
-            font-size: 2.5vh;
-            color: rgba(0, 0, 0, 0.72);
+            color: rgba(0, 0, 0, 0.72); 
         }
 
         &-input {
-            font-size: 3.5vh;
-            height: auto;
+            font-size: 1.7em;
+            margin-top: .6em;
             background-color: #EEF0FB;
+            width: 100%;
         }
     }
 }

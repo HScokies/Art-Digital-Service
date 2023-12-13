@@ -1,5 +1,5 @@
 import './style.scss'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Logo from 'images/logo.webp'
 import { Button, Input, FormMessage } from 'src/components';
 import { Validator } from 'src/services';
@@ -10,6 +10,7 @@ const ForgotPasswordPage = () => {
     const { Email } = useParams()
     const [hasErrors, setHasErrors] = useState<boolean>(Validator.validateEmail(Email as string).length > 0);
     const [showMessage, setShow] = useState(false)
+    const navigate = useNavigate()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (Validator.validateEmail(e.target.value)){
@@ -19,8 +20,12 @@ const ForgotPasswordPage = () => {
 
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         setShow(true)
+        setTimeout(() => {
+            navigate("/login")
+        }, 3000)
     }
 
     return (
@@ -29,10 +34,10 @@ const ForgotPasswordPage = () => {
                 <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
                 <FormMessage type='info' text={"Проверьте свою электронную почту на наличие ссылки для сброса пароля. Если оно не появится в течение нескольких минут, проверьте папку «Спам»."} isActive={showMessage}/>                
                 <h1 className='authpage_modal-title'>Забыли пароль?</h1>
-                <form id='forgot-form'>
-                    <span className={`authpage_modal-tip ${showMessage? 'disabled' : ''}`}>Введите адрес электронной почты вашей учетной записи, и мы вышлем вам ссылку для сброса пароля.</span>
+                <form id='forgot-form' onSubmit={(e) => handleSubmit(e)}>
+                    <span className={`authpage_modal-tip`}>Введите адрес электронной почты вашей учетной записи, и мы вышлем вам ссылку для сброса пароля.</span>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} defaultValue={Email} onChange={handleChange} />
-                    <Button isActive={!hasErrors} clickHandler={handleSubmit}>Отправить</Button>
+                    <Button isActive={!hasErrors}>Отправить</Button>
                 </form>                
             </div>
         </div>

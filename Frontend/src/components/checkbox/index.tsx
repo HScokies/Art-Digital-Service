@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './style.scss'
+import Icons from 'images/icons.svg'
 
 interface props {
     children: any,
@@ -22,8 +23,8 @@ const Checkbox = ({ children, name, defaultValue = false, checkedChanged }: prop
             <span onClick={async() => {await setChecked(!checked); if (checkedChanged) checkedChanged()}} className={'checkbox-input_box'}>
                 {
                     checked ?
-                        <svg viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M27.761 0L11.4565 13.9061L4.56127 7.14104L0 11.0706L11.1396 22L32 4.22447L27.761 0Z" fill="#6B74B2" />
+                        <svg>
+                            <use xlinkHref={Icons+'#check'} />
                         </svg> :
                         null
                 }

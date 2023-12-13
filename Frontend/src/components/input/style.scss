@@ -1,75 +1,79 @@
+@mixin active-label {
+    transform: translateY(-1em);
+    font-size: 1em;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.72); 
+}
+
 .input {
     cursor: text;
-    min-height: 13.5vh;
+    height: calc(4em + 1.5em);
     &_wrapper {
-        position: relative;
-        height: 10vh;
+        position: relative;        
+        height: 4em;
+        padding: .3em .5em;
         outline: .1vmin solid rgba(0, 0, 0, 0.32);
         border-radius: 5px;
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        padding-inline: 1.5vmin;
         &.error{
             outline-color: #DE3341;
         }
         &-show{
-            height: 50%;
+            aspect-ratio: 1;
+            height: 100%;
             transition: all ease-in-out 1S;
             cursor: pointer;
             margin-left: 2vw;
             @media (max-width: 799px) {
-                height: 35%;
+                height: 70%;
                 margin-inline: 1vw;
                 margin-top: 1vh;
             }
         }
         &-field {
             display: block;
-            font-size: 3.5vmin; //vh
+            font-size: 1.7em;
             width: 100%;
             &::-ms-reveal{
                 display: none;
             }
             &:not(:placeholder-shown),&.active{
-                margin-top: 2vh;
+                margin-top: .6em;
             }
             &:not(:placeholder-shown) + .input_wrapper-label{
-                transform: translateY(-3.1vh);
-                font-size: 2.5vmin;//vh
-                font-weight: bold;
-                color: rgba(0, 0, 0, 0.72); 
+                @include active-label
             }
         }
 
         &-label {
             position: absolute;
             cursor: text;
-            font-size: 3.5vmin; //vh
+            font-size: 1.2em;
             color: rgba(0, 0, 0, 0.32); 
             user-select: none;
             transition: all ease-in-out .2s;
             -moz-transition: all ease-in-out .2s;
             -webkit-transition: all ease-in-out .2s;
-
-            &.active{                
-                transform: translateY(-3.1vh);
-                font-size: 2.5vmin;//vh
-                font-weight: bold;
-                color: rgba(0, 0, 0, 0.72); 
+            &.active{
+                @include active-label
             }
         }
     }
     &-error{
         color: #DE3341;
-        font-size: 2.5vmin; //vh
+        font-size: 1.2em;
         visibility: hidden;
         max-width: 100%;
         transform: translateY(-10%);
         transition: all ease-in-out .2s;
         -moz-transition: all ease-in-out .2s;
         -webkit-transition: all ease-in-out .2s;
+        @media (max-width: 799px) {
+            font-size: .9em;
+        }
         &:not(:empty){
             visibility: visible;
             transform: inherit;

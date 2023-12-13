@@ -35,7 +35,8 @@ const LoginPage = () => {
     }
 
 
-    const handleSubmit = () => {
+    const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         setFormError({
             isActive: true,
             text: "Данные, использованные вами для входа, недействительны"
@@ -48,13 +49,13 @@ const LoginPage = () => {
                 <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
                 <FormMessage type='error' text={formError.text} isActive={formError.isActive} />
                 <h1 className='authpage_modal-title'>Войти в учетную запись</h1>
-                <form id='login-form'>
+                <form id='login-form' onSubmit={(e) => handleSubmit(e)}>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={Email} />
                     <Input label='Пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
-                    <Button isActive={!hasErrors} clickHandler={handleSubmit}>Продолжить</Button>
-                    <Link className='authpage_modal-reset' to={`/forgot/${email}`}>
+                    <Link className='authpage_modal-reset' to={`/forgot/${email || ""}`}>
                         Забыли пароль?
-                    </Link>                
+                    </Link>   
+                    <Button isActive={!hasErrors}>Продолжить</Button>             
                 </form>
             </div>
         </div>

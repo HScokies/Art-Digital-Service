@@ -10,10 +10,13 @@
     padding: .2em 2em;
     border-radius: 15px;
     font-weight: 600;
-    font-size: 3vh;
+    font-size: 2em;
     cursor: pointer;
     user-select: none;
     transition: all ease-in-out .2s;
+    @media (max-width: 799px) {
+        font-size: 1.5em;
+    }
     &.disabled{
         cursor: not-allowed;
         opacity: .5;

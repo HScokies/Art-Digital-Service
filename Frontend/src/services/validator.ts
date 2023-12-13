@@ -40,7 +40,7 @@ export class Validator{
     }
 
     static validatePhoneNumber = (phone: string): string => {
-        if (!phone.match("^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$")){
+        if (!phone.startsWith("+7 ") || phone.length != 13){
             return "Неверный номер телефона"
         }
         return ""

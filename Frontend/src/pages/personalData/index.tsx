@@ -8,7 +8,7 @@ const PersonalDataPage = () => {
     const [hasErrors, setHasErrors] = useState(true);
 
     const dbdata = {
-        isAdult: false,
+        isAdult: true,
         cases: [
             {
                 value: 0,
@@ -124,7 +124,7 @@ const PersonalDataPage = () => {
                             null :
                             <Input onChange={validateFields} label='Полное имя родителя' type='text' name='parentName' required={true} />
                     }
-                    <Input defaultValue={"+7 "} onChange={phoneChange} maxlength={13} label='Телефон' type='tel' name='phone' required={true} />
+                    <Input defaultValue={"+7 "} onChange={phoneChange} maxlength={13} label='Телефон' type='tel' name='phone' required={true} validator={Validator.validatePhoneNumber} />
                     <Input onChange={validateFields} label='Фамилия участника' type='text' name='lastName' required={true} />
                     <Input onChange={validateFields} label='Имя участника' type='text' name='firstName' required={true} />
                     <Input onChange={validateFields} label='Отчество участника' type='text' name='middleName' required={true} />

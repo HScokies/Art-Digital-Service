@@ -1,0 +1,23 @@
+.stage{    
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: start;
+    border-top: 1px solid black;
+    padding: .5em 0;
+    &:last-child{
+        border-bottom: 1px solid black;
+    }
+    &-index{
+        display: block;
+        width: 2em;
+        font-weight: 600;
+        font-size: 2em;        
+    }
+    &-descr{
+        width: 100%;
+        font-size: 1.2em;
+        white-space: pre-wrap;
+        align-self: center;
+        padding-right: 2em;
+    }
+}

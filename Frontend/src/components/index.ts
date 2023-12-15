@@ -4,6 +4,7 @@ import FormMessage from "./formMessage";
 import Combobox from "./combobox";
 import Checkbox from "./checkbox";
 import FileInput from "./fileInput";
+import Stage from "./stage";
 
 export {
     Input,
@@ -11,5 +12,6 @@ export {
     FormMessage,
     Combobox,
     Checkbox,
-    FileInput
+    FileInput,
+    Stage
 }

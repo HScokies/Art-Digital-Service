@@ -26,8 +26,8 @@
         position: relative;
     }
     &.error{
-        color: #DE3341; 
-        fill: #DE3341;
+        color: $Danger; 
+        fill: $Danger;
     }
 
     @media (max-width: 799px) {

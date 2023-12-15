@@ -4,9 +4,9 @@ import Icons from 'images/icons.svg'
 
 interface props {
     label: string,
-    type: string,
+    type: 'email' | 'number' | 'password' | 'tel' | 'text' | 'url',
     name: string,
-    required: true | undefined,
+    required?: true | undefined,
     validator?: (value: string) => string,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
     onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void,

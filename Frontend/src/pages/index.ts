@@ -4,6 +4,7 @@ import RegisterPage from "./register";
 import ForgotPasswordPage from "./forgotPassword";
 import PasswordResetPage from "./reset";
 import PersonalDataPage from "./personalData";
+import ProfilePage from "./profile";
 
 
 export{
@@ -12,5 +13,6 @@ export{
     RegisterPage,
     ForgotPasswordPage,
     PasswordResetPage,
-    PersonalDataPage
+    PersonalDataPage,
+    ProfilePage
 }

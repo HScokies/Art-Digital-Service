@@ -1,33 +1,58 @@
 @import 'styles/variables.scss';
 
-@mixin section{
+@mixin section {
     padding: 3em 3em 6em;
-    @media (max-width: 799px){
+
+    @media (max-width: 799px) {
         padding: 2em 1em 6em;
     }
 }
-@mixin section-title{
+
+@mixin section-title {
     font-size: 3em;
     font-weight: 600;
     margin-bottom: 1em;
-    @media (max-width: 799px){
+
+    @media (max-width: 799px) {
         font-size: 1.5em;
     }
 }
 
-.nav-element {
-    padding: 1em;
-    background-color: white;
-    outline: 1px solid white;
-    border-radius: 5px;
+.scroll-top {
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 3vw;
+    bottom: -100vh;
+    transition: bottom ease-in-out .5s;
+    aspect-ratio: 1;
+    width: 3em;
+    border-radius: 50%;
+    background-color: $Glaucous;
+
+    & svg {
+        aspect-ratio: 1;
+        height: 2em;
+        fill: white;
+    }
+
+    &.active {
+        bottom: 3em;
+    }
 }
 
+
 .profilepage {
+    display: flex;
+    flex-flow: column nowrap;
     min-height: 100vh;
     overflow: hidden;
 
     &_header {
+        height: 4em;
+        position: fixed;
         width: 100%;
         display: flex;
         flex-flow: row nowrap;
@@ -36,21 +61,92 @@
         background-color: #9198CA;
         padding: .5em;
 
-        &-logo {
+        &-logo,
+        &-user_container {
             color: white;
             font-size: 1.5em;
             user-select: none;
             cursor: pointer;
 
-            @media (max-width: 799px) {
-                font-size: 1.5em;
+            & svg {
+                aspect-ratio: 1;
+                height: 1.5em;
+            }
+        }
+
+        &-logo.image {
+            display: none;
+            height: 2em;
+        }
+
+        &-user_container {
+            display: flex;
+            align-items: center;
+            gap: .5em;
+
+            &-user {
+                font-weight: 600;
+                white-space: nowrap;
+                max-width: 10em;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            &-menu {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height ease-in-out 1s;
+                position: absolute;
+                top: 2.65em;
+                right: .5em;
+                color: #313131;
+                box-shadow: rgba(0, 0, 0, 0.15) 2px 4px 20px 0px;  
+                &.active{
+                    max-height: unset;
+                }              
+                &-item {
+                    display: flex;
+                    flex-flow: column nowrap;
+                    white-space: nowrap;
+                    padding: .5em;
+                    max-width: 320px;
+                    border-bottom: 1px solid #d9d9d9;
+
+                    & span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    &:hover {
+                        background-color: #2f2f2f0a;
+                    }
+                    &-logout{
+                        text-align: center;
+                        color: $Danger;
+                    }
+                }
+            }
+        }
+
+
+        @media (max-width: 799px) {
+
+            &-logo {
+                &.text {
+                    display: none;
+                }
+
+                &.image {
+                    display: block;
+                }
             }
         }
     }
 
     &_task {
+        margin-top: 4em; // header
         @include section();
-        background-color: white;
+
         &-title {
             @include section-title();
         }
@@ -59,7 +155,8 @@
             font-size: 2em;
             width: 60%;
             max-width: 50em;
-            @media (max-width: 799px){
+
+            @media (max-width: 799px) {
                 width: 100%;
                 font-size: 1.3em;
             }
@@ -69,14 +166,17 @@
     &_status {
         @include section();
         background-color: $Lavender;
+
         &-title {
             @include section-title();
             text-align: center;
-            &_wait{
+
+            &_wait {
                 @include section-title();
             }
         }
-        &-form{
+
+        &-form {
             display: flex;
             flex-flow: column nowrap;
             justify-content: center;
@@ -86,56 +186,164 @@
             min-width: 40em;
             max-width: 70em;
             margin-inline: auto;
+
             // padding: 2.5em 5%;
-            padding-inline: 5%;
-            & .fileinput{
+            // padding-inline: 5%;
+            & .fileinput {
                 width: 100%;
             }
-            & .button{
+
+            & .button {
                 margin-top: 1em;
                 height: 2.5em;
                 width: 100%;
             }
         }
+
         @media (max-width: 799px) {
-           padding-inline: 0; 
-           &-form{
-            min-width: unset;
-            max-width: unset;
-            width: 100%;
-            padding-inline: .5em;
-           }
+            padding-inline: 0;
+
+            &-form {
+                min-width: unset;
+                max-width: unset;
+                width: 100%;
+                padding-inline: .5em;
+            }
         }
     }
 
-    &_guide{
+    &_guide {
         @include section();
         display: flex;
         flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
-        &-title{
+
+        &-title {
             @include section-title();
             text-align: center;
         }
-        &-video{
+
+        &-video {
             aspect-ratio: 2/1;
             width: 80%;
             max-width: 60em;
             height: auto;
+
             @media (max-width: 799px) {
                 width: 100%;
             }
         }
     }
 
-    &_stages{
+    &_stages {
         @include section();
         background-color: $Lavender;
-        
+        padding-inline: 10%;
+
         &-title {
             @include section-title();
             text-align: center;
+        }
+    }
+
+    &_criterias {
+        @include section();
+
+        &-title {
+            @include section-title();
+        }
+
+        &-container {
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 1.2em;
+            white-space: pre-wrap;
+            font-size: 1.5em;
+
+            @media (max-width: 799px) {
+                font-size: 1.2em;
+            }
+        }
+    }
+
+    &_footer {
+        margin-top: auto;
+        color: white;
+        font-weight: 600;
+
+        &_top {
+            padding: 2em 2.5em 3em;
+            background-color: #9198CA;
+            border-bottom: .1vmin solid white;
+
+            &-title {
+                font-size: 2em;
+                margin-bottom: .8em;
+            }
+
+            &-container {
+                display: flex;
+                flex-flow: row;
+                justify-content: space-between;
+                font-size: 1.2em;
+
+                &_left,
+                &_right {
+                    display: flex;
+                    flex-flow: column nowrap;
+                    gap: .8em;
+                }
+
+                &_right-element {
+                    text-align: right;
+                }
+            }
+        }
+
+        &_bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #828AC1;
+            padding: .5em 1em;
+
+            &-copy {
+                text-align: center;
+                font-size: 1.2em;
+            }
+
+            &-socials {
+                display: flex;
+                gap: 2em;
+
+                &-link svg {
+                    aspect-ratio: 1;
+                    height: 2em;
+                }
+            }
+
+        }
+
+        @media (max-width: 799px) {
+            &_top {
+                padding-inline: .5em;
+
+                &-container {
+                    flex-direction: column;
+                    gap: 2em;
+
+                    &_right-element {
+                        text-align: left;
+                    }
+                }
+            }
+
+            &_bottom {
+                flex-flow: column nowrap;
+                align-items: center;
+                gap: 1em;
+            }
         }
     }
 }

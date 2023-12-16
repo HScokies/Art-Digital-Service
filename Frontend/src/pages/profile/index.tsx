@@ -1,7 +1,7 @@
 import './style.scss'
 import Logo from 'images/logo.webp'
 import Icons from 'images/icons.svg'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, FileInput, Stage } from 'src/components'
 
 const ProfilePage = () => {
@@ -46,23 +46,35 @@ const ProfilePage = () => {
             "Контент раздела «Услуги или товары»"
         ]
     }
+    const [scrollActive, setScrollActive] = useState(false)
+    document.addEventListener('scroll', () => setScrollActive(window.scrollY > 100))
+
     const [menuActive, setMenuActive] = useState(false)
+    document.addEventListener('click', (e) => {
+        const element = e.target as HTMLElement;
+        if (!element.classList.contains('usermenu')) {
+            setMenuActive(false)
+        }
+    })
     const handleLogout = () => {
         console.debug("logout")
     }
+
     return (
-        <div className='profilepage'>
+        <div className='profilepage' >
             <header className='profilepage_header'>
-                <img src={Logo} alt='Logo.webp' className='profilepage_header-logo image' />
-                <h1 className='profilepage_header-logo text'>Цифра&bull;Дизайн&bull;Сервис</h1>
-                <div className='profilepage_header-user_container'>
-                    <span className='profilepage_header-user_container-user'>
+                <div className='profilepage_header_logocontainer'>
+                    <img src={Logo} alt='Logo.webp' className='profilepage_header_logocontainer-logo image' />
+                    <h1 className='profilepage_header_logocontainer-logo text'>Цифра&bull;Дизайн&bull;Сервис</h1>
+                </div>
+                <div className='profilepage_header-user_container usermenu' onClick={() => setMenuActive(!menuActive)}>
+                    <span className='profilepage_header-user_container-user usermenu'>
                         {dbdata.firstName}
                     </span>
-                    <svg className='profilepage_header-user_container-dropdown'>
+                    <svg className='profilepage_header-user_container-dropdown usermenu'>
                         <use xlinkHref={Icons + "#downarrow"} />
                     </svg>
-                    <ul className='profilepage_header-user_container-menu'>
+                    <ul className={`profilepage_header-user_container-menu ${menuActive ? 'active' : ''}`}>
                         <li className="profilepage_header-user_container-menu-item">
                             <span className='profilepage_header-user_container-menu-item-username'>
                                 {dbdata.firstName} {dbdata.lastName}
@@ -71,7 +83,7 @@ const ProfilePage = () => {
                                 {dbdata.email}
                             </span>
                         </li>
-                        <li className="profilepage_header-user_container-menu-item">
+                        <li className="profilepage_header-user_container-menu-item" onClick={() => handleLogout()}>
                             <span className='profilepage_header-user_container-menu-item-logout'>
                                 Выйти
                             </span>
@@ -176,7 +188,7 @@ const ProfilePage = () => {
                     </div>
                 </section>
             </footer>
-            <span className={`scroll-top ${window.scrollY > 100 ? 'active' : ''}`} onClick={() => window.scrollTo(0, 0)}>
+            <span className={`scroll-top ${scrollActive ? 'active' : ''}`} onClick={() => window.scrollTo(0, 0)}>
                 <svg>
                     <use xlinkHref={Icons + "#uparrow"} />
                 </svg>

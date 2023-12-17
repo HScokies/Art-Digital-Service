@@ -5,6 +5,7 @@ import ForgotPasswordPage from "./forgotPassword";
 import PasswordResetPage from "./reset";
 import PersonalDataPage from "./personalData";
 import ProfilePage from "./profile";
+import DashboardPage from "./dashboard";
 
 
 export{
@@ -14,5 +15,6 @@ export{
     ForgotPasswordPage,
     PasswordResetPage,
     PersonalDataPage,
-    ProfilePage
+    ProfilePage,
+    DashboardPage
 }

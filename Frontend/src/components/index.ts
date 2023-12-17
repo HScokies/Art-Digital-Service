@@ -5,6 +5,7 @@ import Combobox from "./combobox";
 import Checkbox from "./checkbox";
 import FileInput from "./fileInput";
 import Stage from "./stage";
+import AsideMenu from "./asideMenu";
 
 export {
     Input,
@@ -13,5 +14,6 @@ export {
     Combobox,
     Checkbox,
     FileInput,
-    Stage
+    Stage,
+    AsideMenu
 }

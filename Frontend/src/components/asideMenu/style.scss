@@ -1,0 +1,53 @@
+@import 'styles/variables.scss';
+
+.aside {
+    position: sticky;
+    width: 5em;
+    height: 100%;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.15) 2px 4px 20px 0px;
+    display: flex;
+    flex-flow: row nowrap;
+    &_menu {       
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        gap: 1em; 
+        width: 100%;
+        border-right: .1vmin solid #d9d9d9;
+        &-logo {
+            height: 5.5em;
+            cursor: pointer;
+            user-select: none;
+            padding-bottom: 1em;
+            border-bottom: .1vmin solid #d9d9d9;
+        }
+        &-element{
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            transition: background-color ease-in-out .1s;
+            cursor: pointer;
+            & svg{
+                aspect-ratio: 1;
+                height: 3.5em;
+            }
+            &:hover, &.active{
+                background-color: #0000000A;
+            }
+            &#logout{
+                margin-top: auto;
+                border-top: .1vmin solid #d9d9d9;
+                & svg{
+                    transition: stroke ease-in-out .5s;
+                    stroke: black;
+                }
+                &:hover svg{
+                    stroke: $Danger;
+                }
+            }
+        }
+    }
+}

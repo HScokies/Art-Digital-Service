@@ -1,4 +1,4 @@
-import { AccessPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage } from "./pages"
+import { AccessPage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage } from "./pages"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -15,6 +15,8 @@ function App() {
         
         <Route path="form" element={<PersonalDataPage/>}/>
         <Route path="profile" element={<ProfilePage/>}/>
+
+        <Route path="dashboard" element={<DashboardPage/>}/>
       </Routes>
     </BrowserRouter>
   )

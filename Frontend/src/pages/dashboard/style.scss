@@ -1,0 +1,9 @@
+.dashboardpage{
+    display: flex;
+    flex-flow: row nowrap;
+    height: 100vh;
+    background-color: #E3E5F3;
+    &-content{
+        width: 100%;
+    }
+}

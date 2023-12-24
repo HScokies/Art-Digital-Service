@@ -24,6 +24,9 @@
                     visibility: hidden;
                     aspect-ratio: 1;
                     height: 1em;
+                    &.active{
+                        visibility: visible;
+                    }
 
                     &.asc {
                         visibility: visible;

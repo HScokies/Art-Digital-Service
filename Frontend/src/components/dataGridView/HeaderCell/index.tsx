@@ -1,10 +1,11 @@
 import Icons from 'images/icons.svg'
 import { useEffect, useRef, useState } from 'react'
-import { IHeaderCell, orderBy } from '../interfaces';
+import { IColumnOptions, IHeaderCell, orderBy, param } from '../interfaces';
 
 
 
 const HeaderCell = ({ id, title, setSort, activeSort, options, setFilters, activeFilters }: IHeaderCell) => {
+    //#region handleSort
     const sortStates: (orderBy | undefined)[] = [
         undefined,
         {
@@ -32,6 +33,7 @@ const HeaderCell = ({ id, title, setSort, activeSort, options, setFilters, activ
         sortStatesIndex.current = (sortStatesIndex.current + 1) % sortStates.length
         setSort(sortStates[sortStatesIndex.current])
     }
+    //#endregion
 
     //#region handle options menu visibility
     const [menuActive, setMenuActive] = useState(false)
@@ -48,48 +50,55 @@ const HeaderCell = ({ id, title, setSort, activeSort, options, setFilters, activ
         }
     }, [])
     //#endregion
-    const handleOptionToggle = (optionId: string, status: boolean) => {
+    const [filtersActive, setFiltersActive] = useState(false)
+    const handleOptionToggle = (param: param, status: boolean) => {
         const newFilters = activeFilters?.map((e) => {
-            if (e.column == id && e.options){
-                const filter = e.options.find(o => o.id == optionId)
-               if (filter) filter.isActive = status
+            if (e.column == id && e.options) {
+                const filter = e.options.find(o => o.id == param.id)
+                if (filter) filter.isActive = status
+                const isFiltered = e.options.find(o => !o.isActive)
+                setFiltersActive(isFiltered?true : false)
             }
             return e
         })
         if (setFilters)
-            setFilters(newFilters? newFilters : [])
+            setFilters(newFilters ? newFilters : [])
     }
 
 
-return (
-    <th className='datagrid-cell header'>
-        <div className='title-wrapper' onClick={() => handleSortChange()}>
-            {title}
-            <svg className={sortClassName()}>
-                <use xlinkHref={Icons + '#arrow_SM'} />
-            </svg>
-        </div>
-        <div className='filters'>
-            <span id={id} onClick={() => setMenuActive(true)} className={`datagrid-cell icon-wrapper ${options ? 'active' : ''}`}>
-                <svg id={id}>
-                    <use id={id} xlinkHref={Icons + "#burger"} />
+    return (
+        <th className='datagrid-cell header'>
+            <div className='title-wrapper' onClick={() => handleSortChange()}>
+                {title}
+                <svg className={filtersActive ? 'active' : ''}>
+                    <use xlinkHref={Icons + '#filter'} />
                 </svg>
-            </span>
-            <div className={`datagrid-cell menu ${menuActive ? 'active' : ''}`}>
-                {
-                    options?.map((e) => {
-                        const id = (Date.now() * Math.random()).toString(36);
-                        return (
-                            <div key={id} className='datagrid-cell menu-option' onClick={(e) => e.stopPropagation()}>
-                                <input checked={e.isActive} id={id} type='checkbox' onChange={(ev) => handleOptionToggle(e.id, ev.target.checked)} />
-                                <label htmlFor={id}>{e.title}</label>
-                            </div>
-                        )
-                    })
-                }
+
+                <svg className={sortClassName()}>
+                    <use xlinkHref={Icons + '#arrow_SM'} />
+                </svg>
             </div>
-        </div>
-    </th>
-)
+            <div className='filters'>
+                <span id={id} onClick={() => setMenuActive(true)} className={`datagrid-cell icon-wrapper ${options ? 'active' : ''}`}>
+                    <svg id={id}>
+                        <use id={id} xlinkHref={Icons + "#burger"} />
+                    </svg>
+                </span>
+                <div className={`datagrid-cell menu ${menuActive ? 'active' : ''}`}>
+                    {
+                        options?.map((e) => {
+                            const id = (Date.now() * Math.random()).toString(36);
+                            return (
+                                <div key={id} className='datagrid-cell menu-option' onClick={(e) => e.stopPropagation()}>
+                                    <input checked={e.isActive} id={id} type='checkbox' onChange={(ev) => handleOptionToggle(e, ev.target.checked)} />
+                                    <label htmlFor={id}>{e.title}</label>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            </div>
+        </th>
+    )
 }
 export default HeaderCell

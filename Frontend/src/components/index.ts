@@ -6,6 +6,7 @@ import Checkbox from "./checkbox";
 import FileInput from "./fileInput";
 import Stage from "./stage";
 import AsideMenu from "./asideMenu";
+import DataGridView from "./dataGridView";
 
 export {
     Input,
@@ -15,5 +16,6 @@ export {
     Checkbox,
     FileInput,
     Stage,
-    AsideMenu
+    AsideMenu,
+    DataGridView,
 }

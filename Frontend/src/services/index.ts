@@ -1,5 +1,7 @@
 import { Validator } from "./validator";
+import { API } from "./api";
 
 export{
-    Validator
+    Validator,
+    API
 }

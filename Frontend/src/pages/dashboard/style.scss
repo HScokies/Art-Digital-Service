@@ -2,8 +2,11 @@
     display: flex;
     flex-flow: row nowrap;
     height: 100vh;
-    background-color: #E3E5F3;
+    min-width: 600px;
+    overflow: auto;
+    background-color: #f8f9fa;
     &-content{
         width: 100%;
+        padding: 1em 3em;
     }
 }

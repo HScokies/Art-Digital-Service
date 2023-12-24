@@ -1,0 +1,92 @@
+@import 'styles/variables.scss';
+
+.datagrid {
+    & thead{
+        background-color: #f1f3f5;
+    }
+    &-cell {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        &.header {
+            font-size: 1.3em;
+            font-weight: 600;            
+            & .title-wrapper {
+                width: 100%;
+                cursor: pointer;
+                user-select: none;
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                gap: .1em;
+
+                & svg {
+                    visibility: hidden;
+                    aspect-ratio: 1;
+                    height: 1em;
+
+                    &.asc {
+                        visibility: visible;
+                    }
+
+                    &.desc {
+                        visibility: visible;
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+
+            & .filters {
+                display: flex;
+                flex-flow: column;
+
+                & .icon-wrapper {
+                    visibility: hidden;
+
+                    &.active {
+                        visibility: visible;
+                    }
+                    transition: opacity ease-in-out .1s;
+                    opacity: 0;
+
+                    & svg {
+                        aspect-ratio: 1;
+                        height: 1em;
+                    }
+                }
+
+                & .menu {
+                    display: none;
+                    &.active{
+                        display: flex;
+                    }
+                    user-select: none;
+                    position: absolute;
+                    min-width: 100px;
+                    right: 0;
+                    top: 0;
+                    flex-flow: column nowrap;   
+                    background-color: #f8f9fa;                 
+                    box-shadow: 1px 3px 7px 0px rgba(0, 0, 0, 0.25);
+                    &-option{
+                        width: 100%;                 
+                        font-weight: 500;
+                        font-size: 1em;        
+                        padding: .3em .5em;
+                        white-space: nowrap;
+                        & input{
+                            margin-right: .5em;
+                            accent-color: gray;
+                        }            
+                    }
+                }
+            }
+
+            &:hover {
+                & .filters .icon-wrapper {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

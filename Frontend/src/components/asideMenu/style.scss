@@ -12,7 +12,6 @@
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
-        gap: 1em; 
         width: 100%;
         border-right: .1vmin solid #d9d9d9;
         &-logo {
@@ -33,17 +32,18 @@
             & svg{
                 aspect-ratio: 1;
                 height: 3.5em;
+                stroke: black;
+                transition: stroke ease-in-out .5s;
             }
-            &:hover, &.active{
+            &:hover{
                 background-color: #0000000A;
+            }
+            &.active svg{
+                stroke: $Glaucous;
             }
             &#logout{
                 margin-top: auto;
                 border-top: .1vmin solid #d9d9d9;
-                & svg{
-                    transition: stroke ease-in-out .5s;
-                    stroke: black;
-                }
                 &:hover svg{
                     stroke: $Danger;
                 }

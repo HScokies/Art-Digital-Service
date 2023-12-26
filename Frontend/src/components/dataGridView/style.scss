@@ -1,17 +1,34 @@
 @import 'styles/variables.scss';
 
-.datagrid {
+.datagrid {    
+    white-space: nowrap;
+    border-collapse: collapse;
+    overflow-x: auto;
+    & td, th{
+        border: 1px solid #e6e8eb;
+        padding: .5em 1em;
+    }
     & thead{
         background-color: #f1f3f5;
     }
+    &-row{
+        &.error{
+            text-align: center;
+            font-size: calc(.5em + 1vw);
+        }
+    }
     &-cell {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        &.header {
-            font-size: 1.3em;
+        min-width: 45px;
+        font-size: 1.1em;
+        & .header {
+            position: relative;
+            width: 100%;
+            display: inline-flex;  
             font-weight: 600;            
             & .title-wrapper {
+                overflow: hidden;
+                text-overflow: ellipsis;
+
                 width: 100%;
                 cursor: pointer;
                 user-select: none;
@@ -24,6 +41,9 @@
                     visibility: hidden;
                     aspect-ratio: 1;
                     height: 1em;
+                    &.inactive{
+                        visibility: collapse;
+                    }
                     &.active{
                         visibility: visible;
                     }
@@ -39,11 +59,16 @@
                 }
             }
 
-            & .filters {
+            & .filters {                
                 display: flex;
+                align-items: center;
                 flex-flow: column;
 
                 & .icon-wrapper {
+                    height: 100%;
+                    display: flex;
+                    justify-content: end;
+                    align-items: center;
                     visibility: hidden;
 
                     &.active {
@@ -72,11 +97,11 @@
                     background-color: #f8f9fa;                 
                     box-shadow: 1px 3px 7px 0px rgba(0, 0, 0, 0.25);
                     &-option{
+                        display: flex;
                         width: 100%;                 
                         font-weight: 500;
                         font-size: 1em;        
                         padding: .3em .5em;
-                        white-space: nowrap;
                         & input{
                             margin-right: .5em;
                             accent-color: gray;

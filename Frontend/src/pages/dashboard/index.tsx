@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './style.scss'
 import { AsideMenu, DataGridView } from 'src/components'
-import { orderBy } from 'components/dataGridView/interfaces'
+import { API } from 'src/services'
 
 
 
@@ -10,7 +10,6 @@ import { orderBy } from 'components/dataGridView/interfaces'
 
 const DashboardPage = () => {
     const [content, setContent] = useState<JSX.Element>()
-    const [activeSort, setActiveSort] = useState<orderBy | undefined>()
 
     return (
         <div className='dashboardpage'>
@@ -19,7 +18,8 @@ const DashboardPage = () => {
                     {
                         iconId: '#users',
                         title: 'Участники',
-                        onClick: () => setContent(<DataGridView columns={[
+                        onClick: () => setContent(<DataGridView 
+                            columns={[
                             {
                                 id: "users",
                                 title: "Участник",
@@ -31,45 +31,37 @@ const DashboardPage = () => {
                             {
                                 id: "cases",
                                 title: "Направление",
-                                options: [
-                                    {
-                                        id: '3dModeling',
+                                filters: [
+                                    {                                    
                                         title: '3D моделирование для компьютерных игр',
                                         name: 'excludeCase',
                                         value: 1,
-                                        isActive: true,
                                     },
                                     {
-                                        id: 'gamedev',
                                         title: 'Разработка компьютерных игр',
                                         name: 'excludeCase',
                                         value: 2,
-                                        isActive: true,
                                     },
                                 ]
                             },
                             {
                                 id: "score",
                                 title: "Балл",
-                                options: [
+                                filters: [
                                     {
-                                        id: 'hasScore',
                                         title: 'Есть значение',
                                         name: 'hasScore',
                                         value: false,
-                                        isActive: true,
                                     },
                                     {
-                                        id: 'noScore',
                                         title: 'Нет значения',
                                         name: 'noScore',
                                         value: false,
-                                        isActive: true,
                                     }
                                 ]
                             }
-                        ]
-                        }/>)
+                        ]} source={API.getUsers}
+                        />)
                     },
                     {
                         iconId: '#book',

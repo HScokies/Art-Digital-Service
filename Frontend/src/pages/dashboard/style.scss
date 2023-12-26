@@ -7,6 +7,6 @@
     background-color: #f8f9fa;
     &-content{
         width: 100%;
-        padding: 1em 3em;
+        padding: calc(1em + .5vh) 1.5vw;
     }
 }

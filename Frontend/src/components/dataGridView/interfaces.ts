@@ -36,3 +36,8 @@ export interface IRow{
     id: number,
     data: string[]
 }
+
+export interface pagination{
+    rows: number,
+    page: number
+}

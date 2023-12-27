@@ -3,17 +3,43 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: $Glaucous;
-    color: white;
-    text-transform: uppercase;
+    border: .1vmin solid;
     text-align: center;
     padding: .2em 2em;
-    border-radius: 15px;
-    font-weight: 600;
+    border-radius: 15px;    
     font-size: 2em;
     cursor: pointer;
     user-select: none;
     transition: all ease-in-out .2s;
+    &.brand{
+        background-color: $Glaucous;
+        color: white;
+        text-transform: uppercase;
+        font-weight: 600;
+        &:not(:disabled):hover{
+            background-color: #757eb9;
+        }
+    }        
+    &.passive{
+        border-color: #e6e8eb;
+        background-color: #fbfcfd;
+        color: black;
+        text-transform: capitalize;
+        font-weight: 450;
+        &:hover{
+            background-color: #ededed;
+        }
+    }
+    &.danger{
+        border-color: $Danger;
+        color: $Danger;
+        background-color: #fff8f8;
+        font-weight: 450;
+        &:hover {
+            color: white;
+            background-color: $Danger;
+        }
+    }
     @media (max-width: 799px) {
         font-size: 1.5em;
     }

@@ -55,7 +55,7 @@ const HeaderCell = ({ index, columnData, setSort, activeSort, setActiveFilters, 
 
 
     return (
-        <th className={`datagrid-cell col_${index}`} onMouseDown={(e) => console.debug(e)}>
+        <th className={`datagrid-cell col_${index}`}>
             <div className='header'>
             <div className='title-wrapper' onClick={() => handleSortChange()}>
                 {columnData.title}

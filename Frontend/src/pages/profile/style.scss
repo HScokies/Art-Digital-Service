@@ -88,6 +88,9 @@
             display: flex;
             align-items: center;
             gap: .5em;
+            & svg{
+                fill: white;
+            }
 
             &-user {
                 font-weight: 600;

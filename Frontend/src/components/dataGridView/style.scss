@@ -32,73 +32,6 @@
     }
 }
 
-.datagrid_menu-top {
-    height: 3em;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    gap: 1em;
-    width: 100%;
-
-    & .btn-wrapper {
-        display: flex;
-        flex-flow: row nowrap;
-        gap: 1em;
-        & .button{
-            font-size: 1.3em;
-            text-transform: capitalize;
-        }
-    }
-
-    & .searchbar {
-        width: 100%;
-        display: block;
-        border: 1px solid #e6e8eb;
-        border-radius: .5em;
-        font-size: calc(1em + .7vw);
-        padding: .1em .5em;
-    }
-
-    .highlighted-menu {
-        display: flex;
-        flex-flow: row nowrap;
-        gap: 1.5em;
-
-        & .rows-controll {
-            display: flex;
-            flex-flow: row nowrap;
-            align-items: center;
-            gap: 1em;
-            padding-inline: .75em;
-            border-right: .3vmin solid #e6e8eb;
-
-            &-label {
-                font-size: 1.5em;
-            }
-
-            &-btn {
-                display: inline-flex;
-                justify-content: center;
-                align-items: center;
-                transition: all ease-in-out .3s;
-                border-radius: .35em;
-                padding: .2em;
-                box-shadow: 1px 2px 4px 0px rgba(0, 0, 0, 0.25);
-
-                &:hover {
-                    background-color: #ededed;
-                }
-
-                & svg {
-                    aspect-ratio: 1;
-                    height: 1.35em;
-                }
-            }
-        }
-    }
-
-    margin-bottom: 1em;
-}
 
 .tableWrapper {
     max-height: 60vh;
@@ -115,7 +48,7 @@
 
     & td,
     th {
-        border: 1px solid #e6e8eb;
+        border: .1vmin solid #e6e8eb;
         padding: .5em 1em;
     }
 

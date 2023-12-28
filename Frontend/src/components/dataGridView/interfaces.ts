@@ -32,12 +32,12 @@ export interface IColumn{
     filters?: param[]
 }
 
+export interface IData{
+    pageCount: number,
+    rows: IRow[]
+}
+
 export interface IRow{
     id: number,
     data: string[]
-}
-
-export interface pagination{
-    rows: number,
-    page: number
 }

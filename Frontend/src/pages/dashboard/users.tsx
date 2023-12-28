@@ -4,9 +4,10 @@ import { API } from "src/services"
 const Users = () => (
     <DataGridView
         searchLabel="Участник"
-        source={API.getUsers}
-        exportSource={API.exportUsers}
-        deleteSource={API.deleteUsers}
+        dataSource={API.getUsers}
+        exportProvider={API.exportUsers}
+        deleteProvider={API.deleteUsers}
+        rowsPerPageOptions={new Set([5,10,25,50,75])}
         columns={[
             {
                 id: "users",

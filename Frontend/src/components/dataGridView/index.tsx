@@ -99,6 +99,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                     </table>
                 </div>
                 <BottomMenu
+                    currentPage={currentPage}
                     setPage={setCurrentPage}
                     setRowsPerPage={setRowsPerPage}
                     rowsPerPageOptions={rowsPerPageOptions}

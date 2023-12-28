@@ -6,32 +6,31 @@ interface props {
     setRowsPerPage: React.Dispatch<React.SetStateAction<number>>,
     setPage: React.Dispatch<React.SetStateAction<number>>,
     rowsPerPageOptions: Set<number>,
+    currentPage: number,    
     pageCount: number
 }
-const BottomMenu = ({ setRowsPerPage, setPage, rowsPerPageOptions, pageCount }: props) => {
-    const [currentPage, setCurrentPage] = useState(1)
+const BottomMenu = ({ setRowsPerPage, setPage, currentPage, rowsPerPageOptions, pageCount }: props) => {
+    
+    useEffect(() => {
+        handleBlur(currentPage)
+    }, [pageCount])
+    
     //page validator
     const handleBlur = (Page: number) => {
-        if (Page < 1)
-            Page = 1
         if (Page > pageCount)
             Page = pageCount
-
-        setCurrentPage(Page)
+        if (Page < 1)
+            Page = 1
         setPage(Page)
     }
 
     const handlePageChange = (type: 'inc' | 'dec') => {
-        let Page = currentPage;
         if (type=='inc' && currentPage<pageCount){
-            Page+=1
+            setPage(currentPage+1)
         }
         else if (currentPage>1){
-            Page-=1
+            setPage(currentPage-1)
         }
-        
-        setCurrentPage(Page)
-        setPage(Page)
     }
     return (
         <div className='datagrid_menu-bottom'>
@@ -49,7 +48,7 @@ const BottomMenu = ({ setRowsPerPage, setPage, rowsPerPageOptions, pageCount }: 
             <div className='container'>
                 <span className='bottom-menu-label'>
                     Страница
-                    <input min={1} max={pageCount} type='number' value={currentPage} onChange={(e) => setCurrentPage(+e.target.value)} onBlur={(e) => handleBlur(+e.target.value)} />
+                    <input min={1} max={pageCount} type='number' value={currentPage} onChange={(e) => setPage(+e.target.value)} onBlur={(e) => handleBlur(+e.target.value)} />
                     из {pageCount}
                 </span>
             </div>

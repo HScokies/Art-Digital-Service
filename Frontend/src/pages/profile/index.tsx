@@ -1,63 +1,54 @@
 import './style.scss'
 import Logo from 'images/logo.webp'
 import Icons from 'images/icons.svg'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Button, FileInput, Stage } from 'src/components'
+import { API } from 'src/services'
+import { AuthContext } from 'src/hooks/authContext'
+import parse from 'html-react-parser';
+import { IProfileData } from 'src/interfaces'
 
 const ProfilePage = () => {
-    const dbdata = {
-        firstName: "Иван",
-        lastName: "Иванов",
-        email: "example@email.com",
-        task: `Разработать одностраничный сайт на тильде или 
-        при помощи любого бесплатного онлайн конструктора 
-        на тему: сайт-визитка компании. 
-        По итогу работы подготовить презентацию 
-        с рядом обязательных слайдов.`,
-        sendedFiles: false,
-        statustext: `Ваша заявки принята и находится на рассмотрении.
-        Ожидайте результатов!`,
-        guideURL: 'https://rutube.ru/play/embed/463d2697d78bef84dc937b06e1a42699',
-        stages: [
-            'Выбрать компанию, для которой будет разработан сайт (название, сфера деятельности, товары или услуги, информация о команде этой компании; подобрать фото, текст, видео, ссылки)',
-            'Создать «Заголовок страницы» (текст, фото)',
-            'Создать раздел «Услуги или товары» (текст, фото, кнопки, ссылки)',
-            'Создать раздел «Наша команда» (текст, фото, видео, ссылки, кнопки)',
-            'Создать раздел «Контакты» (ссылки, текст)',
-            `Создать «Подвал (футер* сайта)» (кнопка обратной связи, знак авторского права,иконки социальных сетей)
-*Футер сайта (подвал) – это сквозной повторяющийся структурный элемент, расположенный в нижней части страниц сайта`,
-            'Содержательно наполнить контентом и оформить все разделы',
-            'Дизайн сайта - оформить сайт в едином стиле',
-            `Подготовить презентацию
-1-й слайд – титульный (название сайта, название конструктора, фамилия, имя, отчество участника)
-2-й слайд – обосновать, почему выбрали именно эту компанию (до 5 предложений)
-3-й слайд – скрин «Заголовка» сайта
-4-й слайд – скрин раздела «Услуги или товары»
-5-й слайд – скрин раздела «Наша команда»
-6-й слайд – скрин раздела «Контакты»
-7-й слайд – скрин «Подвала (футера сайта)»
-8-й слайд - ссылка на разработанный и опубликованный сайт `,
-            'Отправить заявку на участие в олимпиаде, прикрепив презентацию в формате pdf'
-        ],
-        criterias: [
-            "Оформление титульного листа",
-            "Обоснованность выбора компании",
-            "«Заголовок» сайта",
-            "Контент раздела «Услуги или товары»"
-        ]
-    }
-    const [scrollActive, setScrollActive] = useState(false)
-    document.addEventListener('scroll', () => setScrollActive(window.scrollY > 100))
+    const { setAuthorized } = useContext(AuthContext)
+    const [scrollActive, setScrollActive] = useState(false)  
 
+    const [data, setData] = useState<IProfileData>()
+    useEffect(() => {
+        setData(API.getProfileData)
+    }, [])
     const [menuActive, setMenuActive] = useState(false)
-    document.addEventListener('click', (e) => {
-        const element = e.target as HTMLElement;
-        if (!element.classList.contains('usermenu')) {
-            setMenuActive(false)
+    useEffect(() => {
+        const toggleUserMenu = (e: MouseEvent) => {
+            const element = e.target as HTMLElement;
+            if (!element.classList.contains('usermenu')) {
+                setMenuActive(false)
+            }
         }
-    })
+        document.addEventListener('click',  toggleUserMenu)
+        return(() => document.removeEventListener('click', toggleUserMenu))
+    }, [])
+
+    useEffect(() => {
+        const updateScrollState = () => {
+            setScrollActive(window.scrollY > 100)            
+        }
+        document.addEventListener('scroll', updateScrollState)
+        return(() => document.removeEventListener('scroll', updateScrollState))
+    }, [])
+    
     const handleLogout = () => {
-        console.debug("logout")
+        API.logout()
+        setAuthorized(false)
+    }
+
+    const [buttonActive, setActive] = useState(false)
+    const handleFileChange = () => {
+        const inputs = document.getElementsByClassName("fileinput_wrapper-field")
+        for (let i=0; i<inputs.length; i++){
+            const input = inputs[i] as HTMLInputElement
+            if (!input.files?.length) return setActive(false)
+        }
+    setActive(true)
     }
 
     return (
@@ -69,7 +60,7 @@ const ProfilePage = () => {
                 </div>
                 <div className='profilepage_header-user_container usermenu' onClick={() => setMenuActive(!menuActive)}>
                     <span className='profilepage_header-user_container-user usermenu'>
-                        {dbdata.firstName}
+                        {data?.user.firstName}
                     </span>
                     <svg className='profilepage_header-user_container-dropdown usermenu'>
                         <use xlinkHref={Icons + "#downarrow"} />
@@ -77,10 +68,10 @@ const ProfilePage = () => {
                     <ul className={`profilepage_header-user_container-menu ${menuActive ? 'active' : ''}`}>
                         <li className="profilepage_header-user_container-menu-item">
                             <span className='profilepage_header-user_container-menu-item-username'>
-                                {dbdata.firstName} {dbdata.lastName}
+                                {data?.user.firstName} {data?.user.lastName}
                             </span>
                             <span className='profilepage_header-user_container-menu-item-email'>
-                                {dbdata.email}
+                                {data?.user.email}
                             </span>
                         </li>
                         <li className="profilepage_header-user_container-menu-item" onClick={() => handleLogout()}>
@@ -96,23 +87,29 @@ const ProfilePage = () => {
                     Задание
                 </h2>
                 <p className='profilepage_task-descr'>
-                    {dbdata.task}
+                    {data?.case.task&&parse(data.case.task)}
                 </p>
             </section>
             <section className='profilepage_status'>
                 {
-                    dbdata.sendedFiles ?
+                    data?.user.status?
                         <>
-                            <h2 className='profilepage_status-title_wait'>Результаты</h2>
-                            <p>%Placeholder%</p>
+                            <h2 className='profilepage_status-title_results'>Результаты</h2>
+                            <p className='profilepage_status-text'>{data.user.status.name}</p>
+                            {
+                                data.user.status.file && 
+                                <a onClick={() => API.getFile(data.user.status!.file!)} className='profilepage_status-text link'>
+                                Скачать сертификат участника
+                                </a>
+                            }
                         </>
                         :
                         <>
                             <h2 className='profilepage_status-title'>Отправить задание</h2>
                             <form className='profilepage_status-form' id='task-form'>
-                                <FileInput label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />
-                                <FileInput label='Выполненное задание' name='solution' accept={['.pdf']} />
-                                <Button isActive={true}>
+                                <FileInput changeHandler={handleFileChange} label='Согласие на обработку персональных данных' required={true} name='consent' accept={['.pdf']} />
+                                <FileInput changeHandler={handleFileChange} label='Выполненное задание' name='solution' required={true} accept={['.pdf']} />
+                                <Button isActive={buttonActive}>
                                     Отправить
                                 </Button>
                             </form>
@@ -124,14 +121,14 @@ const ProfilePage = () => {
                 <h2 className='profilepage_guide-title'>
                     Мастер-класс
                 </h2>
-                <iframe className='profilepage_guide-video' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen={true} src={dbdata.guideURL}></iframe>
+                <iframe className='profilepage_guide-video' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen={true} src={data?.case.video}></iframe>
             </section>
             <section className='profilepage_stages'>
                 <h2 className='profilepage_stages-title'>
                     Порядок выполнения
                 </h2>
                 {
-                    dbdata.stages.map((e, i) => (
+                    data?.case.stages.map((e, i) => (
                         <Stage key={i} index={i + 1} text={e} />
                     ))
                 }
@@ -142,8 +139,8 @@ const ProfilePage = () => {
                 </h2>
                 <div className='profilepage_criterias-container'>
                     {
-                        dbdata.criterias.map((e, i) => (
-                            <span key={i} className='profilepage_criterias-container-criteria'>{e}</span>
+                        data?.case.criterias.map((e, i) => (
+                            <span key={i} className='profilepage_criterias-container-criteria'>{parse(e)}</span>
                         ))
                     }
                 </div>
@@ -160,13 +157,13 @@ const ProfilePage = () => {
                             <span className='profilepage_footer_top-container_left-element'>г. Челябинск, ул. Ворошилова, 12</span>
                         </address>
                         <div className='profilepage_footer_top-container_right'>
-                            <a href="" className="profilepage_footer_top-container_right-element">
+                            <a href={data?.legal.regulations} className="profilepage_footer_top-container_right-element">
                                 Положение об Олимпиаде
                             </a>
-                            <a href="" className="profilepage_footer_top-container_right-element">
+                            <a href={data?.legal.privacyPolicy} className="profilepage_footer_top-container_right-element">
                                 Политика конфиденциальности
                             </a>
-                            <a href="" className="profilepage_footer_top-container_right-element">
+                            <a href={data?.legal.processingConsent} className="profilepage_footer_top-container_right-element">
                                 Согласие на обработку персональных данных
                             </a>
                         </div>

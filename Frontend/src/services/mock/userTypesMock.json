@@ -1,0 +1,17 @@
+[
+    {
+        "id": 0,
+        "isAdult": true,
+        "name": "Студент СПО"
+    },
+    {
+        "id": 1,
+        "isAdult": true,
+        "name": "Студент ВО"
+    },
+    {
+        "id": 2,
+        "isAdult": false,
+        "name": "Школьник"
+    }
+]

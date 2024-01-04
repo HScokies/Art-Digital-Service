@@ -1,3 +1,4 @@
+import './style.scss'
 import { Button } from "src/components"
 
 interface props{

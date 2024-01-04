@@ -6,6 +6,7 @@ import PasswordResetPage from "./reset";
 import PersonalDataPage from "./personalData";
 import ProfilePage from "./profile";
 import DashboardPage from "./dashboard";
+import CasePage from "./Case";
 
 
 export{
@@ -16,5 +17,6 @@ export{
     PasswordResetPage,
     PersonalDataPage,
     ProfilePage,
-    DashboardPage
+    DashboardPage,
+    CasePage
 }

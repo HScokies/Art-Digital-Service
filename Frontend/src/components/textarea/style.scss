@@ -1,0 +1,54 @@
+@mixin active-label {
+    top: .3em;
+    font-size: 1em;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.72); 
+}
+
+.textarea {
+    cursor: text;
+    &_wrapper {
+        position: relative;        
+        min-height: 4em;
+        padding: .3em .5em;
+        outline: .1vmin solid rgba(0, 0, 0, 0.32);
+        border-radius: 5px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        &.error{
+            outline-color: #DE3341;
+        }
+        &-field {
+            overflow-y: hidden;
+            display: block;
+            line-height: 1;
+            font-size: 1.7em;
+            min-height: 0px;
+            outline: none;
+            width: 100%;
+            resize: none;            
+            &:not(:placeholder-shown),&.active{
+                margin-top: .6em;
+            }
+            &:not(:placeholder-shown) + .textarea_wrapper-label{
+                @include active-label
+            }
+        }
+
+        &-label {
+            position: absolute;
+            cursor: text;
+            font-size: 1.2em;
+            color: rgba(0, 0, 0, 0.32); 
+            user-select: none;
+            transition: all ease-in-out .2s;
+            -moz-transition: all ease-in-out .2s;
+            -webkit-transition: all ease-in-out .2s;
+            &.active{
+                @include active-label
+            }
+        }
+    }
+}

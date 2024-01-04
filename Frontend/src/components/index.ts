@@ -1,4 +1,5 @@
 import Input from "./input";
+import TextArea from "./textarea";
 import Button from "./button";
 import FormMessage from "./formMessage";
 import Combobox from "./combobox";
@@ -10,6 +11,7 @@ import DataGridView from "./dataGridView";
 
 export {
     Input,
+    TextArea,
     Button,
     FormMessage,
     Combobox,

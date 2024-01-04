@@ -1,12 +1,16 @@
 import { useState } from "react";
+import Icons from 'images/icons.svg'
 import { IRow } from "../interfaces";
 
 interface props {
     row: IRow,
-    setHighlightedRows: React.Dispatch<React.SetStateAction<Set<number>>>
+    setHighlightedRows: React.Dispatch<React.SetStateAction<Set<number>>>,
+    setCurrentRowId: React.Dispatch<React.SetStateAction<number>>
 }
 
-const DatagridRow = ({ row, setHighlightedRows }: props) => {
+const DatagridRow = ({ row, setHighlightedRows, setCurrentRowId }: props) => {
+    const updateDialog = document.getElementById("dialog-update") as HTMLDialogElement
+
     const toggleHighlighted = (isChecked: boolean) => {
         !isChecked ?
             setHighlightedRows(rows => {
@@ -17,7 +21,16 @@ const DatagridRow = ({ row, setHighlightedRows }: props) => {
 
     return (
         <tr className='datagrid-row' id={`rowid-${row.id}`}>
-            <td><input onChange={(e) => toggleHighlighted(e.target.checked)} type='checkbox' /></td>
+            <td className="datagrid-cell">
+                <div className="controll">
+                    <input onChange={(e) => toggleHighlighted(e.target.checked)} type='checkbox' />
+                    <button className='datagrid-expand' onClick={() => {setCurrentRowId(row.id); updateDialog.showModal()}}>
+                        <svg>
+                            <use xlinkHref={Icons + "#expand"} />
+                        </svg>
+                    </button>
+                </div>
+            </td>
             {
                 Object.entries(row.data).map((e, col) => (
                     <td className={`datagrid-cell col_${col}`} key={col}>{e[1]}</td>

@@ -1,8 +1,15 @@
 .fileinput {
+    width: auto;
     cursor: pointer;
-    height: 4em;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;    
+    gap: 1em;
+    height: 5.5em;
 
     &_wrapper {
+        min-width: 0;
+        flex-grow: 1;
         height: 4em;
         display: flex;
         flex-flow: row nowrap;
@@ -58,7 +65,12 @@
 
         &-icon {
             aspect-ratio: 1;
-            height: 1.25em
+            height: 1.25em;
+            &.download{
+                height: auto;
+                min-width: 2em;      
+                max-width: 2em;
+            }
         }
     }
 }

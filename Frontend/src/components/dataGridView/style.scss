@@ -1,37 +1,5 @@
 @import 'styles/variables.scss';
 
-#delete-row-dialog {
-    background-color: #f8f9fa;
-    margin: auto;
-
-    & .title {
-        width: 100%;
-        background-color: #f1f3f5;
-        font-size: 1.5em;
-        padding: 1em 1.5em;
-        font-weight: 500;
-        border-bottom: .1vmin solid #e6e8eb;
-    }
-
-    & .descr {
-        border-bottom: .1vmin solid #e6e8eb;
-        width: 100%;
-        font-size: 1.3em;
-        padding: 1.3em 1.5em;
-    }
-
-    & .button-container {
-        & .button{
-            font-size: 1.3em;            
-        }
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        gap: .5em;
-        padding: 1em 1.5em;
-    }
-}
-
 
 .tableWrapper {
     max-height: 60vh;
@@ -78,7 +46,34 @@
     &-cell {
         min-width: 45px;
         font-size: calc(.7em + .5vw);
-
+        & .controll{
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            gap: 1em;
+            & .datagrid-expand{
+                visibility: hidden;
+                aspect-ratio: 1;
+                min-height: 1em;
+                display: inline-flex;
+                align-items: center;
+                border-radius: 50%;
+                padding: .1em;                
+                &:hover{
+                    background-color: #ededed;
+                }
+                & svg{
+                    stroke: black;
+                    aspect-ratio: 1;
+                    height: 1.25em;
+                }
+            }
+            &:hover{
+                & .datagrid-expand{
+                    visibility: visible;
+                }
+            }
+        }
         & .header {
             width: 100%;
             display: inline-flex;

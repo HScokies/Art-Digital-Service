@@ -7,7 +7,7 @@
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        outline: .1vmin solid rgba(0, 0, 0, 0.32);
+        border: .1vmin solid rgba(0, 0, 0, 0.32);
         padding: .3em .5em;
         border-radius: 5px;
         height: 4em;
@@ -24,7 +24,6 @@
         &-input {
             font-size: 1.7em;
             margin-top: .6em;
-            background-color: #EEF0FB;
             width: 100%;
         }
     }

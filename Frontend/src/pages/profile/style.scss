@@ -51,6 +51,7 @@
     overflow: hidden;
 
     &_header {
+        z-index: 999;
         height: 4em;
         position: fixed;
         width: 100%;
@@ -186,8 +187,21 @@
             @include section-title();
             text-align: center;
 
-            &_wait {
+            &_results {
                 @include section-title();
+            }
+        }
+        &-text{
+            display: block;
+            font-size: 2em; 
+            &.link{
+                margin-top: .5em;
+                font-weight: 500; 
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            @media (max-width: 799px) {
+                font-size: 1.3em;
             }
         }
 

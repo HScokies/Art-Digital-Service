@@ -3,10 +3,9 @@ import HeaderCell from './HeaderCell'
 import DatagridRow from './Row'
 import { useEffect, useState } from 'react'
 import { IColumn, IData, filter, orderBy, param } from './interfaces'
-import Icons from 'images/icons.svg'
-import { Button } from 'components/index'
 import { BottomMenu, TopMenu } from './Menu'
-import { DeleteDialog } from './Modals'
+import { DeleteDialog, FormDialog } from './Modals'
+import { formProps } from './Modals/createUpdateDialog'
 
 interface props {
     searchLabel: string,
@@ -14,12 +13,16 @@ interface props {
     rowsPerPageOptions: Set<number>
     dataSource: (offset: number, take: number, filters: param[], search?: string, orderBy?: orderBy) => IData,
     exportProvider: (ids?: Set<number>) => void
-    deleteProvider: (ids: Set<number>) => void
+    deleteProvider?: (ids: Set<number>) => void,
+    updateProvider: (id: number, model: FormData) => void,
+    createProvider?: (model: FormData) => void,
+    createForm?: () => JSX.Element,
+    updateForm: ({ id }: formProps) => JSX.Element
 }
 
 
 
-const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, exportProvider, deleteProvider }: props) => {
+const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, exportProvider, deleteProvider, createProvider, updateProvider, createForm, updateForm }: props) => {
     const [data, setData] = useState<IData>()
 
     //array of highlighted rows ids
@@ -28,8 +31,10 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
     const [activeFilters, setActiveFilters] = useState(new Set<filter>([]))
     const [activeSearch, setActiveSearch] = useState<string>()
 
-    const [rowsPerPage, setRowsPerPage] = useState([...rowsPerPageOptions][0]||0)
+    const [rowsPerPage, setRowsPerPage] = useState([...rowsPerPageOptions][0] || 0)
     const [currentPage, setCurrentPage] = useState(1)
+
+    const [currentRowId, setCurrentRowId] = useState(-1)
 
     //Handle data
     useEffect(() => {
@@ -39,12 +44,11 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
         let params: param[] = []
         activeFilters.forEach((f) => params.push(f.param))
 
-        console.debug("page",currentPage,"rpp",rowsPerPage  )
         const offset = (currentPage - 1) * rowsPerPage;
         const data = dataSource(offset, rowsPerPage, params, search, activeSort)
         setData(data)
 
-    }, [activeSort, activeFilters, activeSearch, rowsPerPage, currentPage])    
+    }, [activeSort, activeFilters, activeSearch, rowsPerPage, currentPage])
 
     // handle highlightedRows
     useEffect(() => {
@@ -87,7 +91,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                         </thead>
                         <tbody className='datagrid_body'>
                             {
-                                data && data.rows.length > 0 ? data.rows.map((e) => <DatagridRow key={e.id} row={e} setHighlightedRows={setHighlightedRows} />)
+                                data && data.rows.length > 0 ? data.rows.map((e) => <DatagridRow key={e.id} row={e} setCurrentRowId={setCurrentRowId} setHighlightedRows={setHighlightedRows} />)
                                     :
                                     <tr className='datagrid-row error'>
                                         <td colSpan={columns.length + 1}>
@@ -103,12 +107,32 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                     setPage={setCurrentPage}
                     setRowsPerPage={setRowsPerPage}
                     rowsPerPageOptions={rowsPerPageOptions}
-                    pageCount={data?.pageCount||0}
+                    pageCount={data?.pageCount || 0}
                 />
             </div>
-            <DeleteDialog
-                deleteProvider={deleteProvider}
-                highlightedRows={highlightedRows}
+            {
+                deleteProvider &&
+                <DeleteDialog
+                    deleteProvider={deleteProvider}
+                    highlightedRows={highlightedRows}
+                />
+            }
+            {
+                (createProvider && createForm) &&
+                <FormDialog
+                    dialogId='create'
+                    onSubmit={createProvider}
+                    dialogTitle='Создание участника'
+                    FormElements={createForm}
+                />
+            }
+            <FormDialog
+                dialogId='update'
+                onSubmit={updateProvider}
+                dialogTitle='Обновление участника'
+                rowId={currentRowId}
+                setActiveRow={setCurrentRowId}
+                FormElements={updateForm}
             />
         </>
 

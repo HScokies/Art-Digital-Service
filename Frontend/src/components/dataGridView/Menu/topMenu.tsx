@@ -11,7 +11,8 @@ interface props {
 }
 
 const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLabel, setSearch }: props) => {
-    const dialog = document.getElementById('delete-row-dialog') as HTMLDialogElement
+    const deleteDialog = document.getElementById('delete-row-dialog') as HTMLDialogElement
+    const createDialog = document.getElementById('dialog-create') as HTMLDialogElement
     return (
         <div className='datagrid_menu-top'>
             {
@@ -27,14 +28,20 @@ const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLa
                         </div>
                         <div className='btn-wrapper'>
                             <Button variant='brand' isActive={true} clickHandler={() => exportProvider(highlightedRows)}>Экспорт</Button>
-                            <Button variant='passive' isActive={true} clickHandler={() => dialog.showModal()}>Удалить</Button>
+                            {
+                                deleteDialog&&
+                                <Button variant='passive' isActive={true} clickHandler={() => deleteDialog.showModal()}>Удалить</Button>
+                            }                            
                         </div>
                     </div>
                     :
                     <>
                         <input className='searchbar' onChange={(e) => setSearch(e.target.value)} type='search' placeholder={searchLabel} />
                         <div className='btn-wrapper'>
-                            <Button isActive={true}>Добавить</Button>
+                            {
+                                createDialog&&
+                                <Button isActive={true} clickHandler={() => createDialog.showModal()}>Добавить</Button>
+                            }                            
                             <Button variant='passive' isActive={true} clickHandler={() => exportProvider()}>Экспорт</Button>
                         </div>
                     </>

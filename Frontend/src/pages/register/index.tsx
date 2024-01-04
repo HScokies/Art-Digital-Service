@@ -2,29 +2,14 @@ import { Validator } from 'src/services'
 import './style.scss'
 import Logo from 'images/logo.webp'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Button, Combobox, Input } from 'src/components'
 import { Option } from 'src/components/combobox'
 
 const RegisterPage = () => {
     const { Email } = useParams()
     const navigate = useNavigate()
-
     const [hasErrors, setHasErrors] = useState(true);
-    const [userTypes, setUserTypes] = useState<Option[]>([
-        {
-            value: 0,
-            label: "Студент СПО"
-        },
-        {
-            value: 1,
-            label: "Студент ВО"
-        },
-        {
-            value: 2,
-            label: "Школьник"
-        },
-    ])
 
     interface IForm {
         email: HTMLInputElement,
@@ -45,7 +30,7 @@ const RegisterPage = () => {
                 <h1 className='authpage_modal-title'>Зарегистрироваться</h1>
                 <form id='register-form' onSubmit={() => navigate('/form')}>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={Email} />
-                    <Combobox label='Тип учетной записи' options={userTypes} />
+                    <Combobox name='typeId' label='Тип учетной записи' options={[]} />
                     <Input label='Пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
                     <Button isActive={!hasErrors}>Продолжить</Button>
                 </form>

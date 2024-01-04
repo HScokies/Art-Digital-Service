@@ -2,8 +2,9 @@ import './style.scss'
 import { Link, useParams } from 'react-router-dom';
 import Logo from 'images/logo.webp'
 import { Button, Input, FormMessage } from 'src/components';
-import { Validator } from 'src/services';
-import { useState } from 'react';
+import { API, Validator } from 'src/services';
+import { useContext, useState } from 'react';
+import { AuthContext } from 'src/hooks/authContext';
 
 interface IForm {
     email: HTMLInputElement,
@@ -15,7 +16,7 @@ interface IFormError {
     text: string
 }
 
-const LoginPage = () => {
+const LoginPage = () => {    
     const { Email } = useParams()
     const [hasErrors, setHasErrors] = useState(true);
 
@@ -37,6 +38,11 @@ const LoginPage = () => {
 
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const userData = API.login(new FormData(e.target as HTMLFormElement));
+        if (userData){
+            setUserInfo(userData)
+            return;
+        }
         setFormError({
             isActive: true,
             text: "Данные, использованные вами для входа, недействительны"

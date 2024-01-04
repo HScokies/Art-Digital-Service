@@ -1,0 +1,20 @@
+{
+    "users": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+    },
+    "cases": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+    },
+    "staff": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+    }
+}

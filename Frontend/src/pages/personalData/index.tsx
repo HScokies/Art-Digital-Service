@@ -127,7 +127,7 @@ const PersonalDataPage = () => {
                     <Input defaultValue={"+7 "} onChange={phoneChange} maxlength={13} label='Телефон' type='tel' name='phone' required={true} validator={Validator.validatePhoneNumber} />
                     <Input onChange={validateFields} label='Фамилия участника' type='text' name='lastName' required={true} maxlength={40} />
                     <Input onChange={validateFields} label='Имя участника' type='text' name='firstName' required={true} maxlength={40} />
-                    <Input onChange={validateFields} label='Отчество участника' type='text' name='middleName' required={true} maxlength={40} />
+                    <Input onChange={validateFields} label='Отчество участника' type='text' name='patronymic' required={true} maxlength={40} />
                     <Input onChange={validateFields} datalist="Cities" label='Город участника' type='text' name='city' required={true} />
                     <datalist id='Cities'>
                         {

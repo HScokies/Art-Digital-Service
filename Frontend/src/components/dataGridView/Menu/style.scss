@@ -21,7 +21,7 @@
         display: block;
         border: 1px solid #e6e8eb;
         border-radius: .5em;
-        font-size: calc(1em + .7vw);
+        font-size: 1.5em;
         padding: .1em .5em;
     }
 
@@ -67,6 +67,7 @@
 }
 
 .datagrid_menu-bottom{
+    height: 3em;
     user-select: none;
     display: flex;
     flex-flow: row nowrap;

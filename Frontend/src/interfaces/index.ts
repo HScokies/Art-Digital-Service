@@ -68,7 +68,7 @@ interface IUserInfo{
     status?: IProfileStatus
 }
 
-interface IProfileStatus{
+export default interface IProfileStatus{
     name: string,
     file?: string
 }

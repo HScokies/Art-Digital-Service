@@ -5,6 +5,7 @@
 	margin: 0px;
 	border: none;
 	font-family: 'Montserrat', sans-serif !important;
+	scrollbar-width: thin;
 }
 
 *,
@@ -99,6 +100,11 @@ html{
 body{
 	min-height: 100vh;
 	text-rendering: optimizeSpeed;
+}
+
+dialog{
+	max-width: 100%;
+	max-height: 100%;
 }
 
 input::-webkit-calendar-picker-indicator {

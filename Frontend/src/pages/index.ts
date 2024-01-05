@@ -5,8 +5,14 @@ import ForgotPasswordPage from "./forgotPassword";
 import PasswordResetPage from "./reset";
 import PersonalDataPage from "./personalData";
 import ProfilePage from "./profile";
+
 import DashboardPage from "./dashboard";
-import CasePage from "./Case";
+import UsersDashboardPage from "./usersDashboard";
+import CasesDashboardPage from "./casesDashboard";
+import CaseUpsertPage from "./caseEdit";
+import StaffDashboardPage from "./staffDashboard";
+
+
 
 
 export{
@@ -18,5 +24,8 @@ export{
     PersonalDataPage,
     ProfilePage,
     DashboardPage,
-    CasePage
+    UsersDashboardPage,
+    CasesDashboardPage,
+    StaffDashboardPage,
+    CaseUpsertPage
 }

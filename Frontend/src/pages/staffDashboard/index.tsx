@@ -1,7 +1,6 @@
-import { API } from 'src/services'
-import './style.scss'
-import { DataGridView } from 'src/components'
-import { formProps } from 'src/components/dataGridView/Modals/createUpdateDialog'
+import { DataGridView } from "src/components"
+import { formProps } from "src/components/dataGridView/Modals/createUpdateDialog"
+import { API } from "src/services"
 
 const CreateEmployee = () => {
     return(
@@ -13,18 +12,8 @@ const UpdateEmployee = ({ id }: formProps) => {
         <></>
     )
 }
-/*
-    Администратор - все
-    Модератор {
-        Полное взаимодествие с участниками
-    },
-    Преподаватель {
-        Изменение оценки,
-        Изменение статуса
-    }
-*/
 
-const Staff = () => {
+const StaffDashboardPage = () => {
     return(
         <DataGridView
             searchLabel="Сотрудник"
@@ -49,4 +38,4 @@ const Staff = () => {
         />
     )
 }
-export default Staff
+export default StaffDashboardPage

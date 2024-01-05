@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react'
 import './style.scss'
 import { AsideMenu } from 'src/components'
-import Users from './users'
-import Staff from './staff'
 import { menuElement } from 'src/components/asideMenu'
 import { API } from 'src/services'
 import { IPermissions } from 'src/interfaces'
-import Cases from './cases'
+import { Outlet } from 'react-router-dom'
 
 
 const DashboardPage = () => {
-    const [content, setContent] = useState<JSX.Element>()
     const [navElements, setNavElements] = useState<menuElement[]>([])
     const [permissions, setPermissions] = useState<IPermissions>()
 
@@ -25,11 +22,7 @@ const DashboardPage = () => {
                 {
                     iconId: '#users',
                     title: 'Участники',
-                    onClick: () => setContent(<Users 
-                        createPermission={permissions.users.create} 
-                        updatePermission={permissions.users.update}
-                        deletePermission={permissions.users.delete}
-                        />)
+                    to: 'dashboard/users'
                 }
             )
         }
@@ -37,7 +30,7 @@ const DashboardPage = () => {
             elements.push({
                 iconId: '#book',
                 title: 'Направления',
-                onClick: () => setContent(<Cases/>)
+                to: 'dashboard/cases'
             })
         }
         if (permissions?.staff.read){
@@ -45,7 +38,7 @@ const DashboardPage = () => {
                 {
                     iconId: '#shield',
                     title: 'Сотрудники',
-                    onClick: () => setContent(<Staff />)
+                    to: 'dashboard/staff'
                 })
         }
         setNavElements(elements)
@@ -57,7 +50,7 @@ const DashboardPage = () => {
                 items={navElements}
             />
             <section className='dashboardpage-content'>
-                {content}
+                <Outlet/>
             </section>
         </div>
     )

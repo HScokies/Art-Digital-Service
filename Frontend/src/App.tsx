@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AccessPage, CasePage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage } from "./pages"
+import { AccessPage, CaseUpsertPage, CasesDashboardPage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage, StaffDashboardPage, UsersDashboardPage } from "./pages"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthContext } from "./hooks/authContext";
 import { API } from "./services";
@@ -40,8 +40,15 @@ const App = () => {
           <Route path="form" element={<PersonalDataPage />} />
           <Route path="profile" element={<ProfilePage />} />
 
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="case/:id?" element={<CasePage/>}/>
+          <Route element={<DashboardPage />}>
+            <Route path="dashboard" element={<></>}/>
+            <Route path="dashboard/users" element={<UsersDashboardPage />} />
+            <Route path="dashboard/staff" element={<StaffDashboardPage />} />
+            <Route path="dashboard/cases" element={<CasesDashboardPage />} />
+            <Route path="dashboard/cases/:id?" element={<CaseUpsertPage/>} />
+            <Route path="dashboard/cases/add" element={<CaseUpsertPage/>} />
+          </Route>          
+
         </Routes>
       </BrowserRouter>
     </AuthContext.Provider>

@@ -8,6 +8,9 @@ import FileInput from "./fileInput";
 import Stage from "./stage";
 import AsideMenu from "./asideMenu";
 import DataGridView from "./dataGridView";
+import CaseData from "./caseData";
+import CreateUserForm from "./createUserForm";
+import UpdateUserForm from "./updateUserForm";
 
 export {
     Input,
@@ -20,4 +23,7 @@ export {
     Stage,
     AsideMenu,
     DataGridView,
+    CaseData,
+    CreateUserForm,
+    UpdateUserForm
 }

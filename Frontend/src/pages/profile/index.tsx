@@ -2,11 +2,11 @@ import './style.scss'
 import Logo from 'images/logo.webp'
 import Icons from 'images/icons.svg'
 import { useContext, useEffect, useState } from 'react'
-import { Button, FileInput, Stage } from 'src/components'
+import { Button, CaseData, FileInput, Stage } from 'src/components'
 import { API } from 'src/services'
 import { AuthContext } from 'src/hooks/authContext'
-import parse from 'html-react-parser';
 import { IProfileData } from 'src/interfaces'
+
 
 const ProfilePage = () => {
     const { setAuthorized } = useContext(AuthContext)
@@ -41,17 +41,8 @@ const ProfilePage = () => {
         setAuthorized(false)
     }
 
-    const [buttonActive, setActive] = useState(false)
-    const handleFileChange = () => {
-        const inputs = document.getElementsByClassName("fileinput_wrapper-field")
-        for (let i=0; i<inputs.length; i++){
-            const input = inputs[i] as HTMLInputElement
-            if (!input.files?.length) return setActive(false)
-        }
-    setActive(true)
-    }
-
     return (
+        data&&
         <div className='profilepage' >
             <header className='profilepage_header'>
                 <div className='profilepage_header_logocontainer'>
@@ -82,69 +73,7 @@ const ProfilePage = () => {
                     </ul>
                 </div>
             </header>
-            <section className='profilepage_task'>
-                <h2 className='profilepage_task-title'>
-                    Задание
-                </h2>
-                <p className='profilepage_task-descr'>
-                    {data?.case.task&&parse(data.case.task)}
-                </p>
-            </section>
-            <section className='profilepage_status'>
-                {
-                    data?.user.status?
-                        <>
-                            <h2 className='profilepage_status-title_results'>Результаты</h2>
-                            <p className='profilepage_status-text'>{data.user.status.name}</p>
-                            {
-                                data.user.status.file && 
-                                <a onClick={() => API.getFile(data.user.status!.file!)} className='profilepage_status-text link'>
-                                Скачать сертификат участника
-                                </a>
-                            }
-                        </>
-                        :
-                        <>
-                            <h2 className='profilepage_status-title'>Отправить задание</h2>
-                            <form className='profilepage_status-form' id='task-form'>
-                                <FileInput changeHandler={handleFileChange} label='Согласие на обработку персональных данных' required={true} name='consent' accept={['.pdf']} />
-                                <FileInput changeHandler={handleFileChange} label='Выполненное задание' name='solution' required={true} accept={['.pdf']} />
-                                <Button isActive={buttonActive}>
-                                    Отправить
-                                </Button>
-                            </form>
-                        </>
-
-                }
-            </section>
-            <section className='profilepage_guide'>
-                <h2 className='profilepage_guide-title'>
-                    Мастер-класс
-                </h2>
-                <iframe className='profilepage_guide-video' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen={true} src={data?.case.video}></iframe>
-            </section>
-            <section className='profilepage_stages'>
-                <h2 className='profilepage_stages-title'>
-                    Порядок выполнения
-                </h2>
-                {
-                    data?.case.stages.map((e, i) => (
-                        <Stage key={i} index={i + 1} text={e} />
-                    ))
-                }
-            </section>
-            <section className='profilepage_criterias'>
-                <h2 className='profilepage_criterias-title'>
-                    Критерии
-                </h2>
-                <div className='profilepage_criterias-container'>
-                    {
-                        data?.case.criterias.map((e, i) => (
-                            <span key={i} className='profilepage_criterias-container-criteria'>{parse(e)}</span>
-                        ))
-                    }
-                </div>
-            </section>
+            <CaseData userStatus={data.user.status} caseData={data.case} />
             <footer className='profilepage_footer'>
                 <section className='profilepage_footer_top'>
                     <h3 className='profilepage_footer_top-title'>

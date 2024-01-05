@@ -122,14 +122,14 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                 <FormDialog
                     dialogId='create'
                     onSubmit={createProvider}
-                    dialogTitle='Создание участника'
+                    dialogTitle='Создание записи'
                     FormElements={createForm}
                 />
             }
             <FormDialog
                 dialogId='update'
                 onSubmit={updateProvider}
-                dialogTitle='Обновление участника'
+                dialogTitle='Обновление записи'
                 rowId={currentRowId}
                 setActiveRow={setCurrentRowId}
                 FormElements={updateForm}

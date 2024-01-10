@@ -1,4 +1,5 @@
 ﻿using Domain.Core.Primitives;
+using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -16,8 +17,14 @@ namespace Api.Controllers
         }
         protected IActionResult Problem(Error error)
         {
-            //logger.LogError("Error occured: {0}", Request.Path);
-            return Problem(statusCode: error.statusCode, title: error.message);
+            logger.LogError("Error occured: {0}\n{1}", Request.Path, error.message);
+            return Problem(statusCode: (int)error.statusCode, title: error.message);
+        }
+
+        protected void ClearJWTCookie()
+        {
+            Response.Cookies.Delete("token");
+
         }
     }
 }

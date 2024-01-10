@@ -7,16 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Abstractions\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,13 +6,15 @@ namespace Domain.Entities
     {
         public int id { get; set; }
 
-        public UserTypes userType { get; set; }
+        public StaffDto? Staff { get; set; }
+        public ParticipantDto? Participant { get; set; }
 
-        public string? refreshToken { get; set; }
+        public string firstName { get; set; } = string.Empty;
+        public string lastName { get; set; } = string.Empty;
+        public string patronymic { get; set; } = string.Empty;
 
         public string email { get; set; } = null!;
-        public byte[] hash { get; set; } = null!;
-        public byte[] salt { get; set; } = null!;
+        public string password { get; set; } = null!; // salt + hash
     }
 
 }

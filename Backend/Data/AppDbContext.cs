@@ -1,14 +1,10 @@
-﻿using Domain.Entities;
+﻿using Domain.Core.Primitives;
+using Domain.Entities;
 using Domain.Enumeration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data
 {
@@ -37,22 +33,20 @@ namespace Data
         public DbSet<CaseDto> cases { get; set; }
         
         public DbSet<UserDto> users { get; set; }
-        public DbSet<UserDataDto> usersData { get; set; }
-        
-        public DbSet<ParticipantDataDto> participantsData { get; set; }
-
-        public DbSet<StaffRoleDto> roles { get; set; }
         public DbSet<StaffDto> staff { get; set; }
+        public DbSet<ParticipantDto> participants { get; set; }
+
+        public DbSet<ParticipantTypeDto> types { get; set; }
+        public DbSet<StaffRoleDto> roles { get; set; }   
 
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.HasPostgresEnum<AccessLevels>();
-            modelBuilder.HasPostgresEnum<UserTypes>();
-
-            modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);            
+            modelBuilder.HasPostgresEnum<participant_status>();
+            modelBuilder.HasPostgresEnum<access_levels>();
         }
     }
 }

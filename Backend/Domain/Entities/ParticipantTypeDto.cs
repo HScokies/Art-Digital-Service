@@ -1,9 +1,10 @@
 ﻿namespace Domain.Entities
 {
-    public class UserTypeDto
+    public class ParticipantTypeDto
     {
         public int id {  get; set; }
         public string name { get; set; } = null!;
         public bool isAdult { get; set; }
+        public ICollection<ParticipantDto> Participants { get; set; } = null!;
     }
 }

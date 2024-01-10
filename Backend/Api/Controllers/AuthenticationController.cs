@@ -1,29 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Contracts.User;
-using Domain.Core.Primitives;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Domain.Core.Utility;
 using Domain.Enumeration;
-using Domain.Core.Utility;
-using Api.Controllers.Extensions;
+using Domain.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
 
     public class AuthenticationController : ApiController
     {
-        public AuthenticationController(ILogger<ApiController> logger) : base(logger)
+        private readonly IUserRepository users;
+
+        public AuthenticationController(ILogger<ApiController> logger, IUserRepository users) : base(logger)
         {
+            this.users = users;
         }
 
         //TODO: Check if user exists, Register, LogIn, LogOut, Refresh token
-        [HttpGet("user/{email}")]
-        public IActionResult GetUserByEmail(string email)
-        {
-            if (!Ensure.isEmail(email))
-            {
-                return Problem(CommonErrors.User.InvalidEmail);
-            }
-            return Ok();
-        }
     }
 }

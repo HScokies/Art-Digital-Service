@@ -1,4 +1,6 @@
 using Data;
+using Application;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,14 +11,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddDataLayer();
+builder.Services.AddDbContext();
+builder.Services.AddRepositories();
+builder.Services.AddAppServices();
+builder.Services.AddInfrastructureLayer();
 
 var app = builder.Build();
-app.UseExceptionHandler("/error");
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error");
+}
+
 
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

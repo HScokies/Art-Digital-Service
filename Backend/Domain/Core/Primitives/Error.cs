@@ -1,4 +1,6 @@
-﻿namespace Domain.Core.Primitives
+﻿using System.Net;
+
+namespace Domain.Core.Primitives
 {
-    public record Error(int statusCode, string message);
+    public record Error(HttpStatusCode statusCode, string message);
 }

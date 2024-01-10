@@ -9,9 +9,11 @@ namespace Data.Configurations
         public void Configure(EntityTypeBuilder<UserDto> builder)
         {
             builder.ToTable("users");
-
             builder.HasKey(u => u.id);
+            builder.HasIndex(u => u.email).IsUnique();
             
+            builder.HasOne(u => u.Staff).WithOne(s => s.User).HasForeignKey<StaffDto>(s => s.userId);
+            builder.HasOne(u => u.Participant).WithOne(p => p.User).HasForeignKey<ParticipantDto>(p => p.userId);
         }
     }
 }

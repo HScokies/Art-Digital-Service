@@ -7,16 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Abstractions\" />
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
-  </ItemGroup>
+	
 
 </Project>

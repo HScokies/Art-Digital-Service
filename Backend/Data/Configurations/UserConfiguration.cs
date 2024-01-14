@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Bcrypt = BCrypt.Net.BCrypt;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,6 +15,9 @@ namespace Data.Configurations
             
             builder.HasOne(u => u.Staff).WithOne(s => s.User).HasForeignKey<StaffDto>(s => s.userId);
             builder.HasOne(u => u.Participant).WithOne(p => p.User).HasForeignKey<ParticipantDto>(p => p.userId);
+            builder.HasData(
+                new UserDto() { id = 1, email = "admin@example.com", password = Bcrypt.EnhancedHashPassword("changeme1") }
+                );
         }
     }
 }

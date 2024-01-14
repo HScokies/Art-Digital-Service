@@ -7,6 +7,6 @@ namespace Domain.Entities
         public int id {  get; set; }
         public ICollection<StaffDto> Staff { get; set; } = null!;
         public string name { get; set; } = null!;
-        public List<access_levels> PermissionsList { get; set; } = new();
+        public List<string> PermissionsList { get; set; } = new();
     }
 }

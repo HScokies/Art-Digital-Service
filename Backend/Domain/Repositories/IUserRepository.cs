@@ -1,14 +1,12 @@
-﻿using Domain.Core.Primitives;
-using Contracts.User;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Domain.Repositories
 {
     public interface IUserRepository
     {
-        Task<bool> CheckIfExistsAsync(string email, CancellationToken cancellationToken = default);
-        Task<ParticipantTypeDto?> GetParticipantTypeAsync(int participantTypeId, CancellationToken cancellationToken = default);
-        Task<UserDto> CreateUserAsync(string email, string password, CancellationToken cancellationToken = default);
-        Task<ParticipantDto> CreateParticipantAsync(UserDto user, ParticipantTypeDto type, CancellationToken cancellationToken = default);
+        Task<bool> CheckIfUserExistsAsync(string email, CancellationToken cancellationToken = default);
+        Task<bool> CheckIfTypeExistsAsync(int participantTypeId, CancellationToken cancellationToken = default);
+        Task<ParticipantDto> CreateParticipantAsync(ParticipantDto participant, CancellationToken cancellationToken = default);
+        Task<UserDto?> GetUserByEmail (string email, CancellationToken cancellationToken = default);
     }
 }

@@ -14,7 +14,7 @@ namespace Domain.Entities
         public int? caseId { get; set; }
         public CaseDto Case { get; set; } = null!;
 
-        public participant_status status { get; set; }
+        public string status { get; set; } = Roles.ParticipantsStatus.justRegistered;
 
         public string phone { get; set; } = string.Empty;
         public string city { get; set; } = string.Empty;

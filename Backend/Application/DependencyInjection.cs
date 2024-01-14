@@ -1,5 +1,4 @@
-﻿using Application.Services;
-using Domain.Services;
+﻿using Application.Services.User;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application

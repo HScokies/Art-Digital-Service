@@ -45,8 +45,6 @@ namespace Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);            
-            modelBuilder.HasPostgresEnum<participant_status>();
-            modelBuilder.HasPostgresEnum<access_levels>();
         }
     }
 }

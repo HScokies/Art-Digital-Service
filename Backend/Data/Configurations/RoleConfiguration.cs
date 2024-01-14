@@ -24,18 +24,18 @@ namespace Data.Configurations
                         id = 1, 
                         name = "Администратор",
                         PermissionsList = {
-                            access_levels.createUsers,
-                            access_levels.createStaff,
-                            access_levels.createCases,
-                            access_levels.readUsers, 
-                            access_levels.readStaff, 
-                            access_levels.readCases,
-                            access_levels.updateUsers,
-                            access_levels.updateStaff,
-                            access_levels.updateCases,
-                            access_levels.deleteUsers,
-                            access_levels.deleteStaff,
-                            access_levels.deleteCases
+                            Roles.Permissions.createUsers,
+                            Roles.Permissions.createStaff,
+                            Roles.Permissions.createCases,
+                            Roles.Permissions.readUsers,
+                            Roles.Permissions.readStaff,
+                            Roles.Permissions.readCases,
+                            Roles.Permissions.updateUsers,
+                            Roles.Permissions.updateStaff,
+                            Roles.Permissions.updateCases,
+                            Roles.Permissions.deleteUsers,
+                            Roles.Permissions.deleteStaff,
+                            Roles.Permissions.deleteCases
                         } 
                     },
                     new StaffRoleDto()
@@ -44,10 +44,10 @@ namespace Data.Configurations
                         name = "Модератор",
                         PermissionsList =
                         {
-                            access_levels.createUsers,
-                            access_levels.readUsers,
-                            access_levels.updateUsers, 
-                            access_levels.deleteUsers
+                            Roles.Permissions.createUsers,
+                            Roles.Permissions.readUsers,
+                            Roles.Permissions.updateUsers,
+                            Roles.Permissions.deleteUsers
                         }
                     },
                     new StaffRoleDto()
@@ -56,8 +56,8 @@ namespace Data.Configurations
                         name = "Преподаватель",
                         PermissionsList =
                         {
-                            access_levels.readUsers,
-                            access_levels.rateUsers
+                            Roles.Permissions.readUsers,
+                            Roles.Permissions.rateUsers,
                         }
                     }
                 ); 

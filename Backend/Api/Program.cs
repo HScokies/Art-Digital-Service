@@ -14,7 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext();
 builder.Services.AddRepositories();
 builder.Services.AddAppServices();
-builder.Services.AddInfrastructureLayer();
+builder.Services.AddJwtAuthentication();
+builder.Services.AddEmailService();
 
 var app = builder.Build();
 

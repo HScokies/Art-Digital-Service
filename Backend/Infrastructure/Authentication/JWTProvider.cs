@@ -22,29 +22,20 @@ namespace Infrastructure.Authentication
             this.Lifetime = Lifetime;
             Credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha384Signature);            
         }
-        public void IssueStaffToken(HttpResponse Response, int userId, List<access_levels> permissions)
+        public void IssueStaffToken(HttpResponse Response, int userId, List<string> permissions)
         {
-            List<Claim> claims = new()
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            };
-            permissions.ForEach(permission =>
-            {
-                claims.Add(new Claim(ClaimTypes.Role, permission.ToString()));
-            });
-            CreateAndAppendToken(Response, claims);
+            IssueStaffToken(Response, userId.ToString(), permissions);
         }
 
-        public void IssueUserToken(HttpResponse Response, int userId, participant_status status)
+        public void IssueUserToken(HttpResponse Response, int userId, string status)
         {
-            List<Claim> claims = new()
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Role, status.ToString())
-            };
-            CreateAndAppendToken(Response, claims);
+            IssueUserToken(Response, userId.ToString(), status);
         }
-
+        public void ClearToken(HttpResponse Response)
+        {
+            Response.Cookies.Append(tokenCookieName, "", new CookieOptions { Expires = DateTime.UtcNow.AddDays(-1) }); 
+            Response.Cookies.Delete(this.tokenCookieName); // for some reason this does not work in some browsers :(
+        }
         private void CreateAndAppendToken(HttpResponse Response, IEnumerable<Claim> claims)
         {
             CreateToken(claims, out string token, out DateTime expires);
@@ -72,7 +63,30 @@ namespace Infrastructure.Authentication
                 Secure = true,
                 SameSite = SameSiteMode.None
             };
-            Response.Cookies.Append(tokenCookieName, token);
+            Response.Cookies.Append(tokenCookieName, token, cookieOptions);
+        }
+
+        public void IssueUserToken(HttpResponse Response, string userId, string status)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Role, status)
+            };
+            CreateAndAppendToken(Response, claims);
+        }
+
+        public void IssueStaffToken(HttpResponse Response, string userId, List<string> permissions)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+            };
+            foreach (var permission in permissions)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, permission.ToString()));
+            }
+            CreateAndAppendToken(Response, claims);
         }
     }
 }

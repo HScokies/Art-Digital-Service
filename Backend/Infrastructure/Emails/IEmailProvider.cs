@@ -1,8 +1,11 @@
-﻿namespace Infrastructure.Emails
+﻿using MimeKit;
+using System.Net.Mail;
+
+namespace Infrastructure.Emails
 {
     public interface IEmailProvider
     {
-        public Task SendWelcomeEmail(string recipientEmail, string videoURL);
-        public Task SendPasswordResetEmail(string recipientEmail, string recipientName, string resetUrl);
+        public Task SendWelcomeEmail(MailboxAddress recipient, string videoURL, CancellationToken cancellationToken);
+        public Task SendPasswordResetEmail(MailboxAddress recipient, string resetUrl, CancellationToken cancellationToken);
     }
 }

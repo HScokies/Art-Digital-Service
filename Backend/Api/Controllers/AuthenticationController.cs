@@ -59,10 +59,15 @@ namespace Api.Controllers
 
 
         [HttpGet("emailtest")]
-        public async Task<IActionResult> Test()
+        public async Task<IActionResult> Test(CancellationToken cancellationToken)
         {
-            await emailProvider.SendPasswordResetEmail("email@example.com", "You Name", Guid.NewGuid().ToString());
-            return Ok("awaiting");
+            await emailProvider.SendPasswordResetEmail(
+                recipientEmail: "email@example.com",
+                recipientName: "Иван",
+                resetUrl: $"https://example.com/{Guid.NewGuid()}",
+                cancellationToken: cancellationToken
+                );
+            return Ok("sent");
         }
 
         private IActionResult LoginAsStaff(StaffDto staff)

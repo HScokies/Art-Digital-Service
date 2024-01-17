@@ -16,6 +16,9 @@ builder.Services.AddRepositories();
 builder.Services.AddAppServices();
 builder.Services.AddJwtAuthentication();
 builder.Services.AddEmailService();
+builder.Services.AddFilesService();
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -23,14 +26,10 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/error");
 }
-
-
-
-app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();

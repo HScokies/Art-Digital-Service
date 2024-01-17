@@ -1,8 +1,6 @@
-﻿using Domain.Enumeration;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Contracts.User;
 
 namespace Data.Repositories
 {
@@ -26,6 +24,12 @@ namespace Data.Repositories
             return res.Entity;
         }
 
-        public async Task<UserDto?> GetUserByEmail(string email, CancellationToken cancellationToken = default) => await ctx.users.Include(u => u.Staff).Include(u => u.Staff.Role).Include(u => u.Participant).FirstOrDefaultAsync(u => u.email == email, cancellationToken);
+        public async Task<ParticipantDto?> GetParticipantByIdAsync(int id, CancellationToken cancellationToken = default) => await ctx.participants.Include(p => p.User).Include(p => p.Case).FirstOrDefaultAsync(p => p.userId == id, cancellationToken);
+
+        public async Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default) => await ctx.users.Include(u => u.Staff).Include(u => u.Staff!.Role).Include(u => u.Participant).FirstOrDefaultAsync(u => u.email == email, cancellationToken);
+
+        public async Task<UserDto?> GetUserByIdAsync(int id, CancellationToken cancellationToken = default) => await ctx.users.FirstOrDefaultAsync(u => u.id == id, cancellationToken);
+
+        public async Task<int> SaveAsync(CancellationToken cancellationToken = default) => await ctx.SaveChangesAsync(cancellationToken);
     }
 }

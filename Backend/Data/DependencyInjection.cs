@@ -31,6 +31,7 @@ namespace Data
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICaseRepository, CaseRepository>();
             
             return services;
         }

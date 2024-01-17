@@ -12,10 +12,12 @@ namespace Application.Services.User
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly ICaseRepository caseRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, ICaseRepository caseRepository)
         {
             this.userRepository = userRepository;
+            this.caseRepository = caseRepository;
         }
         private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await userRepository.CheckIfTypeExistsAsync(request.userType, cancellationToken);
         private async Task<bool> isUserExists(string email, CancellationToken cancellationToken) => await userRepository.CheckIfUserExistsAsync(email, cancellationToken);
@@ -57,7 +59,7 @@ namespace Application.Services.User
             if (!Ensure.isPassword(request.password))
                 return new Result<UserDto>(CommonErrors.User.InvalidPassword);
 
-            var res = await userRepository.GetUserByEmail(request.email, cancellationToken);
+            var res = await userRepository.GetUserByEmailAsync(request.email, cancellationToken);
             if (res is null)
                 return new Result<UserDto>(CommonErrors.User.NotFound);
 
@@ -65,6 +67,23 @@ namespace Application.Services.User
                 return new Result<UserDto>(CommonErrors.User.InvalidCredentials);
 
             return new Result<UserDto>(res);
+        }
+
+        public async Task<Result<PersonalDataAppendResponse>> AppendParticipantDataAsync(int userId, PersonalDataAppendRequest request, CancellationToken cancellationToken)
+        {
+            if (!await caseRepository.ExistsAsync(request.caseId))
+                return new Result<PersonalDataAppendResponse>(CommonErrors.Case.NotFound);
+
+            var participant = await userRepository.GetParticipantByIdAsync(userId, cancellationToken);
+            if (participant is null)
+                return new Result<PersonalDataAppendResponse>(CommonErrors.User.NotFound);
+            
+            participant.appendPersonalData(request);
+            await userRepository.SaveAsync();
+
+            var res = participant.toPersonalDataResponse();
+
+            return new Result<PersonalDataAppendResponse>(res);
         }
     }
 }

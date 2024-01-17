@@ -13,33 +13,36 @@ namespace Infrastructure.Authentication
         private readonly string Audience;
         private readonly int Lifetime;
         private readonly SigningCredentials Credentials;
+        private readonly HttpContext httpContext;
 
-        public JWTProvider(string tokenCookieName, SymmetricSecurityKey key, string Issuer, string Audience, int Lifetime)
+        public JWTProvider(string tokenCookieName, SymmetricSecurityKey key, string Issuer, string Audience, int Lifetime, IHttpContextAccessor httpContextAccessor)
         {
             this.tokenCookieName = tokenCookieName;
             this.Issuer = Issuer;
             this.Audience = Audience;
             this.Lifetime = Lifetime;
-            Credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha384Signature);            
+            Credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha384Signature);
+
+            this.httpContext = httpContextAccessor.HttpContext!;
         }
-        public void IssueStaffToken(HttpResponse Response, int userId, List<string> permissions)
+        public void IssueStaffToken(int userId, List<string> permissions)
         {
-            IssueStaffToken(Response, userId.ToString(), permissions);
+            IssueStaffToken(userId.ToString(), permissions);
         }
 
-        public void IssueUserToken(HttpResponse Response, int userId, string status)
+        public void IssueUserToken(int userId, string status)
         {
-            IssueUserToken(Response, userId.ToString(), status);
+            IssueUserToken(userId.ToString(), status);
         }
-        public void ClearToken(HttpResponse Response)
+        public void ClearToken()
         {
-            Response.Cookies.Append(tokenCookieName, "", new CookieOptions { Expires = DateTime.UtcNow.AddDays(-1) }); 
-            Response.Cookies.Delete(this.tokenCookieName); // for some reason this does not work in some browsers :(
+            httpContext.Response.Cookies.Append(tokenCookieName, "", new CookieOptions { Expires = DateTime.UtcNow.AddDays(-1) });
+            httpContext.Response.Cookies.Delete(this.tokenCookieName); // for some reason this does not work in some browsers :(
         }
-        private void CreateAndAppendToken(HttpResponse Response, IEnumerable<Claim> claims)
+        private void CreateAndAppendToken(IEnumerable<Claim> claims)
         {
             CreateToken(claims, out string token, out DateTime expires);
-            AppendToken(Response, token, expires);
+            AppendToken(token, expires);
         }
         private void CreateToken(IEnumerable<Claim> claims, out string token, out DateTime expires)
         {
@@ -54,7 +57,7 @@ namespace Infrastructure.Authentication
 
             token = new JwtSecurityTokenHandler().WriteToken(jwttoken);
         }
-        private void AppendToken(HttpResponse Response, string token, DateTime expires)
+        private void AppendToken(string token, DateTime expires)
         {
             CookieOptions cookieOptions = new()
             {
@@ -63,20 +66,20 @@ namespace Infrastructure.Authentication
                 Secure = true,
                 SameSite = SameSiteMode.None
             };
-            Response.Cookies.Append(tokenCookieName, token, cookieOptions);
+            httpContext.Response.Cookies.Append(tokenCookieName, token, cookieOptions);
         }
 
-        public void IssueUserToken(HttpResponse Response, string userId, string status)
+        public void IssueUserToken(string userId, string status)
         {
             List<Claim> claims = new()
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Role, status)
             };
-            CreateAndAppendToken(Response, claims);
+            CreateAndAppendToken(claims);
         }
 
-        public void IssueStaffToken(HttpResponse Response, string userId, List<string> permissions)
+        public void IssueStaffToken(string userId, List<string> permissions)
         {
             List<Claim> claims = new()
             {
@@ -86,7 +89,7 @@ namespace Infrastructure.Authentication
             {
                 claims.Add(new Claim(ClaimTypes.Role, permission.ToString()));
             }
-            CreateAndAppendToken(Response, claims);
+            CreateAndAppendToken(claims);
         }
     }
 }

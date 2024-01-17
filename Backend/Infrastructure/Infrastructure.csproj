@@ -20,6 +20,9 @@
     <None Update="Emails\Templates\password-reset.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Emails\Templates\welcome-message.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 	
 

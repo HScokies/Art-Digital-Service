@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Enumeration;
 using Infrastructure.Authentication;
 using Infrastructure.Emails;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -22,14 +23,13 @@ namespace Api.Controllers
             this.emailProvider = emailProvider;
         }
 
-        //TODO: Check if user exists, Register, LogIn, LogOut, Refresh token
         [HttpPost("register")]
         public async Task<IActionResult> RegisterNewParticipant([FromForm] RegisterRequest request, CancellationToken cancellationToken)
         {
             var result = await userService.RegisterUserAsync(request, cancellationToken);
             if (!result.isSuccess)
                 return Problem(result.error);
-            jwtProvider.IssueUserToken(Response, result.value, Roles.ParticipantsStatus.justRegistered);
+            jwtProvider.IssueUserToken(result.value, Roles.ParticipantsStatus.justRegistered);
             return CreatedAtAction(nameof(RegisterNewParticipant), result.value);
         }
 
@@ -50,20 +50,19 @@ namespace Api.Controllers
             return Problem(CommonErrors.Unknown);
         }
 
-        [HttpGet("logout")]
+        [HttpGet("logout"), Authorize]
         public IActionResult Logout()
         {
-            jwtProvider.ClearToken(Response);
+            jwtProvider.ClearToken();
             return NoContent();
         }
 
 
-        [HttpGet("emailtest")]
-        public async Task<IActionResult> Test(CancellationToken cancellationToken)
+        [HttpGet("reset"), Authorize] //TODO
+        public async Task<IActionResult> ResetPassword(CancellationToken cancellationToken)
         {
             await emailProvider.SendPasswordResetEmail(
-                recipientEmail: "email@example.com",
-                recipientName: "Иван",
+                new MimeKit.MailboxAddress("Иван", "email@example.com"),
                 resetUrl: $"https://example.com/{Guid.NewGuid()}",
                 cancellationToken: cancellationToken
                 );
@@ -72,14 +71,16 @@ namespace Api.Controllers
 
         private IActionResult LoginAsStaff(StaffDto staff)
         {
-            jwtProvider.IssueStaffToken(Response, staff.userId, staff.Role.PermissionsList);
+            jwtProvider.IssueStaffToken(staff.userId, staff.Role.PermissionsList);
             return Ok();
         }
 
         private IActionResult LoginAsParticipant(ParticipantDto participant)
         {
-            jwtProvider.IssueUserToken(Response, participant.userId, participant.status);
+            jwtProvider.IssueUserToken(participant.userId, participant.status);
             return Ok();
         }
+        
     }
+    
 }

@@ -20,11 +20,5 @@ namespace Api.Controllers
             logger.LogError("Error occured: {0}\n{1}", Request.Path, error.message);
             return Problem(statusCode: (int)error.statusCode, title: error.message);
         }
-
-        protected void ClearJWTCookie()
-        {
-            Response.Cookies.Delete("token");
-
-        }
     }
 }

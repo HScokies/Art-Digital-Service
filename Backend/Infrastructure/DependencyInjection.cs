@@ -1,9 +1,12 @@
 ﻿using Domain.Core.Utility;
 using Infrastructure.Authentication;
 using Infrastructure.Emails;
+using Infrastructure.Files;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace Infrastructure
@@ -21,7 +24,11 @@ namespace Infrastructure
 
             SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(JwtSecret));
 
-            services.AddSingleton<IJWTProvider, JWTProvider>(options => new JWTProvider(tokenCookieName, key, Issuer, Audience, TokenLifetime_H));
+            services.AddTransient<IJWTProvider, JWTProvider>(options =>
+            {
+                var httpContextAccessor = options.GetRequiredService<IHttpContextAccessor>();
+                return new JWTProvider(tokenCookieName, key, Issuer, Audience, TokenLifetime_H, httpContextAccessor);
+            });
 
             services.AddAuthentication(
                 JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -59,12 +66,23 @@ namespace Infrastructure
 
             int port = port_str is null ? 587 : int.Parse(port_str);
 
-            services.AddScoped<IEmailProvider, EmailProvider>(options => new EmailProvider(
-                login: login,
-                password: password,
-                host: host,
-                port: port
-                ));
+            
+            services.AddScoped<IEmailProvider, EmailProvider>(options =>
+            {
+                var httpContextAccessor = options.GetRequiredService<IHttpContextAccessor>();
+                return new EmailProvider(
+                    login: login,
+                    password: password,
+                    host: host,
+                    port: port,
+                    httpContextAccessor: httpContextAccessor
+                    );
+            });
+            return services;
+        }
+        public static IServiceCollection AddFilesService(this IServiceCollection services)
+        {
+            services.AddScoped<IFilesService, FilesService>();
             return services;
         }
     }

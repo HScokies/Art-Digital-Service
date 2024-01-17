@@ -6,7 +6,7 @@
         public ICollection<ParticipantDto> participants { get; set; } = null!;
         public string name { get; set; } = null!;
         public string task { get; set; } = null!;
-        public string video { get; set; } = null!; // embed видео ( Мастер-класс )
+        public string youtubeId { get; set; } = null!; // https://www.youtube.com/watch?v=dQw4w9WgXcQ => id = dQw4w9WgXcQ
         public List<string> stages { get; set; } = null!;
         public List<string> criterias { get; set; } = null!;
         

@@ -15,6 +15,11 @@ namespace Domain.Enumeration
             public static Error InvalidEmail = new(HttpStatusCode.BadRequest, "Указанный email не прошел валидацию!");
             public static Error InvalidPassword = new(HttpStatusCode.BadRequest, "Указанный пароль не прошел валидацию!");
             public static Error InvalidUserType = new(HttpStatusCode.BadRequest, "Неизвестный тип учетной записи!");
+            public static Error InvalidToken = new(HttpStatusCode.Unauthorized, "Неверный формат токена!");
+        }
+        public static class Case
+        {
+            public static Error NotFound = new(HttpStatusCode.NotFound, "Указанное направление не обнаружено!");
         }
     }
 }

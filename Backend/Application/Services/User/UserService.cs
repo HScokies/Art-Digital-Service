@@ -5,6 +5,8 @@ using Domain.Core.Utility;
 using Domain.Entities;
 using Domain.Enumeration;
 using Domain.Repositories;
+using Infrastructure.Files;
+using Microsoft.AspNetCore.Http;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
@@ -13,11 +15,13 @@ namespace Application.Services.User
     {
         private readonly IUserRepository userRepository;
         private readonly ICaseRepository caseRepository;
+        private readonly IFilesService filesSevice;
 
-        public UserService(IUserRepository userRepository, ICaseRepository caseRepository)
+        public UserService(IUserRepository userRepository, ICaseRepository caseRepository, IFilesService filesSevice)
         {
             this.userRepository = userRepository;
             this.caseRepository = caseRepository;
+            this.filesSevice = filesSevice;
         }
         private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await userRepository.CheckIfTypeExistsAsync(request.userType, cancellationToken);
         private async Task<bool> isUserExists(string email, CancellationToken cancellationToken) => await userRepository.CheckIfUserExistsAsync(email, cancellationToken);
@@ -84,6 +88,51 @@ namespace Application.Services.User
             var res = participant.toPersonalDataResponse();
 
             return new Result<PersonalDataAppendResponse>(res);
+        }
+
+        public async Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution)
+        {
+            var participant = await userRepository.GetParticipantByIdAsync(userId);
+            if (participant is null)
+                return new Result<AppendParticipantFilesResponse>(CommonErrors.User.NotFound);
+
+            if (!Ensure.isValidFileSize(consent.Length) || !Ensure.isValidFileSize(solution.Length))
+                return new Result<AppendParticipantFilesResponse>(CommonErrors.File.LargeFile);
+            
+            var consentMimeResult = filesSevice.getMimeType(consent);
+            if (!consentMimeResult.isSuccess)
+                return new Result<AppendParticipantFilesResponse>(consentMimeResult.error);
+            if (!Ensure.isValidConsentMimeType(consentMimeResult.value))
+                return new Result<AppendParticipantFilesResponse>(CommonErrors.File.UnsupportedMediaType);
+
+            var solutionMimeResult = filesSevice.getMimeType(solution);
+            if (!solutionMimeResult.isSuccess)
+                return new Result<AppendParticipantFilesResponse>(solutionMimeResult.error);
+            if (!Ensure.isValidSolutionMimeType(solutionMimeResult.value))
+                return new Result<AppendParticipantFilesResponse>(CommonErrors.File.UnsupportedMediaType);
+
+            var consentFilenameResult = filesSevice.UploadFileAsync(consent);
+            var solutionFileNameResult = filesSevice.UploadFileAsync(solution);
+            await consentFilenameResult; 
+            await solutionFileNameResult;
+            if (!consentFilenameResult.Result.isSuccess)
+                return new Result<AppendParticipantFilesResponse>(consentFilenameResult.Result.error);
+            if (!solutionFileNameResult.Result.isSuccess)
+                return new Result<AppendParticipantFilesResponse>(solutionFileNameResult.Result.error);
+
+            var response = new AppendParticipantFilesResponse()
+            {
+                status = Roles.ParticipantsStatus.awaitingResults,
+                consent = consentFilenameResult.Result.value,
+                solution = solutionFileNameResult.Result.value
+            };
+
+            participant.consentFilename = response.consent;
+            participant.solutionFilename = response.solution;
+            participant.status = response.status;
+            await userRepository.SaveAsync();
+
+            return new Result<AppendParticipantFilesResponse>(response);
         }
     }
 }

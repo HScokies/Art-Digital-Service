@@ -2,5 +2,5 @@
 
 namespace Domain.Core.Primitives
 {
-    public record Error(HttpStatusCode statusCode, string message);
+    public record Error(HttpStatusCode statusCode, string message, string? logMessage = "");
 }

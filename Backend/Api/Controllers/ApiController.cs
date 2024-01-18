@@ -17,7 +17,7 @@ namespace Api.Controllers
         }
         protected IActionResult Problem(Error error)
         {
-            logger.LogError("Error occured: {0}\n{1}", Request.Path, error.message);
+            logger.LogWarning("Error occured: {0}\n{1}", Request.Path, error.logMessage);
             return Problem(statusCode: (int)error.statusCode, title: error.message);
         }
     }

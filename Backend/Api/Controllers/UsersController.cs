@@ -7,23 +7,21 @@ using Infrastructure.Emails;
 using Infrastructure.Files;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
+using System.Web;
 
 namespace Api.Controllers
 {
     public class UsersController : ApiController
     {
         private readonly IUserService userService;
-        private readonly IJWTProvider jWTProvider;
+        private readonly IJWTProvider JWTProvider;
         private readonly IEmailProvider emailProvider;
-        private readonly IFilesService filesService;
 
-        public UsersController(ILogger<ApiController> logger, IUserService userService, IJWTProvider JWTProvider, IEmailProvider emailProvider, IFilesService filesService) : base(logger)
+        public UsersController(ILogger<ApiController> logger, IUserService userService, IJWTProvider JWTProvider, IEmailProvider emailProvider) : base(logger)
         {
             this.userService = userService;
-            jWTProvider = JWTProvider;
+            this.JWTProvider = JWTProvider;
             this.emailProvider = emailProvider;
-            this.filesService = filesService;
         }
 
         [HttpGet]
@@ -55,20 +53,24 @@ namespace Api.Controllers
                 cancellationToken: cancellationToken
                 );
 
-            jWTProvider.IssueUserToken(response.userId, response.status);
+            JWTProvider.IssueUserToken(response.userId, response.status);
             return Ok(response);
         }
 
         [HttpPost("append-files"), Authorize(Roles = Roles.ParticipantsStatus.sentPersonalData)]
-        public IActionResult AppendFilesAsync(IFormFile conscent, IFormFile solution)
+        public async Task<IActionResult> AppendFilesAsync(IFormFile conscent, IFormFile solution)
         {
-            var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(conscent.FileName, out var contentType))
-                return BadRequest();
-            
-            var ext = provider.get
-            filesService.UploadFile(conscent,)
-            return Ok("");
+            var userIdResult = User.GetUserId();
+            if (!userIdResult.isSuccess)
+                return Problem(userIdResult.error);
+
+            var Result = await userService.AppendParticipantFilesAsync(userIdResult.value,conscent, solution);
+            if (!Result.isSuccess)
+                return Problem(Result.error);
+
+            var res = Result.value;
+            JWTProvider.IssueUserToken(res.userId, res.status);
+            return Ok(res);
         }
     }
 }

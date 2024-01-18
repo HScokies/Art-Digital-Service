@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+    <PackageReference Include="Mime-Detective" Version="23.10.1" />
     <PackageReference Include="MimeKit" Version="4.3.0" />
   </ItemGroup>
 
@@ -23,6 +24,10 @@
     <None Update="Emails\Templates\welcome-message.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Files\Uploads\" />
   </ItemGroup>
 	
 

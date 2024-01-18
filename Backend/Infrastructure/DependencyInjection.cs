@@ -82,7 +82,7 @@ namespace Infrastructure
         }
         public static IServiceCollection AddFilesService(this IServiceCollection services)
         {
-            services.AddScoped<IFilesService, FilesService>();
+            services.AddSingleton<IFilesService, FilesService>();
             return services;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Contracts.User;
 using Domain.Core.Primitives;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Services.User
 {
@@ -10,5 +11,6 @@ namespace Application.Services.User
         Task<Result<int>> RegisterUserAsync(RegisterRequest request, CancellationToken cancellationToken);        
         Task<Result<UserDto>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken);
         Task<Result<PersonalDataAppendResponse>> AppendParticipantDataAsync(int userId, PersonalDataAppendRequest request, CancellationToken cancellationToken);
+        Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution);
     }
 }

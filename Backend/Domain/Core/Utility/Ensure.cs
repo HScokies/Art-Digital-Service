@@ -29,5 +29,21 @@ namespace Domain.Core.Utility
             }
             return false;
         }
+
+        public static bool isValidConsentMimeType(string MimeType)
+        {
+            Span<string> validMimeTypes = ["image/bmp", "image/jpeg", "image/png", "application/pdf"];
+            return validMimeTypes.Contains(MimeType);
+        }
+        public static bool isValidSolutionMimeType(string MimeType)
+        {
+            return MimeType == "application/pdf";
+        }
+
+        public static bool isValidFileSize(long size)
+        {
+            const int MegaByte = 1_048_576;
+            return size < (MegaByte * 3);
+        }
     }
 }

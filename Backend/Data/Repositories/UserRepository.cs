@@ -41,7 +41,7 @@ namespace Data.Repositories
                 query = query.Where(p => p.rating == null);
             if (!noScore)
                 query = query.Where(p => p.rating != null);
-            if (search.IsNullOrEmpty())
+            if (!search.IsNullOrEmpty())
                 query = query.Where(p => EF.Functions.ILike(p.User.lastName + " " + p.User.firstName + " " + p.User.patronymic, $"%{search}%"));
             if (excludeType is not null)
                 query = query.Where(p => !excludeType.Contains(p.typeId));

@@ -89,12 +89,12 @@ namespace Api.Controllers
          *      Participant types
          */
         [HttpPost("participants"), Authorize(Roles = Roles.Permissions.createUsers)]
-        public async Task<IActionResult> CreateParticipantAsync([FromForm] CreateParticipantRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateParticipant([FromForm] CreateParticipantRequest request, CancellationToken cancellationToken)
         {
             var Result = await userService.CreateParticipantAsync(request, cancellationToken);
             if (!Result.isSuccess)
                 return Problem(Result.error);
-            return CreatedAtAction(nameof(CreateParticipantAsync), Result.value);
+            return CreatedAtAction(nameof(CreateParticipant), Result.value);
         }
 
         [HttpGet("participants/types")]

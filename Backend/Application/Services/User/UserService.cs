@@ -18,7 +18,7 @@ namespace Application.Services.User
         private readonly IUserRepository userRepository;
         private readonly ICaseRepository caseRepository;
         private readonly IFilesService filesSevice;
-        private readonly IParticipantRepository participantsRepository;
+        private readonly IParticipantRepository participantRepository;
 
         public UserService(IRepository repository, IUserRepository userRepository, ICaseRepository caseRepository, IFilesService filesSevice, IParticipantRepository participantRepository)
         {
@@ -26,7 +26,7 @@ namespace Application.Services.User
             this.userRepository = userRepository;
             this.caseRepository = caseRepository;
             this.filesSevice = filesSevice;
-            this.participantsRepository = participantRepository;
+            this.participantRepository = participantRepository;
         }
         private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await userRepository.TypeExistsAsync(request.userType, cancellationToken);
         private async Task<bool> isUserExists(string email, CancellationToken cancellationToken) => await userRepository.UserExistsAsync(email, cancellationToken);
@@ -189,7 +189,7 @@ namespace Application.Services.User
 
         public async Task<GetParticipantResponse> GetParticipants(CancellationToken cancellationToken, int offset, int take, bool participantsOnly,  bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null)
         {
-            return await participantsRepository.GetParticipants(
+            return await participantRepository.GetParticipants(
                 cancellationToken: cancellationToken,
                 offset: offset,
                 take: take,

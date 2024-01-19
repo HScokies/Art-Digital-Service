@@ -11,6 +11,7 @@ namespace Application.Services.User
         Task<Result<int>> RegisterUserAsync(RegisterRequest request, CancellationToken cancellationToken);        
         Task<Result<UserDto>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken);
         Task<Result<PersonalDataAppendResponse>> AppendParticipantDataAsync(int userId, PersonalDataAppendRequest request, CancellationToken cancellationToken);
-        Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution);
+        Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution, CancellationToken cancellationToken);
+        Task<Result<int>> CreateParticipantAsync(CreateParticipantRequest request, CancellationToken cancellationToken);
     }
 }

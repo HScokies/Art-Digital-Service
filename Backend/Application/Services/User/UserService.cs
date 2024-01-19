@@ -7,6 +7,7 @@ using Domain.Enumeration;
 using Domain.Repositories;
 using Infrastructure.Files;
 using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Tsp;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
@@ -90,31 +91,20 @@ namespace Application.Services.User
             return new Result<PersonalDataAppendResponse>(res);
         }
 
-        public async Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution)
+        public async Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution, CancellationToken cancellationToken)
         {
-            var participant = await userRepository.GetParticipantByIdAsync(userId);
+            var participant = await userRepository.GetParticipantByIdAsync(userId, cancellationToken);
             if (participant is null)
                 return new Result<AppendParticipantFilesResponse>(CommonErrors.User.NotFound);
 
-            if (!Ensure.isValidFileSize(consent.Length) || !Ensure.isValidFileSize(solution.Length))
-                return new Result<AppendParticipantFilesResponse>(CommonErrors.File.LargeFile);
-            
-            var consentMimeResult = filesSevice.getMimeType(consent);
-            if (!consentMimeResult.isSuccess)
-                return new Result<AppendParticipantFilesResponse>(consentMimeResult.error);
-            if (!Ensure.isValidConsentMimeType(consentMimeResult.value))
-                return new Result<AppendParticipantFilesResponse>(CommonErrors.File.UnsupportedMediaType);
+            var validationResult = ValidateParticipantFiles<AppendParticipantFilesResponse>(consent, solution);
+            if (!validationResult.isSuccess)
+                return validationResult;
 
-            var solutionMimeResult = filesSevice.getMimeType(solution);
-            if (!solutionMimeResult.isSuccess)
-                return new Result<AppendParticipantFilesResponse>(solutionMimeResult.error);
-            if (!Ensure.isValidSolutionMimeType(solutionMimeResult.value))
-                return new Result<AppendParticipantFilesResponse>(CommonErrors.File.UnsupportedMediaType);
-
-            var consentFilenameResult = filesSevice.UploadFileAsync(consent);
-            var solutionFileNameResult = filesSevice.UploadFileAsync(solution);
-            await consentFilenameResult; 
-            await solutionFileNameResult;
+           
+            var consentFilenameResult = filesSevice.UploadUserFileAsync(consent, cancellationToken);
+            var solutionFileNameResult = filesSevice.UploadUserFileAsync(solution, cancellationToken);
+            await Task.WhenAll(solutionFileNameResult, consentFilenameResult);
             if (!consentFilenameResult.Result.isSuccess)
                 return new Result<AppendParticipantFilesResponse>(consentFilenameResult.Result.error);
             if (!solutionFileNameResult.Result.isSuccess)
@@ -130,9 +120,58 @@ namespace Application.Services.User
             participant.consentFilename = response.consent;
             participant.solutionFilename = response.solution;
             participant.status = response.status;
-            await userRepository.SaveAsync();
+            await userRepository.SaveAsync(cancellationToken);
 
             return new Result<AppendParticipantFilesResponse>(response);
+        }
+
+        public async Task<Result<int>> CreateParticipantAsync(CreateParticipantRequest request, CancellationToken cancellationToken) 
+        {
+            //Upload participant files and add their filenames to request 
+            if (request.consent is not null && request.solution is not null)
+            {
+                var validationResult = ValidateParticipantFiles<int>(request.consent, request.solution);
+                if (!validationResult.isSuccess)
+                    return validationResult;
+
+                var consentFilenameTask = filesSevice.UploadUserFileAsync(request.consent, cancellationToken);
+                var solutionFilenameTask = filesSevice.UploadUserFileAsync(request.solution, cancellationToken);
+                await Task.WhenAll(consentFilenameTask, solutionFilenameTask);
+                var consentRes = consentFilenameTask.Result;
+                var solutionRes = solutionFilenameTask.Result;
+                if (!consentRes.isSuccess)
+                    return new Result<int>(consentRes.error);
+                if (!solutionRes.isSuccess)
+                    return new Result<int>(solutionRes.error);
+
+                request.consentFilename = consentRes.value;
+                request.solutionFilename = solutionRes.value;
+            }
+            request.password = Bcrypt.EnhancedHashPassword(request.password);
+
+            var Participant = request.toParticipant();
+            var res = await userRepository.CreateParticipantAsync(Participant, cancellationToken);
+            return new Result<int>(res.id);
+        }
+        
+        private Result<T> ValidateParticipantFiles<T>(IFormFile consent, IFormFile solution)
+        {
+            if (!Ensure.isValidFileSize(consent.Length) || !Ensure.isValidFileSize(solution.Length))
+                return new Result<T>(CommonErrors.File.LargeFile);
+
+            var consentMimeResult = filesSevice.getMimeType(consent);
+            if (!consentMimeResult.isSuccess)
+                return new Result<T>(consentMimeResult.error);
+            if (!Ensure.isValidConsentMimeType(consentMimeResult.value))
+                return new Result<T>(CommonErrors.File.UnsupportedMediaType);
+
+            var solutionMimeResult = filesSevice.getMimeType(solution);
+            if (!solutionMimeResult.isSuccess)
+                return new Result<T>(solutionMimeResult.error);
+            if (!Ensure.isValidSolutionMimeType(solutionMimeResult.value))
+                return new Result<T>(CommonErrors.File.UnsupportedMediaType);
+
+            return new Result<T>();
         }
     }
 }

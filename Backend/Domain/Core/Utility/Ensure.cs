@@ -32,7 +32,7 @@ namespace Domain.Core.Utility
 
         public static bool isValidConsentMimeType(string MimeType)
         {
-            Span<string> validMimeTypes = ["image/bmp", "image/jpeg", "image/png", "application/pdf"];
+            HashSet<string> validMimeTypes = ["image/bmp", "image/jpeg", "image/png", "application/pdf"];
             return validMimeTypes.Contains(MimeType);
         }
         public static bool isValidSolutionMimeType(string MimeType)

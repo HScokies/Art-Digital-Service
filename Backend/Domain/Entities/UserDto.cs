@@ -1,6 +1,4 @@
-﻿using Domain.Enumeration;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class UserDto
     {

@@ -20,7 +20,7 @@ namespace Infrastructure.Files
 
             Directory.CreateDirectory(userFiles);
         }
-        public async Task<Result<MemoryStream>> DownloadFileAsync(string id, string? displayedName)
+        public async Task<Result<MemoryStream>> DownloadFileAsync(string id, string? displayedName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -41,17 +41,17 @@ namespace Infrastructure.Files
             return MIMEtype is null ? new Result<string>(CommonErrors.File.UnknownMimeType) : new Result<string>(MIMEtype);
         }
 
-        public async Task<Result<string>> UploadFileAsync(IFormFile file)
+        private async Task<Result<string>> UploadFileAsync(string directory, IFormFile file, CancellationToken cancellationToken)
         {
             try
             {
                 string safeFilename = $"{Guid.NewGuid()}.{getExtension(file)}";
-                string path = Path.Combine(userFiles, safeFilename);                
+                string path = Path.Combine(directory, safeFilename);                
                 await using (FileStream fs = new(path, FileMode.Create))
                 {
-                    await file.CopyToAsync(fs);
+                    await file.CopyToAsync(fs, cancellationToken);
                 }
-                return new Result<string>(path);
+                return new Result<string>(safeFilename);
             }
             catch (Exception ex)
             {
@@ -59,5 +59,7 @@ namespace Infrastructure.Files
                 return new Result<string>(CommonErrors.Unknown);
             }            
         }
+
+        public async Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken) => await UploadFileAsync(userFiles, file, cancellationToken);
     }
 }

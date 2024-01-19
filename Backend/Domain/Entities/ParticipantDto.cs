@@ -1,4 +1,5 @@
 ﻿using Domain.Enumeration;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -6,12 +7,15 @@ namespace Domain.Entities
     {
         public int id {  get; set; }
         public int userId { get; set; }
+        [JsonIgnore]
         public UserDto User { get; set; } = null!;
 
         public int typeId { get; set; }
+        [JsonIgnore]
         public ParticipantTypeDto Type { get; set; } = null!;
 
         public int? caseId { get; set; }
+        [JsonIgnore]
         public CaseDto Case { get; set; } = null!;
 
         public string status { get; set; } = Roles.ParticipantsStatus.justRegistered;
@@ -19,7 +23,7 @@ namespace Domain.Entities
         public string phone { get; set; } = string.Empty;
         public string city { get; set; } = string.Empty;
         public string institution { get; set; } = string.Empty;
-        public int? grade { get; set; }
+        public int grade { get; set; } = 1;
         public string? speciality { get; set; } = string.Empty;
 
         public string? consentFilename { get; set; } = null!;

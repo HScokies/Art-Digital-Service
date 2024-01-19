@@ -6,6 +6,12 @@
         public readonly Error error;
         public readonly bool isSuccess;
 
+        public Result()
+        {
+            this.value = default(T)!;
+            this.error = null!;
+            isSuccess = true;
+        }
         public Result(T value)
         {
             this.value = value;

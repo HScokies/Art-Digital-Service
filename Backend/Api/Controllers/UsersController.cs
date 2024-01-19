@@ -1,6 +1,7 @@
 ﻿using Api.Controllers.Extensions;
 using Application.Services.User;
 using Contracts.User;
+using Domain.Core.Primitives;
 using Domain.Enumeration;
 using Infrastructure.Authentication;
 using Infrastructure.Emails;
@@ -58,19 +59,38 @@ namespace Api.Controllers
         }
 
         [HttpPost("append-files"), Authorize(Roles = Roles.ParticipantsStatus.sentPersonalData)]
-        public async Task<IActionResult> AppendFilesAsync(IFormFile conscent, IFormFile solution)
+        public async Task<IActionResult> AppendFilesAsync(IFormFile conscent, IFormFile solution, CancellationToken cancellationToken)
         {
             var userIdResult = User.GetUserId();
             if (!userIdResult.isSuccess)
                 return Problem(userIdResult.error);
 
-            var Result = await userService.AppendParticipantFilesAsync(userIdResult.value,conscent, solution);
+            var Result = await userService.AppendParticipantFilesAsync(userIdResult.value,conscent, solution, cancellationToken);
             if (!Result.isSuccess)
                 return Problem(Result.error);
 
             var res = Result.value;
             JWTProvider.IssueUserToken(res.userId, res.status);
             return Ok(res);
+        }
+
+        /*  TODO:
+         *      Create participant         
+         *      Get full participant data
+         *        Update participant 
+         *        Download files
+         *      Delete participants (int[])
+         *      Export participants (int[]?)
+         *      Search participants, user-participants w/o solution & files (string search, int[] excludeUserType, int[] excludeCase,bool, hasScore, bool noScore
+         */
+        [HttpPost("participants"), Authorize(Roles = Roles.Permissions.createUsers)]
+        public async Task<IActionResult> CreateParticipant([FromForm] CreateParticipantRequest request, CancellationToken cancellationToken)
+        {
+            var Result = await userService.CreateParticipantAsync(request, cancellationToken);
+            if (!Result.isSuccess)
+                return Problem(Result.error);
+
+            return CreatedAtAction(nameof(CreateParticipant), Result.value);
         }
     }
 }

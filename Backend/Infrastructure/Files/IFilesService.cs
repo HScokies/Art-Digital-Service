@@ -5,8 +5,8 @@ namespace Infrastructure.Files
 {
     public interface IFilesService
     {
-        public Task<Result<string>> UploadFileAsync(IFormFile file);
-        public Task<Result<MemoryStream>> DownloadFileAsync(string id, string? displayedName);
+        public Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken);
+        public Task<Result<MemoryStream>> DownloadFileAsync(string id, string? displayedName, CancellationToken cancellationToken);
         public Result<string> getMimeType(IFormFile file);
     }
 }

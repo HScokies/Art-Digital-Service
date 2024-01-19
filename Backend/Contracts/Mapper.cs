@@ -41,5 +41,19 @@ namespace Contracts
             youtubeId = participant.Case.youtubeId
         };
 
+        public static ParticipantDto toParticipant(this CreateParticipantRequest request) => new ParticipantDto()
+        {
+            User = new UserDto() { email = request.email, password = request.password, firstName = request.firstName, lastName = request.lastName, patronymic = request.patronymic },
+            typeId = request.typeId,
+            caseId = request.caseId,
+            status = request.solution is null || request.consent is null ? Roles.ParticipantsStatus.sentPersonalData : Roles.ParticipantsStatus.awaitingResults,
+            phone = request.phone,
+            city = request.city,
+            institution = request.institution,
+            grade = request.grade,
+            speciality = request.speciality,
+            consentFilename = request.consentFilename,
+            solutionFilename = request.solutionFilename,
+        };
     }
 }

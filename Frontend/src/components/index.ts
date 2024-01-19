@@ -11,6 +11,7 @@ import DataGridView from "./dataGridView";
 import CaseData from "./caseData";
 import CreateUserForm from "./createUserForm";
 import UpdateUserForm from "./updateUserForm";
+import RateUserForm from "./rateUserForm"
 
 export {
     Input,
@@ -25,5 +26,6 @@ export {
     DataGridView,
     CaseData,
     CreateUserForm,
-    UpdateUserForm
+    UpdateUserForm,
+    RateUserForm
 }

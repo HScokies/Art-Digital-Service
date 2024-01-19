@@ -1,4 +1,5 @@
-﻿using Data.Repositories;
+﻿using Data.Interfaces;
+using Data.Repositories;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,9 @@ namespace Data
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IParticipantRepository, UserRepository>();
             services.AddScoped<ICaseRepository, CaseRepository>();
+            services.AddScoped<IRepository, Repository>();
             
             return services;
         }

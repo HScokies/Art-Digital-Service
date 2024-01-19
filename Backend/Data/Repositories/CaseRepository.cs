@@ -1,4 +1,5 @@
-﻿using Domain.Repositories;
+﻿using Domain.Entities;
+using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
@@ -11,6 +12,10 @@ namespace Data.Repositories
         {
             this.ctx = ctx;
         }
-        public async Task<bool> ExistsAsync(int caseId) => await ctx.cases.AnyAsync(c => c.id == caseId);
+        public async Task<bool> ExistsAsync(int caseId, CancellationToken cancellationToken) => await ctx.cases.AnyAsync(c => c.id == caseId, cancellationToken);
+
+        public async Task<CaseDto?> GetCase(int caseId, CancellationToken cancellationToken) => await ctx.cases.FirstOrDefaultAsync(c => c.id == caseId, cancellationToken);
+
+        public async Task<CaseDto[]> List(CancellationToken cancellationToken)  => await ctx.cases.ToArrayAsync(cancellationToken);
     }
 }

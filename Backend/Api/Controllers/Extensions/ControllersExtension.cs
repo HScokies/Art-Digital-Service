@@ -32,5 +32,7 @@ namespace Api.Controllers.Extensions
 
             return new Result<int>(id);
         }
+
+        public static bool ShowOnlyParticipants(this ClaimsPrincipal User) => User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value == Roles.Permissions.rateUsers);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Contracts.User;
+using Data.Interfaces;
 using Domain.Core.Primitives;
 using Domain.Core.Utility;
 using Domain.Entities;
@@ -7,25 +8,28 @@ using Domain.Enumeration;
 using Domain.Repositories;
 using Infrastructure.Files;
 using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Tsp;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
 {
     public class UserService : IUserService
     {
+        private readonly IRepository repository;
         private readonly IUserRepository userRepository;
         private readonly ICaseRepository caseRepository;
         private readonly IFilesService filesSevice;
+        private readonly IParticipantRepository participantsRepository;
 
-        public UserService(IUserRepository userRepository, ICaseRepository caseRepository, IFilesService filesSevice)
+        public UserService(IRepository repository, IUserRepository userRepository, ICaseRepository caseRepository, IFilesService filesSevice, IParticipantRepository participantRepository)
         {
+            this.repository = repository;
             this.userRepository = userRepository;
             this.caseRepository = caseRepository;
             this.filesSevice = filesSevice;
+            this.participantsRepository = participantRepository;
         }
-        private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await userRepository.CheckIfTypeExistsAsync(request.userType, cancellationToken);
-        private async Task<bool> isUserExists(string email, CancellationToken cancellationToken) => await userRepository.CheckIfUserExistsAsync(email, cancellationToken);
+        private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await userRepository.TypeExistsAsync(request.userType, cancellationToken);
+        private async Task<bool> isUserExists(string email, CancellationToken cancellationToken) => await userRepository.UserExistsAsync(email, cancellationToken);
         public async Task<Result<bool>> CheckIfUserExistsAsync(string email, CancellationToken cancellationToken)
         {
             if (!Ensure.isEmail(email))
@@ -76,7 +80,7 @@ namespace Application.Services.User
 
         public async Task<Result<PersonalDataAppendResponse>> AppendParticipantDataAsync(int userId, PersonalDataAppendRequest request, CancellationToken cancellationToken)
         {
-            if (!await caseRepository.ExistsAsync(request.caseId))
+            if (!await caseRepository.ExistsAsync(request.caseId, cancellationToken))
                 return new Result<PersonalDataAppendResponse>(CommonErrors.Case.NotFound);
 
             var participant = await userRepository.GetParticipantByIdAsync(userId, cancellationToken);
@@ -84,7 +88,7 @@ namespace Application.Services.User
                 return new Result<PersonalDataAppendResponse>(CommonErrors.User.NotFound);
             
             participant.appendPersonalData(request);
-            await userRepository.SaveAsync();
+            await repository.SaveChangesAsync(cancellationToken);
 
             var res = participant.toPersonalDataResponse();
 
@@ -120,13 +124,20 @@ namespace Application.Services.User
             participant.consentFilename = response.consent;
             participant.solutionFilename = response.solution;
             participant.status = response.status;
-            await userRepository.SaveAsync(cancellationToken);
+            await repository.SaveChangesAsync(cancellationToken);
 
             return new Result<AppendParticipantFilesResponse>(response);
         }
 
         public async Task<Result<int>> CreateParticipantAsync(CreateParticipantRequest request, CancellationToken cancellationToken) 
         {
+            var typeExists = await userRepository.TypeExistsAsync(request.typeId, cancellationToken);
+            if (!typeExists)
+                return new Result<int>(CommonErrors.User.InvalidUserType);
+            var caseExists = await caseRepository.ExistsAsync(request.caseId, cancellationToken);
+            if (!caseExists)
+                return new Result<int>(CommonErrors.Case.NotFound);
+
             //Upload participant files and add their filenames to request 
             if (request.consent is not null && request.solution is not null)
             {
@@ -172,6 +183,23 @@ namespace Application.Services.User
                 return new Result<T>(CommonErrors.File.UnsupportedMediaType);
 
             return new Result<T>();
+        }
+
+        public async Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken) => await userRepository.GetParticipantTypes();
+
+        public async Task<GetParticipantResponse> GetParticipants(CancellationToken cancellationToken, int offset, int take, bool participantsOnly,  bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null)
+        {
+            return await participantsRepository.GetParticipants(
+                cancellationToken: cancellationToken,
+                offset: offset,
+                take: take,
+                participantsOnly: participantsOnly,
+                hasScore: hasScore,
+                noScore: noScore,
+                search: search,
+                excludeType: excludeType,
+                excludeCase: excludeCase
+                );
         }
     }
 }

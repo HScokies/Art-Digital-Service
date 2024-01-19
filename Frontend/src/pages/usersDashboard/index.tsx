@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
-import { CreateUserForm, DataGridView } from "src/components"
+import { CreateUserForm, DataGridView, RateUserForm, UpdateUserForm } from "src/components"
 import { param } from "src/components/dataGridView/interfaces"
-import RateUserForm from "src/components/rateUserForm"
 import { API } from "src/services"
 
 
@@ -49,7 +48,7 @@ const UsersDashboardPage = () => {
         createProvider={API.createUser}
         createForm={CreateUserForm}
         updateProvider={API.updateUser}
-        updateForm={RateUserForm}
+        updateForm={UpdateUserForm}
         rowsPerPageOptions={new Set([5, 10, 25, 50, 75])}
         columns={[
             {

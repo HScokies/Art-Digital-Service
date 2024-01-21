@@ -1,6 +1,6 @@
 ﻿namespace Contracts.User
 {
-    public class PersonalDataAppendRequest
+    public sealed class PersonalDataAppendRequest
     {
 
         public string firstName { get; set; } = null!;

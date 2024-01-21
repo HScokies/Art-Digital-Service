@@ -2,7 +2,7 @@
 
 namespace Contracts.User
 {
-    public class PersonalDataAppendResponse
+    public sealed class PersonalDataAppendResponse
     {
         public int userId {  get; set; }
         [JsonIgnore]

@@ -24,7 +24,7 @@ namespace Data.Repositories
             return res.Entity;
         }
 
-        public async Task<ParticipantDto?> GetParticipantByIdAsync(int id, CancellationToken cancellationToken = default) => await ctx.participants.Include(p => p.User).Include(p => p.Case).FirstOrDefaultAsync(p => p.userId == id, cancellationToken);
+        public async Task<ParticipantDto?> GetParticipantByUserIdAsync(int id, CancellationToken cancellationToken = default) => await ctx.participants.Include(p => p.User).Include(p => p.Case).FirstOrDefaultAsync(p => p.userId == id, cancellationToken);
 
         public async Task<ParticipantTypeDto[]> GetParticipantTypes(CancellationToken cancellationToken = default) => await ctx.types.ToArrayAsync(cancellationToken);
 
@@ -50,7 +50,7 @@ namespace Data.Repositories
 
             var participants = query.Select(p => new ParticipantPreview()
             {
-                participantId = p.id,
+                id = p.id,
                 fullName = $"{p.User.lastName} {p.User.firstName} {p.User.patronymic}",
                 typeName = p.Type.name,
                 caseName = p.Case.name,
@@ -71,6 +71,8 @@ namespace Data.Repositories
 
             response.participants = await participants.Skip((currentPage-1)*take).Take(take).ToArrayAsync();
             return response;
-        }          
+        }
+
+        public async Task<ParticipantDto?> GetParticipantById(int id, CancellationToken cancellationToken) => await ctx.participants.Include(p => p.User).FirstOrDefaultAsync(p => p.id == id, cancellationToken);
     }
 }

@@ -13,6 +13,7 @@ namespace Domain.Enumeration
             public static Error InvalidCredentials = new(HttpStatusCode.BadRequest, "Неверный логин или пароль!", "Invalid credentials");
             public static Error NonUniqueEmail = new(HttpStatusCode.BadRequest, "Пользователь с указанным email уже существует!", "Non-unique email");
             public static Error InvalidEmail = new(HttpStatusCode.BadRequest, "Указанный email не прошел валидацию!", "Invalid email");
+            public static Error InvalidPhone = new(HttpStatusCode.BadRequest, "Указанный номер телефона не прошел валидацию!", "Invalid phone");
             public static Error InvalidPassword = new(HttpStatusCode.BadRequest, "Указанный пароль не прошел валидацию!", "Invalid password");
             public static Error InvalidUserType = new(HttpStatusCode.BadRequest, "Неизвестный тип учетной записи!", "Invalid user type");
             public static Error InvalidToken = new(HttpStatusCode.Unauthorized, "Неверный формат токена!", "Invalid token format");

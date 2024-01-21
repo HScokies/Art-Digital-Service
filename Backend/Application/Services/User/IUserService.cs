@@ -15,5 +15,7 @@ namespace Application.Services.User
         Task<Result<int>> CreateParticipantAsync(CreateParticipantRequest request, CancellationToken cancellationToken);
         Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken);
         Task<GetParticipantResponse> GetParticipants(CancellationToken cancellationToken, int offset, int take, bool participantsOnly, bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null);
+        Task<Result<ParticipantDto>> GetParticipant(int participantId, CancellationToken cancellationToken);
+        Task<Result<bool>> UpdateParticipant(int participantId, UpdateParticipantRequest request, CancellationToken cancellationToken);
     }
 }

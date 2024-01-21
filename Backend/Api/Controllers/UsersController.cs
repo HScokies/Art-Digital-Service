@@ -1,16 +1,12 @@
 ﻿using Api.Controllers.Extensions;
 using Application.Services.User;
 using Contracts.User;
-using Domain.Core.Primitives;
 using Domain.Entities;
 using Domain.Enumeration;
 using Infrastructure.Authentication;
 using Infrastructure.Emails;
-using Infrastructure.Files;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Web;
 
 namespace Api.Controllers
 {
@@ -146,10 +142,28 @@ namespace Api.Controllers
         }
         
 
-        [HttpGet("participants/{id:int}"), Authorize(Roles = Roles.Permissions.readUsers)]
-        public async Task<ParticipantDto> GetParticipantAsync(int id, CancellationToken cancellationToken)
+        [HttpGet("participants/{participantId:int}"), Authorize(Roles = Roles.Permissions.readUsers)]
+        public async Task<IActionResult> GetParticipantAsync(int participantId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var Result = await userService.GetParticipant(participantId, cancellationToken);
+            if (!Result.isSuccess)
+                return Problem(Result.error);
+
+            return Ok(Result.value);
+        }
+
+        [HttpPut("participants/{id:int}"), Authorize(Roles = Roles.Permissions.updateUsers)]
+        public async Task<IActionResult> UpdateParticipantAsync(int id, [FromForm] UpdateParticipantRequest request, CancellationToken cancellationToken)
+        {
+            var res = await userService.UpdateParticipant(id, request, cancellationToken);
+            if (!res.isSuccess) return Problem(res.error);
+            return Ok(res.value);
+        }
+
+        [HttpPatch("participants/{id:int}")]
+        public async Task<IActionResult> RateParticipantAsync(int id, int rating, CancellationToken cancellationToken)
+        {
+            return Ok(rating);
         }
     }
 }

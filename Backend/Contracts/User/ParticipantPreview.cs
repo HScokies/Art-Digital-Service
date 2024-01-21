@@ -1,15 +1,15 @@
 ﻿namespace Contracts.User
 {
-    public class ParticipantPreview
+    public sealed class ParticipantPreview
     {
-        public int participantId { get; set; }
+        public int id { get; set; }
         public string fullName { get; set; } = null!;
         public string typeName { get; set; } = null!;
         public string caseName { get; set; } = null!;
         public int? score = null!;
     }
 
-    public class GetParticipantResponse
+    public sealed class GetParticipantResponse
     {
         public ParticipantPreview[] participants { get; set; } = null!;
         public int currentPage { get; set; }

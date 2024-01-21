@@ -60,6 +60,23 @@ namespace Infrastructure.Files
             }            
         }
 
+        private Result<bool> DeleteFile(string directory, string fileName)
+        {
+            try
+            {
+                string path = Path.Combine(directory, fileName);
+                File.Delete(path);
+                return new Result<bool>(true);
+            }
+            catch(Exception ex)
+            {
+                Debug.Fail(ex.Message);
+                return new Result<bool>(CommonErrors.Unknown);
+            }
+        }
+
         public async Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken) => await UploadFileAsync(userFiles, file, cancellationToken);
+
+        public void DropUserFile(string fileName) => DeleteFile(userFiles, fileName);
     }
 }

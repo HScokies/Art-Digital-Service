@@ -2,7 +2,7 @@
 
 namespace Contracts.User
 {
-    public class AppendParticipantFilesResponse
+    public sealed class AppendParticipantFilesResponse
     {
         [JsonIgnore]
         public int userId { get; set; }

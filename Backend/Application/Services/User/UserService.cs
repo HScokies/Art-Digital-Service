@@ -8,6 +8,7 @@ using Domain.Enumeration;
 using Domain.Repositories;
 using Infrastructure.Files;
 using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
@@ -80,10 +81,13 @@ namespace Application.Services.User
 
         public async Task<Result<PersonalDataAppendResponse>> AppendParticipantDataAsync(int userId, PersonalDataAppendRequest request, CancellationToken cancellationToken)
         {
+            if (!Ensure.isPhone(request.phone))
+                return new Result<PersonalDataAppendResponse>(CommonErrors.User.InvalidPhone);
+
             if (!await caseRepository.ExistsAsync(request.caseId, cancellationToken))
                 return new Result<PersonalDataAppendResponse>(CommonErrors.Case.NotFound);
 
-            var participant = await userRepository.GetParticipantByIdAsync(userId, cancellationToken);
+            var participant = await userRepository.GetParticipantByUserIdAsync(userId, cancellationToken);
             if (participant is null)
                 return new Result<PersonalDataAppendResponse>(CommonErrors.User.NotFound);
             
@@ -97,7 +101,7 @@ namespace Application.Services.User
 
         public async Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution, CancellationToken cancellationToken)
         {
-            var participant = await userRepository.GetParticipantByIdAsync(userId, cancellationToken);
+            var participant = await userRepository.GetParticipantByUserIdAsync(userId, cancellationToken);
             if (participant is null)
                 return new Result<AppendParticipantFilesResponse>(CommonErrors.User.NotFound);
 
@@ -131,6 +135,11 @@ namespace Application.Services.User
 
         public async Task<Result<int>> CreateParticipantAsync(CreateParticipantRequest request, CancellationToken cancellationToken) 
         {
+            if (!Ensure.isPhone(request.phone))
+                return new Result<int>(CommonErrors.User.InvalidPhone);
+            if (!Ensure.isPassword(request.password))
+                return new Result<int>(CommonErrors.User.InvalidPassword);
+
             var typeExists = await userRepository.TypeExistsAsync(request.typeId, cancellationToken);
             if (!typeExists)
                 return new Result<int>(CommonErrors.User.InvalidUserType);
@@ -164,27 +173,7 @@ namespace Application.Services.User
             var res = await userRepository.CreateParticipantAsync(Participant, cancellationToken);
             return new Result<int>(res.id);
         }
-        
-        private Result<T> ValidateParticipantFiles<T>(IFormFile consent, IFormFile solution)
-        {
-            if (!Ensure.isValidFileSize(consent.Length) || !Ensure.isValidFileSize(solution.Length))
-                return new Result<T>(CommonErrors.File.LargeFile);
-
-            var consentMimeResult = filesSevice.getMimeType(consent);
-            if (!consentMimeResult.isSuccess)
-                return new Result<T>(consentMimeResult.error);
-            if (!Ensure.isValidConsentMimeType(consentMimeResult.value))
-                return new Result<T>(CommonErrors.File.UnsupportedMediaType);
-
-            var solutionMimeResult = filesSevice.getMimeType(solution);
-            if (!solutionMimeResult.isSuccess)
-                return new Result<T>(solutionMimeResult.error);
-            if (!Ensure.isValidSolutionMimeType(solutionMimeResult.value))
-                return new Result<T>(CommonErrors.File.UnsupportedMediaType);
-
-            return new Result<T>();
-        }
-
+      
         public async Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken) => await userRepository.GetParticipantTypes();
 
         public async Task<GetParticipantResponse> GetParticipants(CancellationToken cancellationToken, int offset, int take, bool participantsOnly,  bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null)
@@ -200,6 +189,127 @@ namespace Application.Services.User
                 excludeType: excludeType,
                 excludeCase: excludeCase
                 );
+        }
+
+        public async Task<Result<ParticipantDto>> GetParticipant(int userId, CancellationToken cancellationToken)
+        {
+            var res = await participantRepository.GetParticipantById(userId, cancellationToken);
+            if (res is null)
+                return new Result<ParticipantDto>(CommonErrors.User.NotFound);
+            return new Result<ParticipantDto>(res);
+        }
+
+        public async Task<Result<bool>> UpdateParticipant(int participantId, UpdateParticipantRequest request, CancellationToken cancellationToken)
+        {
+            if (!Ensure.isEmail(request.email))
+                return new Result<bool>(CommonErrors.User.InvalidEmail);
+            if (!Ensure.isPhone(request.phone))
+                return new Result<bool>(CommonErrors.User.InvalidPhone);
+
+            var participant = await participantRepository.GetParticipantById(participantId, cancellationToken);
+            if (participant is null)
+                return new Result<bool>(CommonErrors.User.NotFound);
+
+            string? oldConsentFilename = null, oldSolutionFilename = null;
+            if (request.consent is not null)
+            {                
+                var validationResilt = ValidateConsent<bool>(request.consent);
+                if (!validationResilt.isSuccess)
+                    return validationResilt;
+
+                oldConsentFilename = participant.consentFilename;
+
+                var consentResult = await filesSevice.UploadUserFileAsync(request.consent, cancellationToken);
+                if (!consentResult.isSuccess)
+                    return new Result<bool>(consentResult.error);
+
+                participant.consentFilename = consentResult.value;
+            }               
+            if (request.solution is not null)
+            {                
+                var validationResilt = ValidateSolutuion<bool>(request.solution);
+                if (!validationResilt.isSuccess)
+                    return validationResilt;
+                
+                oldSolutionFilename = participant.solutionFilename;
+
+                var solutionResult = await filesSevice.UploadUserFileAsync(request.solution, cancellationToken);
+                if (!solutionResult.isSuccess)
+                    return new Result<bool>(solutionResult.error);
+                participant.solutionFilename = solutionResult.value;
+            }
+
+            return await TryUpdateParticipant(participant, request, cancellationToken, oldSolutionFilename, oldConsentFilename);
+        }
+
+        
+        private async Task<Result<bool>> TryUpdateParticipant(ParticipantDto participant,UpdateParticipantRequest request, CancellationToken cancellationToken, string? oldSolutionFilename, string? oldConsentFilename)
+        {
+            try
+            {
+                participant.updateParticipant(request);
+                await repository.SaveChangesAsync(cancellationToken);
+
+                //Удаляем старые файлы в случае успеха
+                if (oldConsentFilename != null)
+                    filesSevice.DropUserFile(oldConsentFilename);
+                if (oldSolutionFilename != null)
+                    filesSevice.DropUserFile(oldSolutionFilename);
+
+                return new Result<bool>();
+            }
+            catch
+            {
+                //Удаляем новые файлы в случае провала
+                if (oldConsentFilename != null)
+                    filesSevice.DropUserFile(participant.consentFilename!);
+                if (oldSolutionFilename != null)                
+                    filesSevice.DropUserFile(participant.solutionFilename!);
+
+                return new Result<bool>(CommonErrors.Unknown);
+            }
+        }
+        private Result<T> ValidateConsent<T>(IFormFile consent)
+        {
+            if (!Ensure.isValidFileSize(consent.Length))
+                return new Result<T>(CommonErrors.File.LargeFile);
+
+            var consentMimeResult = filesSevice.getMimeType(consent);
+
+            if (!consentMimeResult.isSuccess)
+                return new Result<T>(consentMimeResult.error);
+
+            if (!Ensure.isValidConsentMimeType(consentMimeResult.value))
+                return new Result<T>(CommonErrors.File.UnsupportedMediaType);
+
+            return new Result<T>();
+        }
+        private Result<T> ValidateSolutuion<T>(IFormFile solution)
+        {
+            if (!Ensure.isValidFileSize(solution.Length))
+                return new Result<T>(CommonErrors.File.LargeFile);
+
+            var solutionMimeResult = filesSevice.getMimeType(solution);
+
+            if (!solutionMimeResult.isSuccess)
+                return new Result<T>(solutionMimeResult.error);
+
+            if (!Ensure.isValidConsentMimeType(solutionMimeResult.value))
+                return new Result<T>(CommonErrors.File.UnsupportedMediaType);
+
+            return new Result<T>();
+        }
+        private Result<T> ValidateParticipantFiles<T>(IFormFile consent, IFormFile solution)
+        {
+            var consentResult = ValidateConsent<T>(consent);
+            if (!consentResult.isSuccess)
+                return consentResult;
+
+            var solutionResult = ValidateSolutuion<T>(solution);
+            if (!solutionResult.isSuccess)
+                return solutionResult;
+
+            return new Result<T>();
         }
     }
 }

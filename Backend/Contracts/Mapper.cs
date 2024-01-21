@@ -55,5 +55,27 @@ namespace Contracts
             consentFilename = request.consentFilename,
             solutionFilename = request.solutionFilename,
         };
+
+        public static ParticipantDto updateParticipant(this ParticipantDto participant, UpdateParticipantRequest request)
+        {
+            if (request.userTypeId is not null)
+                participant.typeId = (int)request.userTypeId;
+            if (request.caseId is not null)
+                participant.caseId = (int)request.caseId;
+
+            participant.User.email = request.email;
+            participant.phone = request.phone;            
+            participant.User.firstName = request.firstName;
+            participant.User.lastName = request.lastName;
+            participant.User.patronymic = request.patronymic;
+            participant.city = request.city;
+            participant.institution = request.institution;
+            participant.grade = request.grade;
+            participant.speciality = request.speciality;
+            participant.rating = request.score;
+            participant.status = request.status;
+
+            return participant;
+        }
     }
 }

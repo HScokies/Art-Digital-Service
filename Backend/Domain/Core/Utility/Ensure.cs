@@ -21,6 +21,20 @@ namespace Domain.Core.Utility
             return true;
         }
         
+        public static bool isPhone(string phone)
+        {
+            if (!phone.StartsWith("+7 "))
+                return false;
+            if (phone.Length != 13)
+                return false;
+            for (int i=3; i < phone.Length; i++)
+            {
+                if (!Char.IsDigit(phone[i]))
+                    return false;
+            }
+            return true;
+        }
+
         public static bool isValidExpireTime(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
         {
             if (expires != null)

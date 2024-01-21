@@ -65,5 +65,11 @@ namespace Data.Repositories
         }
 
         public async Task<ParticipantDto?> GetParticipantByIdAsync(int id, CancellationToken cancellationToken) => await ctx.participants.Include(p => p.User).FirstOrDefaultAsync(p => p.id == id, cancellationToken);
+
+        public async Task DropParticipantAsync(ParticipantDto participant, CancellationToken cancellationToken)
+        {
+            ctx.participants.Remove(participant);
+            await ctx.SaveChangesAsync(cancellationToken);
+        }
     }
 }

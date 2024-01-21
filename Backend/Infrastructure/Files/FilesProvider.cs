@@ -9,11 +9,11 @@ using System.IO;
 
 namespace Infrastructure.Files
 {
-    public class FilesService : IFilesService
+    public class FilesProvider : IFilesProvider
     {
         private readonly string userFiles = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "user-uploaded");
         private readonly ContentInspector contentInspector;
-        public FilesService()
+        public FilesProvider()
         {
             contentInspector = new ContentInspectorBuilder()
             {

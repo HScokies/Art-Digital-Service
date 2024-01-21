@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Files
 {
-    public interface IFilesService
+    public interface IFilesProvider
     {
         public Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken);
         public void DropUserFile(string fileName);

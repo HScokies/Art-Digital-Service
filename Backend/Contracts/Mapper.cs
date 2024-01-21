@@ -1,4 +1,5 @@
-﻿using Contracts.User;
+﻿using Contracts.Participant;
+using Contracts.User;
 using Domain.Entities;
 using Domain.Enumeration;
 using System.Diagnostics;

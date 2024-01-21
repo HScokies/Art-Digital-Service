@@ -17,6 +17,7 @@ builder.Services.AddAppServices();
 builder.Services.AddJwtAuthentication();
 builder.Services.AddEmailService();
 builder.Services.AddFilesService();
+builder.Services.AddExportService();
 
 builder.Services.AddHttpContextAccessor();
 

@@ -2,6 +2,7 @@
 using Api.Controllers.Extensions;
 using Application.Services.Participant;
 using Application.Services.User;
+using Contracts.Participant;
 using Contracts.User;
 using Domain.Enumeration;
 using Infrastructure.Authentication;
@@ -101,6 +102,13 @@ namespace Api.Controllers
             return res.isSuccess ? NoContent() : Problem(res.error);
         }
 
+        [HttpDelete("{participantId:int}")]
+        public async Task<IActionResult> DropParticipant(int participantId, CancellationToken cancellationToken)
+        {
+            var res = await participantService.DropParticipantAsync(participantId, cancellationToken);
+            return res.isSuccess? NoContent() : Problem(res.error);
+        }
+
         [HttpPatch("append-data"), Authorize(Roles = Roles.ParticipantsStatus.justRegistered)]
         public async Task<IActionResult> AppendPersonalData([FromForm] PersonalDataAppendRequest request, CancellationToken cancellationToken)
         {
@@ -143,5 +151,11 @@ namespace Api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("export")] // Опциональный параметр id => экспорт только выделенных
+        public IActionResult ExportParticipants([FromQuery] int[] id)
+        {
+            var res = participantService.ExportParticipants(id);
+            return File(res.fileStream, res.contentType);
+        }
     }
 }

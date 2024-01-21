@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Text.Json.Serialization;
 
-namespace Contracts.User
+namespace Contracts.Participant
 {
     public sealed class CreateParticipantRequest
     {

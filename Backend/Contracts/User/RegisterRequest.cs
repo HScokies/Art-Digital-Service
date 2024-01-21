@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Contracts.User
+﻿namespace Contracts.User
 {
     public sealed class RegisterRequest
     {

@@ -1,4 +1,5 @@
 ﻿using Contracts.File;
+using Contracts.Participant;
 using Contracts.User;
 using Domain.Core.Primitives;
 using Domain.Entities;
@@ -16,6 +17,8 @@ namespace Application.Services.Participant
         Task<Result<ParticipantDto>> GetParticipantAsync(int participantId, CancellationToken cancellationToken);
         Task<Result<bool>> UpdateParticipantAsync(int participantId, UpdateParticipantRequest request, CancellationToken cancellationToken);
         Task<Result<bool>> RateParticipantAsync(int participantId, RateParticipantRequest request, CancellationToken cancellationToken);
-        public Task<Result<FileResponse>> GetParticipantFileAsync(string filename, CancellationToken cancellationToken);
+        Task<Result<FileResponse>> GetParticipantFileAsync(string filename, CancellationToken cancellationToken);
+        Task<Result<bool>> DropParticipantAsync(int participantId, CancellationToken cancellationToken);
+        FileResponse ExportParticipants(int[]? participants);
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Domain.Core.Utility;
 using Infrastructure.Authentication;
 using Infrastructure.Emails;
+using Infrastructure.Export;
 using Infrastructure.Files;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
 
 namespace Infrastructure
@@ -82,7 +82,12 @@ namespace Infrastructure
         }
         public static IServiceCollection AddFilesService(this IServiceCollection services)
         {
-            services.AddSingleton<IFilesService, FilesService>();
+            services.AddSingleton<IFilesProvider, FilesProvider>();
+            return services;
+        }
+        public static IServiceCollection AddExportService(this IServiceCollection services)
+        {
+            services.AddTransient<IExportProvider, ExportProvider>();
             return services;
         }
     }

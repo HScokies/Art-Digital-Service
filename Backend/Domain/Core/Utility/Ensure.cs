@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Domain.Enumeration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Domain.Core.Utility
@@ -34,6 +35,16 @@ namespace Domain.Core.Utility
             }
             return true;
         }
+
+        public static bool isStatus(string status) => status switch
+        {
+            Roles.ParticipantsStatus.justRegistered => true,
+            Roles.ParticipantsStatus.sentPersonalData => true,
+            Roles.ParticipantsStatus.awaitingResults => true,
+            Roles.ParticipantsStatus.droppedOut => true,
+            Roles.ParticipantsStatus.invited => true,
+            _ => false
+        };
 
         public static bool isValidExpireTime(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
         {

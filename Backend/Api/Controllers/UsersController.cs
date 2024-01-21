@@ -26,14 +26,14 @@ namespace Api.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUserByEmail(string email, CancellationToken cancellationToken)
         {
             var result = await userService.CheckIfUserExistsAsync(email, cancellationToken);
             return result.isSuccess ? Ok(result.value) : Problem(result.error);
         }
 
         [HttpPatch("append-data"), Authorize(Roles = Roles.ParticipantsStatus.justRegistered)]
-        public async Task<IActionResult> AppendPersonalDataAsync([FromForm]PersonalDataAppendRequest request,CancellationToken cancellationToken)
+        public async Task<IActionResult> AppendPersonalData([FromForm]PersonalDataAppendRequest request,CancellationToken cancellationToken)
         {
             var UserIdResult = User.GetUserId();
             if (!UserIdResult.isSuccess)
@@ -59,7 +59,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("append-files"), Authorize(Roles = Roles.ParticipantsStatus.sentPersonalData)]
-        public async Task<IActionResult> AppendFilesAsync(IFormFile conscent, IFormFile solution, CancellationToken cancellationToken)
+        public async Task<IActionResult> AppendFiles(IFormFile conscent, IFormFile solution, CancellationToken cancellationToken)
         {
             var userIdResult = User.GetUserId();
             if (!userIdResult.isSuccess)
@@ -94,14 +94,14 @@ namespace Api.Controllers
         }
 
         [HttpGet("participants/types")]
-        public async Task<IActionResult> GetParticipantTypesAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetParticipantTypes(CancellationToken cancellationToken)
         {
             var res = await userService.GetParticipantTypesAsync(cancellationToken);
             return Ok(res);
         }
 
         [HttpGet("participants/statuses"), Authorize(Roles = Roles.Permissions.readUsers)]
-        public IActionResult GetParticipantStatusesAsync()
+        public IActionResult GetParticipantStatuses()
         {
             Dictionary<string, string> statuses = new()
             {
@@ -115,7 +115,7 @@ namespace Api.Controllers
 
 
         [HttpGet("participants"), Authorize(Roles = Roles.Permissions.readUsers)]
-        public async Task<IActionResult> GetParticipantsListAsync(CancellationToken cancellationToken,[FromQuery] int offset = 0, int take = 5, bool hasScore = true, bool noScore = true, string ? search = null, [FromQuery] List<int>? excludeType = null, [FromQuery] List<int>? excludeCase = null)
+        public async Task<IActionResult> GetParticipantsList(CancellationToken cancellationToken,[FromQuery] int offset = 0, int take = 5, bool hasScore = true, bool noScore = true, string ? search = null, [FromQuery] List<int>? excludeType = null, [FromQuery] List<int>? excludeCase = null)
         {
             if (offset < 0 || take < 1)
                 return BadRequest();
@@ -127,7 +127,7 @@ namespace Api.Controllers
             // true => Отображать только участников с отправленным решением, согласием
             var isJudge = User.ShowOnlyParticipants();
 
-            var res = await userService.GetParticipants(
+            var res = await userService.GetParticipantsAsync(
                 offset: offset,
                 take: take,
                 participantsOnly: isJudge,
@@ -143,27 +143,24 @@ namespace Api.Controllers
         
 
         [HttpGet("participants/{participantId:int}"), Authorize(Roles = Roles.Permissions.readUsers)]
-        public async Task<IActionResult> GetParticipantAsync(int participantId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetParticipant(int participantId, CancellationToken cancellationToken)
         {
-            var Result = await userService.GetParticipant(participantId, cancellationToken);
-            if (!Result.isSuccess)
-                return Problem(Result.error);
-
-            return Ok(Result.value);
+            var res = await userService.GetParticipantAsync(participantId, cancellationToken);
+            return res.isSuccess? Ok(res.value) : Problem(res.error);
         }
 
-        [HttpPut("participants/{id:int}"), Authorize(Roles = Roles.Permissions.updateUsers)]
-        public async Task<IActionResult> UpdateParticipantAsync(int id, [FromForm] UpdateParticipantRequest request, CancellationToken cancellationToken)
+        [HttpPut("participants/{participantId:int}"), Authorize(Roles = Roles.Permissions.updateUsers)]
+        public async Task<IActionResult> UpdateParticipant(int participantId, [FromForm] UpdateParticipantRequest request, CancellationToken cancellationToken)
         {
-            var res = await userService.UpdateParticipant(id, request, cancellationToken);
-            if (!res.isSuccess) return Problem(res.error);
-            return Ok(res.value);
+            var res = await userService.UpdateParticipantAsync(participantId, request, cancellationToken);
+            return res.isSuccess? NoContent() : Problem(res.error);
         }
 
-        [HttpPatch("participants/{id:int}")]
-        public async Task<IActionResult> RateParticipantAsync(int id, int rating, CancellationToken cancellationToken)
+        [HttpPatch("participants/{participantId:int}"), Authorize(Roles = Roles.Permissions.rateUsers)]
+        public async Task<IActionResult> RateParticipant(int participantId,[FromForm] RateParticipantRequest request, CancellationToken cancellationToken)
         {
-            return Ok(rating);
+            var res = await userService.RateParticipantAsync(participantId, request, cancellationToken);
+            return res.isSuccess? NoContent() : Problem(res.error);
         }
     }
 }

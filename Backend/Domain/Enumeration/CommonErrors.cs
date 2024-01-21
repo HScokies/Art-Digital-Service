@@ -16,6 +16,7 @@ namespace Domain.Enumeration
             public static Error InvalidPhone = new(HttpStatusCode.BadRequest, "Указанный номер телефона не прошел валидацию!", "Invalid phone");
             public static Error InvalidPassword = new(HttpStatusCode.BadRequest, "Указанный пароль не прошел валидацию!", "Invalid password");
             public static Error InvalidUserType = new(HttpStatusCode.BadRequest, "Неизвестный тип учетной записи!", "Invalid user type");
+            public static Error InvalidStatus = new(HttpStatusCode.BadRequest, "Неизвестный статус участника!", "Invalid user status");
             public static Error InvalidToken = new(HttpStatusCode.Unauthorized, "Неверный формат токена!", "Invalid token format");
         }
         public static class Case

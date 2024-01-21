@@ -48,7 +48,7 @@ const UsersDashboardPage = () => {
         createProvider={API.createUser}
         createForm={CreateUserForm}
         updateProvider={API.updateUser}
-        updateForm={UpdateUserForm}
+        updateForm={RateUserForm}
         rowsPerPageOptions={new Set([5, 10, 25, 50, 75])}
         columns={[
             {

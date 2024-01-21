@@ -8,7 +8,6 @@ using Domain.Enumeration;
 using Domain.Repositories;
 using Infrastructure.Files;
 using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
@@ -139,6 +138,8 @@ namespace Application.Services.User
                 return new Result<int>(CommonErrors.User.InvalidPhone);
             if (!Ensure.isPassword(request.password))
                 return new Result<int>(CommonErrors.User.InvalidPassword);
+            if (!Ensure.isEmail(request.email))
+                return new Result<int>(CommonErrors.User.InvalidEmail);
 
             var typeExists = await userRepository.TypeExistsAsync(request.typeId, cancellationToken);
             if (!typeExists)
@@ -176,7 +177,7 @@ namespace Application.Services.User
       
         public async Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken) => await userRepository.GetParticipantTypes();
 
-        public async Task<GetParticipantResponse> GetParticipants(CancellationToken cancellationToken, int offset, int take, bool participantsOnly,  bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null)
+        public async Task<GetParticipantResponse> GetParticipantsAsync(CancellationToken cancellationToken, int offset, int take, bool participantsOnly,  bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null)
         {
             return await participantRepository.GetParticipants(
                 cancellationToken: cancellationToken,
@@ -191,7 +192,7 @@ namespace Application.Services.User
                 );
         }
 
-        public async Task<Result<ParticipantDto>> GetParticipant(int userId, CancellationToken cancellationToken)
+        public async Task<Result<ParticipantDto>> GetParticipantAsync(int userId, CancellationToken cancellationToken)
         {
             var res = await participantRepository.GetParticipantById(userId, cancellationToken);
             if (res is null)
@@ -199,12 +200,14 @@ namespace Application.Services.User
             return new Result<ParticipantDto>(res);
         }
 
-        public async Task<Result<bool>> UpdateParticipant(int participantId, UpdateParticipantRequest request, CancellationToken cancellationToken)
+        public async Task<Result<bool>> UpdateParticipantAsync(int participantId, UpdateParticipantRequest request, CancellationToken cancellationToken)
         {
             if (!Ensure.isEmail(request.email))
                 return new Result<bool>(CommonErrors.User.InvalidEmail);
             if (!Ensure.isPhone(request.phone))
                 return new Result<bool>(CommonErrors.User.InvalidPhone);
+            if (!Ensure.isStatus(request.status))
+                return new Result<bool>(CommonErrors.User.InvalidStatus);
 
             var participant = await participantRepository.GetParticipantById(participantId, cancellationToken);
             if (participant is null)
@@ -310,6 +313,22 @@ namespace Application.Services.User
                 return solutionResult;
 
             return new Result<T>();
+        }
+
+        public async Task<Result<bool>> RateParticipantAsync(int participantId, RateParticipantRequest request, CancellationToken cancellationToken)
+        {
+            if (!Ensure.isStatus(request.status))
+                return new Result<bool>(CommonErrors.User.InvalidStatus);
+
+            var participant = await participantRepository.GetParticipantById(participantId, cancellationToken);
+            if (participant is null)
+                return new Result<bool>(CommonErrors.User.NotFound);
+
+            participant.rating = request.score;
+            participant.status = request.status;
+
+            await repository.SaveChangesAsync(cancellationToken);
+            return new Result<bool>();
         }
     }
 }

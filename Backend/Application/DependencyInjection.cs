@@ -1,4 +1,5 @@
-﻿using Application.Services.User;
+﻿using Application.Services.Participant;
+using Application.Services.User;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -8,6 +9,7 @@ namespace Application
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IParticipantService, ParticipantService>();
 
             return services;
         }

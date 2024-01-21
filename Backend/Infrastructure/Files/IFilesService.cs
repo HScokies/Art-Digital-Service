@@ -1,4 +1,5 @@
-﻿using Domain.Core.Primitives;
+﻿using Contracts.File;
+using Domain.Core.Primitives;
 using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Files
@@ -7,7 +8,7 @@ namespace Infrastructure.Files
     {
         public Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken);
         public void DropUserFile(string fileName);
-        public Task<Result<MemoryStream>> DownloadFileAsync(string id, string? displayedName, CancellationToken cancellationToken);
+        public Task<Result<FileResponse>> DownloadUserFileAsync(string fileName, CancellationToken cancellationToken);
         public Result<string> getMimeType(IFormFile file);
     }
 }

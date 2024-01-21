@@ -1,4 +1,5 @@
-﻿using Api.Controllers.Extensions;
+﻿using Api.Controllers.Base;
+using Api.Controllers.Extensions;
 using Application.Services.User;
 using Contracts.User;
 using Domain.Entities;

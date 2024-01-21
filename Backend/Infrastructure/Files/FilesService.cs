@@ -1,6 +1,8 @@
-﻿using Domain.Core.Primitives;
+﻿using Contracts.File;
+using Domain.Core.Primitives;
 using Domain.Enumeration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MimeDetective;
 using System.Diagnostics;
 using System.IO;
@@ -20,9 +22,25 @@ namespace Infrastructure.Files
 
             Directory.CreateDirectory(userFiles);
         }
-        public async Task<Result<MemoryStream>> DownloadFileAsync(string id, string? displayedName, CancellationToken cancellationToken)
+        private async Task<Result<MemoryStream>> DownloadFileAsync(string directory, string fileName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string path = Path.Combine(directory, fileName);
+
+                MemoryStream stream = new();
+                using (FileStream fs = new(path, FileMode.Open))
+                {
+                    await fs.CopyToAsync(stream);
+                }
+                stream.Position = 0;
+
+                return new Result<MemoryStream>(stream);
+            }
+            catch
+            {
+                return new Result<MemoryStream>(CommonErrors.Unknown);
+            }
         }
 
         private string getExtension(IFormFile file)
@@ -38,6 +56,14 @@ namespace Infrastructure.Files
             using var stream = file.OpenReadStream();
             var InspectResults = contentInspector.Inspect(stream).ByMimeType();
             var MIMEtype = InspectResults.FirstOrDefault()?.MimeType;
+            return MIMEtype is null ? new Result<string>(CommonErrors.File.UnknownMimeType) : new Result<string>(MIMEtype);
+        }
+
+        public Result<string> getMimeType(Stream stream)
+        {
+            var InspectResults = contentInspector.Inspect(stream).ByMimeType();
+            var MIMEtype = InspectResults.FirstOrDefault()?.MimeType;
+            stream.Position = 0;
             return MIMEtype is null ? new Result<string>(CommonErrors.File.UnknownMimeType) : new Result<string>(MIMEtype);
         }
 
@@ -78,5 +104,24 @@ namespace Infrastructure.Files
         public async Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken) => await UploadFileAsync(userFiles, file, cancellationToken);
 
         public void DropUserFile(string fileName) => DeleteFile(userFiles, fileName);
+
+        public async Task<Result<FileResponse>> DownloadUserFileAsync(string fileName, CancellationToken cancellationToken)
+        {
+            var streamResult = await DownloadFileAsync(userFiles, fileName, cancellationToken);
+            if (!streamResult.isSuccess)
+                return new Result<FileResponse>(CommonErrors.Unknown);
+
+            var mimeTypeResult = getMimeType(streamResult.value);
+            if (!mimeTypeResult.isSuccess)
+                return new Result<FileResponse>(CommonErrors.Unknown);
+                        
+            var fileData = new FileResponse()
+            {
+                fileStream = streamResult.value,
+                contentType = mimeTypeResult.value,
+            };
+
+            return new Result<FileResponse>(fileData);
+        }
     }
 }

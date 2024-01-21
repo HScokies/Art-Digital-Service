@@ -1,4 +1,5 @@
-﻿using Domain.Enumeration;
+﻿using Api.Controllers.Base;
+using Domain.Enumeration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

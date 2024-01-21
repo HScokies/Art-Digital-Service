@@ -19,7 +19,7 @@ namespace Api.Controllers
         [HttpGet("user-uploaded/{filename}"), Authorize(Roles = Roles.Permissions.readUsers)]
         public async Task<IActionResult> GetUserFile(string filename, string? displayedName, CancellationToken cancellationToken)
         {
-            var res = await participantService.GetParticipantFile(filename, cancellationToken);
+            var res = await participantService.GetParticipantFileAsync(filename, cancellationToken);
             if (!res.isSuccess)
                 return Problem(res.error);
 

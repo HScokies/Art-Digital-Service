@@ -32,7 +32,7 @@ namespace Data
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IParticipantRepository, UserRepository>();
+            services.AddScoped<IParticipantRepository, ParticipantRepository>();
             services.AddScoped<ICaseRepository, CaseRepository>();
             services.AddScoped<IRepository, Repository>();
             

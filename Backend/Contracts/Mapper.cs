@@ -78,5 +78,17 @@ namespace Contracts
 
             return participant;
         }
+
+        public static IEnumerable<ParticipantExportModel> toParticipantExportModel(this ParticipantDto[] participants)
+        {
+            foreach (var participant in participants)
+            {
+                yield return new ParticipantExportModel()
+                {
+                    firstName = participant.User.firstName,
+                    lastName = participant.User.lastName,
+                };
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@
         public string phone { get; set; } = null!;
         public string email { get; set; } = null!;
         public string institution { get; set; } = null!;
-        public string speciality { get; set; } = null!;
-        public string grade { get; set; } = null!;
+        public string? speciality { get; set; } = null!;
+        public int grade { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Contracts.User;
+﻿using Contracts.Participant;
+using Contracts.User;
 using Data.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,43 @@ namespace Data.Repositories
         {
             ctx.participants.Remove(participant);
             await ctx.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<ParticipantDto[]> GetParticipantsAsync(int[]? id, CancellationToken cancellationToken)
+        {
+            var participants = ctx.participants.AsQueryable();
+            if (id?.Length > 0)
+                participants = participants.Where(p => id.Contains(p.id));
+            return await participants.ToArrayAsync(cancellationToken);
+        }
+
+        public async Task DropParticipantsAsync(ParticipantDto[] participants, CancellationToken cancellationToken)
+        {
+            ctx.participants.RemoveRange(participants);
+            await ctx.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<ParticipantExportModel[]> GetParticipantExportModelsAsync(int[]? id, CancellationToken cancellationToken)
+        {
+            var participants = ctx.participants.AsQueryable();
+
+            if (id?.Length > 0)
+                participants = participants.Where(p => id.Contains(p.id));
+            return await participants.Select(p => new ParticipantExportModel()
+            {
+                firstName = p.User.firstName,
+                lastName = p.User.lastName,
+                patronymic = p.User.patronymic,
+                email = p.User.email,
+                userType = p.Type.name,
+                caseName = p.Case.name,
+                rating = p.rating,
+                city = p.city,
+                phone = p.phone,
+                institution = p.institution,
+                speciality = p.speciality,
+                grade = p.grade
+            }).ToArrayAsync(cancellationToken);
         }
     }
 }

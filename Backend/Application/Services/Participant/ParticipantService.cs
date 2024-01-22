@@ -291,31 +291,24 @@ namespace Application.Services.Participant
             return new Result<bool>();
         }
 
-        public async Task<Result<bool>> DropParticipantAsync(int participantId, CancellationToken cancellationToken)
+        public async Task<Result<bool>> DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken)
         {
-            var participant = await participantRepository.GetParticipantByIdAsync(participantId, cancellationToken);
-            if (participant is null)
-                return new Result<bool>(CommonErrors.User.NotFound);
+            var participants = await participantRepository.GetParticipantsAsync(participantIds, cancellationToken);
+            await participantRepository.DropParticipantsAsync(participants, cancellationToken);
 
-            await participantRepository.DropParticipantAsync(participant, cancellationToken);
-            //drop files
-            if (participant.consentFilename != null)
-                filesProvider.DropUserFile(participant.consentFilename);
-            if (participant.solutionFilename != null)
-                filesProvider.DropUserFile(participant.solutionFilename);
-
+            foreach (var participant in participants)
+            {
+                if (participant.consentFilename != null)
+                    filesProvider.DropUserFile(participant.consentFilename);
+                if (participant.solutionFilename != null)
+                    filesProvider.DropUserFile(participant.solutionFilename);
+            }
             return new Result<bool>();
         }
 
-        public FileResponse ExportParticipants(int[]? participants)
+        public async Task<FileResponse> ExportParticipantsAsync(int[]? participants, CancellationToken cancellationToken)
         {
-            ParticipantExportModel[] participantList = [
-                new ParticipantExportModel()
-                {
-                    firstName = "Иван",
-                    rating = 12
-                }
-            ];
+            ParticipantExportModel[] participantList = await participantRepository.GetParticipantExportModelsAsync(participants, cancellationToken);
             return exportProvider.ExportParticipants(participantList);
         }
     }

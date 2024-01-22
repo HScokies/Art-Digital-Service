@@ -1,7 +1,6 @@
 ﻿using Api.Controllers.Base;
 using Api.Controllers.Extensions;
 using Application.Services.Participant;
-using Application.Services.User;
 using Contracts.Participant;
 using Contracts.User;
 using Domain.Enumeration;
@@ -102,10 +101,10 @@ namespace Api.Controllers
             return res.isSuccess ? NoContent() : Problem(res.error);
         }
 
-        [HttpDelete("{participantId:int}")]
-        public async Task<IActionResult> DropParticipant(int participantId, CancellationToken cancellationToken)
+        [HttpDelete, Authorize(Roles = Roles.Permissions.deleteUsers)]
+        public async Task<IActionResult> DropParticipants(int[] participantIds, CancellationToken cancellationToken)
         {
-            var res = await participantService.DropParticipantAsync(participantId, cancellationToken);
+            var res = await participantService.DropParticipantsAsync(participantIds, cancellationToken);
             return res.isSuccess? NoContent() : Problem(res.error);
         }
 
@@ -151,10 +150,10 @@ namespace Api.Controllers
             return Ok(res);
         }
 
-        [HttpGet("export")] // Опциональный параметр id => экспорт только выделенных
-        public IActionResult ExportParticipants([FromQuery] int[] id)
+        [HttpGet("export"), Authorize(Roles = Roles.Permissions.readUsers)] // Опциональный параметр id => экспорт только выделенных
+        public async Task<IActionResult> ExportParticipants([FromQuery] int[] id, CancellationToken cancellationToken)
         {
-            var res = participantService.ExportParticipants(id);
+            var res = await participantService.ExportParticipantsAsync(id, cancellationToken);
             return File(res.fileStream, res.contentType);
         }
     }

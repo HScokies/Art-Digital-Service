@@ -25,7 +25,7 @@ export class API{
         }
         if (orderBy){
             getUsersURL.searchParams.append("orderBy",orderBy.column)
-            getUsersURL.searchParams.append("order",orderBy.order)
+            getUsersURL.searchParams.append("asc",(orderBy.asc as unknown) as string)
         }
 
         filters.forEach((f) => {

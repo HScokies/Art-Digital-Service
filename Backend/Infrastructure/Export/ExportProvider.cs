@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Contracts.File;
 using Contracts.Participant;
+using Contracts.Staff;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Infrastructure.Export.Extensions;
 using System.Runtime.CompilerServices;
@@ -32,6 +33,26 @@ namespace Infrastructure.Export
                 fileStream = ms
             };
             return response;
-        }        
+        }
+
+        public FileResponse ExportStaff(StaffExportModel[] staff)
+        {
+            using var workbook = new XLWorkbook();
+            var sheet = workbook.AddWorksheet();
+            sheet.CreateHeader(["Имя", "Фамилия", "Отчество", "Роль", "Email"]);
+            sheet.CreateRows(staff);
+            sheet.AutoSize();
+
+            MemoryStream ms = new();
+            workbook.SaveAs(ms);
+            ms.Position = 0;
+
+            FileResponse response = new()
+            {
+                contentType = ContentType,
+                fileStream = ms
+            };
+            return response;
+        }
     }
 }

@@ -33,6 +33,7 @@ namespace Data
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IParticipantRepository, ParticipantRepository>();
+            services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<ICaseRepository, CaseRepository>();
             services.AddScoped<IRepository, Repository>();
             

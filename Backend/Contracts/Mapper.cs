@@ -1,4 +1,5 @@
 ﻿using Contracts.Participant;
+using Contracts.Staff;
 using Contracts.User;
 using Domain.Entities;
 using Domain.Enumeration;
@@ -89,6 +90,59 @@ namespace Contracts
                     lastName = participant.User.lastName,
                 };
             }
+        }
+
+        public static GetParticipantResponse toParticipantResponse(this ParticipantDto participant) => new GetParticipantResponse()
+        {
+            firstName = participant.User.firstName,
+            lastName = participant.User.lastName,
+            patronymic = participant.User.patronymic,
+            typeId = participant.typeId,
+            caseId = participant.caseId,
+            status = participant.status,
+            phone = participant.phone,
+            city = participant.city,
+            institution = participant.institution,
+            grade = participant.grade,
+            speciality = participant.speciality,
+            consentFilename = participant.consentFilename,
+            solutionFilename = participant.solutionFilename,
+            rating = participant.rating,
+        };
+
+        public static GetStaffMemberResponse toStaffResponse(this StaffDto staff) => new GetStaffMemberResponse()
+        {
+            email = staff.User.email,
+            firstName = staff.User.firstName,
+            lastName = staff.User.lastName,
+            patronymic = staff.User.patronymic,
+            roleId = staff.roleId
+        };
+
+        public static StaffDto toStaff(this CreateStaffRequest request) => new StaffDto()
+        {
+            roleId = request.roleId,
+            User = new UserDto()
+            {
+                email = request.email,
+                password = request.password,
+                firstName = request.firstName,
+                lastName = request.lastName,
+                patronymic = request.patronymic,
+            }
+        };
+
+        public static StaffDto updateStaff(this StaffDto staff, UpdateStaffRequest request)
+        {
+            if (request.roleId is not null)
+                staff.roleId = (int)request.roleId;
+
+            staff.User.email = request.email;
+            staff.User.firstName = request.firstName;
+            staff.User.lastName = request.lastName;
+            staff.User.patronymic = request.patronymic;
+
+            return staff;
         }
     }
 }

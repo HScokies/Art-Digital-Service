@@ -51,7 +51,7 @@ namespace Application.Services.User
             request.password = Bcrypt.EnhancedHashPassword(request.password);
             var ParticipantModel = request.toParticipant();
 
-            var createdParticipant = await participantRepository.CreateParticipantAsync(ParticipantModel, cancellationToken);
+            var createdParticipant = await participantRepository.CreateAsync(ParticipantModel, cancellationToken);
 
             return new Result<int>(createdParticipant.id);
         }

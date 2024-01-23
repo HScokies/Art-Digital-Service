@@ -162,7 +162,7 @@ namespace Application.Services.Participant
             return new Result<AppendParticipantFilesResponse>(response);
         }
 
-        public async Task<Result<int>> CreateParticipantAsync(CreateParticipantRequest request, CancellationToken cancellationToken)
+        public async Task<Result<int>> CreateAsync(CreateParticipantRequest request, CancellationToken cancellationToken)
         {
             if (!Ensure.isPhone(request.phone))
                 return new Result<int>(CommonErrors.User.InvalidPhone);
@@ -201,15 +201,21 @@ namespace Application.Services.Participant
             request.password = Bcrypt.EnhancedHashPassword(request.password);
 
             var Participant = request.toParticipant();
-            var res = await participantRepository.CreateParticipantAsync(Participant, cancellationToken);
+            var res = await participantRepository.CreateAsync(Participant, cancellationToken);
             return new Result<int>(res.id);
         }
 
-        public async Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken) => await participantRepository.GetParticipantTypesAsync(cancellationToken);
+        public async Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken) => await participantRepository.GetTypesAsync(cancellationToken);
 
-        public async Task<GetParticipantResponse> GetParticipantsAsync(CancellationToken cancellationToken, int offset, int take, bool participantsOnly, bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null)
-        {
-            return await participantRepository.GetParticipantsAsync(
+        public async Task<GetParticipantsResponse> GetParticipantsAsync(
+            CancellationToken cancellationToken, 
+            int offset, int take, 
+            bool participantsOnly, 
+            bool asc = true, string? orderBy = null,
+            bool hasScore = true, bool noScore = true, 
+            string? search = null, 
+            int[]? excludeType = null, 
+            int[]? excludeCase = null) => await participantRepository.GetAsync(
                 cancellationToken: cancellationToken,
                 offset: offset,
                 take: take,
@@ -220,14 +226,13 @@ namespace Application.Services.Participant
                 excludeType: excludeType,
                 excludeCase: excludeCase
             );
-        }
 
-        public async Task<Result<ParticipantDto>> GetParticipantAsync(int userId, CancellationToken cancellationToken)
+        public async Task<Result<GetParticipantResponse>> GetParticipantAsync(int userId, CancellationToken cancellationToken)
         {
-            var res = await participantRepository.GetParticipantByIdAsync(userId, cancellationToken);
+            var res = await participantRepository.GetAsync(userId, cancellationToken);
             if (res is null)
-                return new Result<ParticipantDto>(CommonErrors.User.NotFound);
-            return new Result<ParticipantDto>(res);
+                return new Result<GetParticipantResponse>(CommonErrors.User.NotFound);
+            return new Result<GetParticipantResponse>(res.toParticipantResponse());
         }
 
         public async Task<Result<bool>> UpdateParticipantAsync(int participantId, UpdateParticipantRequest request, CancellationToken cancellationToken)
@@ -239,7 +244,7 @@ namespace Application.Services.Participant
             if (!Ensure.isStatus(request.status))
                 return new Result<bool>(CommonErrors.User.InvalidStatus);
 
-            var participant = await participantRepository.GetParticipantByIdAsync(participantId, cancellationToken);
+            var participant = await participantRepository.GetAsync(participantId, cancellationToken);
             if (participant is null)
                 return new Result<bool>(CommonErrors.User.NotFound);
 
@@ -280,7 +285,7 @@ namespace Application.Services.Participant
             if (!Ensure.isStatus(request.status))
                 return new Result<bool>(CommonErrors.User.InvalidStatus);
 
-            var participant = await participantRepository.GetParticipantByIdAsync(participantId, cancellationToken);
+            var participant = await participantRepository.GetAsync(participantId, cancellationToken);
             if (participant is null)
                 return new Result<bool>(CommonErrors.User.NotFound);
 
@@ -291,10 +296,10 @@ namespace Application.Services.Participant
             return new Result<bool>();
         }
 
-        public async Task<Result<bool>> DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken)
+        public async Task DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken)
         {
-            var participants = await participantRepository.GetParticipantsAsync(participantIds, cancellationToken);
-            await participantRepository.DropParticipantsAsync(participants, cancellationToken);
+            var participants = await participantRepository.GetAsync(participantIds, cancellationToken);
+            await participantRepository.DropAsync(participants, cancellationToken);
 
             foreach (var participant in participants)
             {
@@ -303,12 +308,11 @@ namespace Application.Services.Participant
                 if (participant.solutionFilename != null)
                     filesProvider.DropUserFile(participant.solutionFilename);
             }
-            return new Result<bool>();
         }
 
         public async Task<FileResponse> ExportParticipantsAsync(int[]? participants, CancellationToken cancellationToken)
         {
-            ParticipantExportModel[] participantList = await participantRepository.GetParticipantExportModelsAsync(participants, cancellationToken);
+            ParticipantExportModel[] participantList = await participantRepository.GetExportModelsAsync(participants, cancellationToken);
             return exportProvider.ExportParticipants(participantList);
         }
     }

@@ -15,16 +15,16 @@ namespace Data.Repositories
 
         public async Task<bool> TypeExistsAsync(int participantTypeId, CancellationToken cancellationToken = default) => await ctx.types.AnyAsync(t => t.id == participantTypeId, cancellationToken);
         
-        public async Task<ParticipantDto> CreateParticipantAsync(ParticipantDto participant, CancellationToken cancellationToken = default)
+        public async Task<ParticipantDto> CreateAsync(ParticipantDto participant, CancellationToken cancellationToken = default)
         {
             var res = await ctx.participants.AddAsync(participant, cancellationToken);
             await ctx.SaveChangesAsync();
             return res.Entity;
         }
         
-        public async Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken = default) => await ctx.types.ToArrayAsync(cancellationToken);
+        public async Task<ParticipantTypeDto[]> GetTypesAsync(CancellationToken cancellationToken = default) => await ctx.types.ToArrayAsync(cancellationToken);
 
-        public async Task<GetParticipantResponse> GetParticipantsAsync(CancellationToken cancellationToken, int offset, int take, bool participantsOnly = false, bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null)
+        public async Task<GetParticipantsResponse> GetAsync(CancellationToken cancellationToken, int offset, int take, bool asc = true, string? orderBy = null, bool participantsOnly = false, bool hasScore = true, bool noScore = true, string? search = null, int[]? excludeType = null, int[]? excludeCase = null)
         {
             IQueryable<ParticipantDto> query = ctx.participants.Include(p => p.User);
             if (participantsOnly)
@@ -35,10 +35,26 @@ namespace Data.Repositories
                 query = query.Where(p => p.rating != null);
             if (!search.IsNullOrEmpty())
                 query = query.Where(p => EF.Functions.ILike(p.User.lastName + " " + p.User.firstName + " " + p.User.patronymic, $"%{search}%"));
-            if (excludeType is not null)
+            if (excludeType?.Length > 0)
                 query = query.Where(p => !excludeType.Contains(p.typeId));
-            if (excludeCase is not null)
+            if (excludeCase?.Length > 0)
                 query = query.Where(p => !excludeCase.Contains((int)p.caseId!));
+
+            switch (orderBy)
+            {
+                case "name":
+                    query = asc ? query.OrderBy(p => p.User.lastName + " " + p.User.firstName + " " + p.User.patronymic) : query.OrderByDescending(p => p.User.lastName + " " + p.User.firstName + " " + p.User.patronymic);
+                    break;
+                case "type":
+                    query = asc ? query.OrderBy(p => p.Type.name) : query.OrderByDescending(p => p.Type.name);
+                    break;
+                case "case":
+                    query = asc ? query.OrderBy(p => p.Case.name) : query.OrderByDescending(p => p.Case.name);
+                    break;
+                case "score":
+                    query = asc ? query.OrderBy(p => p.rating) : query.OrderByDescending(p => p.rating);
+                    break;
+            }
 
             var participants = query.Select(p => new ParticipantPreview()
             {
@@ -51,9 +67,9 @@ namespace Data.Repositories
 
 
             int currentPage = offset > 0 ? offset / take + 1 : 1; // Запрашиваемая страница
-            int pageCount = (int)Math.Ceiling((double)participants.Count() / (double)take); //Всего страниц доступно
+            int pageCount = (int)Math.Ceiling((double)participants.Count() / take); //Всего страниц доступно
             currentPage = currentPage > pageCount ? pageCount : currentPage; // Обновляем текущую страницу если нужно
-            var response = new GetParticipantResponse()
+            var response = new GetParticipantsResponse()
             {
                 currentPage = currentPage,
                 pagesTotal = pageCount
@@ -61,19 +77,13 @@ namespace Data.Repositories
             if (pageCount < 1)
                 return response;
 
-            response.participants = await participants.Skip((currentPage - 1) * take).Take(take).ToArrayAsync();
+            response.participants = await participants.Skip((currentPage - 1) * take).Take(take).ToArrayAsync(cancellationToken);
             return response;
         }
 
-        public async Task<ParticipantDto?> GetParticipantByIdAsync(int id, CancellationToken cancellationToken) => await ctx.participants.Include(p => p.User).FirstOrDefaultAsync(p => p.id == id, cancellationToken);
+        public async Task<ParticipantDto?> GetAsync(int id, CancellationToken cancellationToken) => await ctx.participants.Include(p => p.User).FirstOrDefaultAsync(p => p.id == id, cancellationToken);
 
-        public async Task DropParticipantAsync(ParticipantDto participant, CancellationToken cancellationToken)
-        {
-            ctx.participants.Remove(participant);
-            await ctx.SaveChangesAsync(cancellationToken);
-        }
-
-        public async Task<ParticipantDto[]> GetParticipantsAsync(int[]? id, CancellationToken cancellationToken)
+        public async Task<ParticipantDto[]> GetAsync(int[]? id, CancellationToken cancellationToken)
         {
             var participants = ctx.participants.AsQueryable();
             if (id?.Length > 0)
@@ -81,13 +91,13 @@ namespace Data.Repositories
             return await participants.ToArrayAsync(cancellationToken);
         }
 
-        public async Task DropParticipantsAsync(ParticipantDto[] participants, CancellationToken cancellationToken)
+        public async Task DropAsync(ParticipantDto[] participants, CancellationToken cancellationToken)
         {
             ctx.participants.RemoveRange(participants);
             await ctx.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<ParticipantExportModel[]> GetParticipantExportModelsAsync(int[]? id, CancellationToken cancellationToken)
+        public async Task<ParticipantExportModel[]> GetExportModelsAsync(int[]? id, CancellationToken cancellationToken)
         {
             var participants = ctx.participants.AsQueryable();
 

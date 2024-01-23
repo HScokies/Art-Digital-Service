@@ -23,6 +23,10 @@ namespace Domain.Enumeration
         {
             public static Error NotFound = new(HttpStatusCode.NotFound, "Указанное направление не обнаружено!", "Case not found");
         }
+        public static class Staff
+        {
+            public static Error InvalidRole = new(HttpStatusCode.BadRequest, "Неизвестная роль!", "Invalid staff role");
+        }
         public static class File
         {
             public static Error NotFound = new(HttpStatusCode.NotFound, "Указанный файл не обнаружен!", "File not found");

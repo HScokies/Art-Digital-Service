@@ -6,14 +6,13 @@ namespace Data.Interfaces
 {
     public interface IParticipantRepository
     {
-        Task<GetParticipantResponse> GetParticipantsAsync(CancellationToken cancellationToken, int offset, int take, bool participantsOnly = false, bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null);
-        Task<ParticipantDto[]> GetParticipantsAsync(int[]? id, CancellationToken cancellationToken);
-        Task<ParticipantExportModel[]> GetParticipantExportModelsAsync(int[]? id, CancellationToken cancellationToken);
-        Task<ParticipantDto?> GetParticipantByIdAsync(int id, CancellationToken cancellationToken);
+        Task<GetParticipantsResponse> GetAsync(CancellationToken cancellationToken, int offset, int take, bool asc = true, string? orderBy = null, bool participantsOnly = false, bool hasScore = true, bool noScore = true, string? search = null, int[]? excludeType = null, int[]? excludeCase = null);
+        Task<ParticipantDto[]> GetAsync(int[]? id, CancellationToken cancellationToken);
+        Task<ParticipantExportModel[]> GetExportModelsAsync(int[]? id, CancellationToken cancellationToken);
+        Task<ParticipantDto?> GetAsync(int id, CancellationToken cancellationToken);
         Task<bool> TypeExistsAsync(int participantTypeId, CancellationToken cancellationToken);
-        Task<ParticipantDto> CreateParticipantAsync(ParticipantDto participant, CancellationToken cancellationToken);
-        Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken);
-        Task DropParticipantAsync(ParticipantDto participant, CancellationToken cancellationToken);
-        Task DropParticipantsAsync(ParticipantDto[] participants, CancellationToken cancellationToken);
+        Task<ParticipantDto> CreateAsync(ParticipantDto participant, CancellationToken cancellationToken);
+        Task<ParticipantTypeDto[]> GetTypesAsync(CancellationToken cancellationToken);
+        Task DropAsync(ParticipantDto[] participants, CancellationToken cancellationToken);
     }
 }

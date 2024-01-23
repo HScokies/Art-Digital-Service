@@ -27,7 +27,7 @@ namespace Api.Controllers
         [HttpPost, Authorize(Roles = Roles.Permissions.createUsers)]
         public async Task<IActionResult> CreateParticipant([FromForm] CreateParticipantRequest request, CancellationToken cancellationToken)
         {
-            var Result = await participantService.CreateParticipantAsync(request, cancellationToken);
+            var Result = await participantService.CreateAsync(request, cancellationToken);
             if (!Result.isSuccess)
                 return Problem(Result.error);
             return CreatedAtAction(nameof(CreateParticipant), Result.value);
@@ -54,7 +54,7 @@ namespace Api.Controllers
         }
 
         [HttpGet, Authorize(Roles = Roles.Permissions.readUsers)]
-        public async Task<IActionResult> GetParticipantsList(CancellationToken cancellationToken, [FromQuery] int offset = 0, int take = 5, bool hasScore = true, bool noScore = true, string? search = null, [FromQuery] List<int>? excludeType = null, [FromQuery] List<int>? excludeCase = null)
+        public async Task<IActionResult> GetParticipantsList(CancellationToken cancellationToken, [FromQuery] int offset = 0, int take = 5, bool asc = true, bool hasScore = true, bool noScore = true, string? orderBy = null, string? search = null, [FromQuery] int[]? excludeType = null, [FromQuery] int[]? excludeCase = null)
         {
             if (offset < 0 || take < 1)
                 return BadRequest();
@@ -102,10 +102,10 @@ namespace Api.Controllers
         }
 
         [HttpDelete, Authorize(Roles = Roles.Permissions.deleteUsers)]
-        public async Task<IActionResult> DropParticipants(int[] participantIds, CancellationToken cancellationToken)
+        public async Task<IActionResult> DropParticipants([FromQuery] int[] participantIds, CancellationToken cancellationToken)
         {
-            var res = await participantService.DropParticipantsAsync(participantIds, cancellationToken);
-            return res.isSuccess? NoContent() : Problem(res.error);
+            await participantService.DropParticipantsAsync(participantIds, cancellationToken);
+            return NoContent();
         }
 
         [HttpPatch("append-data"), Authorize(Roles = Roles.ParticipantsStatus.justRegistered)]
@@ -154,7 +154,7 @@ namespace Api.Controllers
         public async Task<IActionResult> ExportParticipants([FromQuery] int[] id, CancellationToken cancellationToken)
         {
             var res = await participantService.ExportParticipantsAsync(id, cancellationToken);
-            return File(res.fileStream, res.contentType);
+            return File(res.fileStream, res.contentType, $"Участники {DateTime.UtcNow}");
         }
     }
 }

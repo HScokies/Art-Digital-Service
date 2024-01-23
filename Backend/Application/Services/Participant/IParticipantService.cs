@@ -11,14 +11,14 @@ namespace Application.Services.Participant
     {
         Task<Result<PersonalDataAppendResponse>> AppendParticipantDataAsync(int userId, PersonalDataAppendRequest request, CancellationToken cancellationToken);
         Task<Result<AppendParticipantFilesResponse>> AppendParticipantFilesAsync(int userId, IFormFile consent, IFormFile solution, CancellationToken cancellationToken);
-        Task<Result<int>> CreateParticipantAsync(CreateParticipantRequest request, CancellationToken cancellationToken);
+        Task<Result<int>> CreateAsync(CreateParticipantRequest request, CancellationToken cancellationToken);
         Task<ParticipantTypeDto[]> GetParticipantTypesAsync(CancellationToken cancellationToken);
-        Task<GetParticipantResponse> GetParticipantsAsync(CancellationToken cancellationToken, int offset, int take, bool participantsOnly, bool hasScore = true, bool noScore = true, string? search = null, List<int>? excludeType = null, List<int>? excludeCase = null);
-        Task<Result<ParticipantDto>> GetParticipantAsync(int participantId, CancellationToken cancellationToken);
+        Task<GetParticipantsResponse> GetParticipantsAsync(CancellationToken cancellationToken, int offset, int take, bool participantsOnly, bool asc = true, string? orderBy = null, bool hasScore = true, bool noScore = true, string? search = null, int[]? excludeType = null, int[]? excludeCase = null);
+        Task<Result<GetParticipantResponse>> GetParticipantAsync(int participantId, CancellationToken cancellationToken);
         Task<Result<bool>> UpdateParticipantAsync(int participantId, UpdateParticipantRequest request, CancellationToken cancellationToken);
         Task<Result<bool>> RateParticipantAsync(int participantId, RateParticipantRequest request, CancellationToken cancellationToken);
         Task<Result<FileResponse>> GetParticipantFileAsync(string filename, CancellationToken cancellationToken);
-        Task<Result<bool>> DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken);
+        Task DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken);
         Task<FileResponse> ExportParticipantsAsync(int[]? participants, CancellationToken cancellationToken);
     }
 }

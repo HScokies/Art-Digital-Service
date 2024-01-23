@@ -11,11 +11,11 @@ const HeaderCell = ({ index, columnData, setSort, activeSort, setActiveFilters, 
         undefined,
         {
             column: columnData.id,
-            order: 'asc'
+            asc: true
         },
         {
             column: columnData.id,
-            order: 'desc'
+            asc: false
         }
     ]
     const sortStatesIndex = useRef(0);
@@ -27,7 +27,7 @@ const HeaderCell = ({ index, columnData, setSort, activeSort, setActiveFilters, 
 
     const sortClassName = () => {
         if (activeSort?.column == columnData.id)
-            return activeSort.order.toString()
+            return activeSort.asc? 'asc' : 'desc';
         return ''
     }
     const handleSortChange = () => {

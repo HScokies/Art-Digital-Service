@@ -1,6 +1,6 @@
 export interface orderBy{
     column: string,
-    order: 'asc' | 'desc'
+    asc: boolean
 }
 
 /**

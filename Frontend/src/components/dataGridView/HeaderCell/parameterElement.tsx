@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IColumn, filter, param } from "../interfaces"
 
 interface props{
@@ -14,23 +14,24 @@ const ParameterElement = ({parent, parameter, setHasActiveFilters, activeFilters
     const [filter] = useState<filter>({column: parent, param: parameter})
     const [isDisplayed, setIsDisplayed] = useState(true)
 
-    const checkIfColumnHasActiveFilters = () => {
-        console.debug('active filters:', activeFilters, 'columnID:', parent)
-        for (let filter of activeFilters){
-            if (filter.column == parent) return true
+    useEffect(() => {
+        const toggleHasActiveFilters = () => {
+            for (let filter of activeFilters){
+                if (filter.column == parent){
+                    return setHasActiveFilters(true)
+                }
+            }    
+            return setHasActiveFilters(false)
         }
-        return false
-    }
+        toggleHasActiveFilters()
+    }, [activeFilters])
 
-    const toggleFilter = (isActive: boolean) => {
-        isActive? setActiveFilters(filters => {
+    const toggleFilter = async(isActive: boolean) => {
+        await isActive? setActiveFilters(filters => {
             filters.delete(filter)
             return new Set(filters)
         }) : setActiveFilters(filters => new Set(filters.add(filter)))
         setIsDisplayed(isActive)
-
-        const columnHasFilters = checkIfColumnHasActiveFilters()
-        setHasActiveFilters(columnHasFilters)
     }
 
     return (

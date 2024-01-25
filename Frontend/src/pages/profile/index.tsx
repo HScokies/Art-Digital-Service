@@ -4,12 +4,10 @@ import Icons from 'images/icons.svg'
 import { useContext, useEffect, useState } from 'react'
 import { Button, CaseData, FileInput, Stage } from 'src/components'
 import { API } from 'src/services'
-import { AuthContext } from 'src/hooks/authContext'
 import { IProfileData } from 'src/interfaces'
 
 
 const ProfilePage = () => {
-    const { setAuthorized } = useContext(AuthContext)
     const [scrollActive, setScrollActive] = useState(false)  
 
     const [data, setData] = useState<IProfileData>()

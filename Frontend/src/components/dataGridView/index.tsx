@@ -45,8 +45,14 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
         activeFilters.forEach((f) => params.push(f.param))
 
         const offset = (currentPage - 1) * rowsPerPage;
-        const data = dataSource(offset, rowsPerPage, params, search, activeSort)
-        setData(data)
+        const fetch = async() => {
+            const data = await dataSource(offset, rowsPerPage, params, search, activeSort)
+            if (data.currentPage > 0)
+                setCurrentPage(data.currentPage)
+            else setCurrentPage(1)
+            setData(data)
+        }
+        fetch();
 
     }, [activeSort, activeFilters, activeSearch, rowsPerPage, currentPage])
 
@@ -91,7 +97,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                         </thead>
                         <tbody className='datagrid_body'>
                             {
-                                data && data.rows.length > 0 ? data.rows.map((e) => <DatagridRow key={e.id} row={e} setCurrentRowId={setCurrentRowId} setHighlightedRows={setHighlightedRows} />)
+                                data && data.participants?.length > 0 ? data.participants.map((e) => <DatagridRow key={e.id} row={e} setCurrentRowId={setCurrentRowId} setHighlightedRows={setHighlightedRows} />)
                                     :
                                     <tr className='datagrid-row error'>
                                         <td colSpan={columns.length + 1}>
@@ -107,7 +113,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                     setPage={setCurrentPage}
                     setRowsPerPage={setRowsPerPage}
                     rowsPerPageOptions={rowsPerPageOptions}
-                    pageCount={data?.pageCount || 0}
+                    pageCount={data?.pagesTotal && data.pagesTotal > 0? data?.pagesTotal : 1}
                 />
             </div>
             {

@@ -32,7 +32,7 @@ const DatagridRow = ({ row, setHighlightedRows, setCurrentRowId }: props) => {
                 </div>
             </td>
             {
-                Object.entries(row.data).map((e, col) => (
+                Object.entries(row).slice(1).map((e, col) => (
                     <td className={`datagrid-cell col_${col}`} key={col}>{e[1]}</td>
                 ))
             }

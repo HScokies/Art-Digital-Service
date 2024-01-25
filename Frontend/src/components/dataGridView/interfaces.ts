@@ -33,11 +33,11 @@ export interface IColumn{
 }
 
 export interface IData{
-    pageCount: number,
-    rows: IRow[]
+    currentPage: number,
+    pagesTotal: number
+    participants: IRow[]
 }
 
 export interface IRow{
-    id: number,
-    data: string[]
+    id: number
 }

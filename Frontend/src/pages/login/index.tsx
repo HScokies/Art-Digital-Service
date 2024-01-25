@@ -3,8 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import Logo from 'images/logo.webp'
 import { Button, Input, FormMessage } from 'src/components';
 import { API, Validator } from 'src/services';
-import { useContext, useState } from 'react';
-import { AuthContext } from 'src/hooks/authContext';
+import { useState } from 'react';
 
 interface IForm {
     email: HTMLInputElement,
@@ -36,17 +35,19 @@ const LoginPage = () => {
     }
 
 
-    const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const userData = API.login(new FormData(e.target as HTMLFormElement));
-        if (userData){
-            setUserInfo(userData)
-            return;
+        const isLoggedIn = await API.login(new FormData(e.target as HTMLFormElement));
+        // if (userData){
+        //     setUserInfo(userData)
+        //     return;
+        // }
+        if (!isLoggedIn){
+            setFormError({
+                isActive: true,
+                text: "Данные, использованные вами для входа, недействительны"
+            });
         }
-        setFormError({
-            isActive: true,
-            text: "Данные, использованные вами для входа, недействительны"
-        });
     }
 
     return (
@@ -56,7 +57,7 @@ const LoginPage = () => {
                 <FormMessage type='error' text={formError.text} isActive={formError.isActive} />
                 <h1 className='authpage_modal-title'>Войти в учетную запись</h1>
                 <form id='login-form' onSubmit={(e) => handleSubmit(e)}>
-                    <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={Email} />
+                    <Input readonly label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={Email} />
                     <Input label='Пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
                     <Link className='authpage_modal-reset' to={`/forgot/${email || ""}`}>
                         Забыли пароль?

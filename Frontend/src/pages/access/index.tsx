@@ -1,9 +1,10 @@
 import { Button, Input } from 'src/components'
 import './style.scss'
 import Logo from 'images/logo.webp'
-import { Validator } from 'src/services'
+import { API, Validator } from 'src/services'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Pages } from 'src/enums'
 
 const AccessPage = () => {
     const navigate = useNavigate()
@@ -19,12 +20,12 @@ const AccessPage = () => {
 
     }
 
-    const handleSubmit = () => {
-        console.debug(email)
-        console.debug("*api call*")
-        if (email == "exists@email.com")
-            navigate(`/login/${email}`)
-        else navigate(`/register/${email}`)
+    const handleSubmit = async() => {
+        const response = await API.emailExists(email)
+        if (response.status != 200) return;
+
+        const isExists = response.data as boolean;
+        isExists? navigate(Pages.login + email) : navigate(Pages.register + email)
     }
 
     return (
@@ -34,7 +35,7 @@ const AccessPage = () => {
                 <h1 className='authpage_modal-title'>Войдите или зарегистрируйтесь</h1>
                 <form id='access-form'>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={email} />
-                    <Button isActive={!hasErrors} clickHandler={handleSubmit}>Продолжить</Button>
+                    <Button type='button' isActive={!hasErrors} clickHandler={handleSubmit}>Продолжить</Button>
                 </form>
             </div>
         </div>

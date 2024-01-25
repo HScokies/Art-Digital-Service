@@ -12,6 +12,7 @@ import CaseData from "./caseData";
 import CreateUserForm from "./createUserForm";
 import UpdateUserForm from "./updateUserForm";
 import RateUserForm from "./rateUserForm"
+import RequireAuth from "./requireAuth";
 
 export {
     Input,
@@ -27,5 +28,6 @@ export {
     CaseData,
     CreateUserForm,
     UpdateUserForm,
-    RateUserForm
+    RateUserForm,
+    RequireAuth
 }

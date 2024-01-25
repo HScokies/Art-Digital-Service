@@ -1,9 +1,15 @@
 export enum Pages{
-    email = '/',
+    profile='/',
+    auth = '/auth',
     register = '/register/',
     login = '/login/',    
     form = '/form/',
-    profile = '/profile/',
     dashboard = '/dashboard/',
     cases = '/case/'
+}
+
+export enum UserTypes{
+    newUser = "31NW20d",
+    participant = "YwTylqv",
+    staff = "CPwUIGt"
 }

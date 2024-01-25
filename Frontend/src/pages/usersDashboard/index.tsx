@@ -15,7 +15,7 @@ const UsersDashboardPage = () => {
             let filter: param[] = []
             for (let userType of data) {
                 filter.push({
-                    name: "excludeUserType",
+                    name: "excludeType",
                     title: userType.name,
                     value: userType.id
                 })
@@ -52,16 +52,16 @@ const UsersDashboardPage = () => {
         rowsPerPageOptions={new Set([5, 10, 25, 50, 75])}
         columns={[
             {
-                id: "users",
+                id: "name",
                 title: "Участник",
             },
             {
-                id: "userType",
+                id: "type",
                 title: "Тип",
                 filters: userTypeFilter
             },
             {
-                id: "cases",
+                id: "case",
                 title: "Направление",
                 filters: casesFilter
             },

@@ -1,14 +1,18 @@
 @import 'styles/variables.scss';
 
+
 $RowHeight: 3em;
 
+/*
 .tableWrapper {
     min-height: ($RowHeight * 2); // 1 row + menus
-    max-height:  ($RowHeight * (15 + 1)); // 15 rows + menus
+    
+    max-height:  ($RowHeight * (15 + 1)); // 15 rows + menus 
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #e6e8eb #f1f3f5;    
 }
+*/
 
 .datagrid {
     min-width: 100%;

@@ -11,8 +11,8 @@ const CreateUserForm = () => {
     const [userTypeOptions, setUserTypeOptions] = useState<Option[]>([])
 
     useEffect(() => {
-        const getCases = () => {
-            const data = API.getCases()
+        const getCases = async() => {
+            const data = (await API.getCases()).data
             let casesAsOptions: Option[] = []
             for (let _case of data) {
                 casesAsOptions.push({
@@ -22,8 +22,8 @@ const CreateUserForm = () => {
             }
             setCases(casesAsOptions)
         }
-        const getUserTypes = () => {
-            const data = API.getUserTypes()
+        const getUserTypes = async() => {
+            const data = (await API.getParticipantTypes()).data
             setUserTypes(data)
             let userTypeOptions: Option[] = []
             for (let userType of data) {
@@ -33,7 +33,8 @@ const CreateUserForm = () => {
                 })
             }
             setUserTypeOptions(userTypeOptions)
-        }
+            setIsAdult(data[0].isAdult);
+        }        
 
         getCases()
         getUserTypes()
@@ -53,11 +54,12 @@ const CreateUserForm = () => {
             <Input label='Адрес электронной почты' type='email' name='email'  validator={Validator.validateEmail} />
             <Input label='Пароль' type='password' name='password'  validator={Validator.validatePassword} />
             <Combobox name="typeId" label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
-            {!isAdult && <Input label='Полное имя родителя' type='text' name='parentName'  />}
+            {!isAdult && <Input label='Полное имя родителя' type='text' name='parentName' />}
             <Input onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'  validator={Validator.validatePhoneNumber} />
             <Input label='Фамилия участника' type='text' name='lastName'  maxlength={40} />
             <Input label='Имя участника' type='text' name='firstName'  maxlength={40} />
             <Input label='Отчество участника' type='text' name='patronymic'  maxlength={40} />
+            <Input datalist="Cities" label='Город участника' type='text' name='city' required={true} />
             <Input label='Учебное заведение' type='text' name='institution'/>
             {
                 isAdult ?

@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { Button, Combobox, FormMessage, Input } from 'src/components'
 import { Option } from 'src/components/combobox'
 import { IUserType } from 'src/interfaces'
+import { UseAuth } from 'src/hooks/useAuth'
+import { UserTypes } from 'src/enums'
 
 interface IFormError {
     isActive: boolean,
@@ -14,6 +16,8 @@ interface IFormError {
 
 const RegisterPage = () => {
     const { Email } = useParams()
+    const { setUserType } = UseAuth();
+
     const navigate = useNavigate()
 
     const [hasErrors, setHasErrors] = useState(true);
@@ -45,6 +49,7 @@ const RegisterPage = () => {
             console.debug("STATUS IS NOT 201")
             return setFormError({isActive: true, text: data.title})
         }
+        setUserType(UserTypes.newUser);
         navigate("/form")
         
     }

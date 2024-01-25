@@ -5,15 +5,20 @@ export interface ICase {
 
 export interface IUserType {
     id: number,
-    isAdult: boolean,
     name: string
+    isAdult: boolean,    
+}
+
+export interface IParticipantStatus{
+    id: string,
+    name: string    
 }
 
 export interface IUserData {
     parentName?: string
     phone: string
     email: string,
-    userType: IUserType
+    typeId: number,
     firstName: string,
     lastName: string,
     patronymic: string,
@@ -21,18 +26,13 @@ export interface IUserData {
     institution: string,
     grade: number,
     speciality?: string,
-    case: ICase,
-    consentId: string,
-    solutionId: string,
-    score?: number
-    status: IUserStatus
-}
-
-export interface IUserStatus{
-    id: number,
-    name: string,
+    caseId: number,
+    consentFilename: string,
+    solutionFilename: string,
+    rating?: number
     status: string
 }
+
 
 export interface IPermissions{
     users: IPermission,

@@ -37,10 +37,10 @@ const RateUserForm = ({ id }: formProps) => {
                 userData &&
                 <>
                     <div className="aside-dialog-filebuttons">
-                        <Button type="button" clickHandler={() => API.getFile(userData?.consentId)} isActive={true} variant='passive'>Согласие</Button>
-                        <Button  type="button" clickHandler={() => API.getFile(userData?.consentId)} isActive={true} variant='passive'>Работа</Button>
+                        <Button type="button" clickHandler={() => API.getFile(userData?.solutionFilename)} isActive={true} variant='passive'>Согласие</Button>
+                        <Button  type="button" clickHandler={() => API.getFile(userData?.consentFilename)} isActive={true} variant='passive'>Работа</Button>
                     </div>
-                    <Input min={0} label='Балл' type='number' name='score' />
+                    <Input min={0} label='Балл' type='number' name='rating' />
                     <Combobox name="statusId" defaultValue={userData.status} label='Статус' options={userStatusOptions} />
                 </>
             }</>

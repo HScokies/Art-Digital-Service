@@ -19,6 +19,7 @@ export interface filter{
 
 export interface IHeaderCell {
     index: number,
+    sizePx?: number,
     columnData: IColumn
     setSort: React.Dispatch<React.SetStateAction<orderBy | undefined>>,
     activeSort?: orderBy,
@@ -29,6 +30,7 @@ export interface IHeaderCell {
 export interface IColumn{
     id: string,
     title: string,
+    sizePx?: number
     filters?: param[]
 }
 

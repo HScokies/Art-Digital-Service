@@ -10,8 +10,8 @@ const UsersDashboardPage = () => {
     const [casesFilter, setCasesFilter] = useState<param[]>([])
 
     useEffect(() => {                
-        const createUserTypesFilter = () => {
-            const data = API.getUserTypes()
+        const createUserTypesFilter = async() => {
+            const data = (await API.getParticipantTypes()).data
             let filter: param[] = []
             for (let userType of data) {
                 filter.push({
@@ -20,10 +20,13 @@ const UsersDashboardPage = () => {
                     value: userType.id
                 })
             }
-            setUserTypeFilter(filter)
+            await setUserTypeFilter(filter)
         }
-        const createCasesFilter = () => {
-            const data = API.getCases()
+        const createCasesFilter = async() => {
+            const response = await API.getCases();
+            if (response.status != 200) return;
+            const data = response.data;
+
             let filter = []
             for (let _case of data) {
                 filter.push({
@@ -43,31 +46,35 @@ const UsersDashboardPage = () => {
         <DataGridView
         searchLabel="Участник"
         dataSource={API.getUsers}
-        exportProvider={API.exportUsers}
+        exportProvider={API.exportParticipants}
         deleteProvider={API.deleteUsers}
         createProvider={API.createUser}
         createForm={CreateUserForm}
         updateProvider={API.updateUser}
-        updateForm={RateUserForm}
-        rowsPerPageOptions={new Set([5, 10, 25, 50, 75])}
+        updateForm={UpdateUserForm}
+        rowsPerPageOptions={new Set([5, 10, 15, 20, 25])}
         columns={[
             {
                 id: "name",
                 title: "Участник",
+                sizePx: 882
             },
             {
                 id: "type",
                 title: "Тип",
-                filters: userTypeFilter
+                filters: userTypeFilter,
+                sizePx: 455
             },
             {
                 id: "case",
                 title: "Направление",
-                filters: casesFilter
+                filters: casesFilter,
+                sizePx: 751
             },
             {
-                id: "score",
+                id: "rating",
                 title: "Балл",
+                sizePx: 50,
                 filters: [
                     {
                         title: 'Есть значение',

@@ -13,54 +13,51 @@ const UpdateUserForm = ({ id }: formProps) => {
     const [userTypeOptions, setUserTypeOptions] = useState<Option[]>([])
     const [userStatusOptions, setUserStatusOptions] = useState<Option[]>([])
     useEffect(() => {
-        const getUserData = () => {
-            const data = API.getUser(id!)
-            setUserData(data)
-            setIsAdult(data.userType.isAdult)
-        }
-        const getCases = () => {
-            const data = API.getCases()
+        const fetch = async() => {
+            const cases = (await API.getCases()).data
             let casesAsOptions: Option[] = []
-            for (let _case of data) {
+            for (let _case of cases) {
                 casesAsOptions.push({
                     value: _case.id,
                     label: _case.name
                 })
             }
             setCases(casesAsOptions)
-        }
-        const getUserTypes = () => {
-            const data = API.getUserTypes()
-            setUserTypes(data)
-            let userTypeOptions: Option[] = []
-            for (let userType of data) {
-                userTypeOptions.push({
-                    value: userType.id,
-                    label: userType.name
-                })
-            }
-            setUserTypeOptions(userTypeOptions)
-        }
-        const getUserStatuses = () => {
-            const data = API.getUserStatuses()
+
+            const statuses = await API.getUserStatuses()
             let userStatusOptions: Option[] = []
-            for (let userStatus of data) {
+            for (let userStatus of statuses) {
                 userStatusOptions.push({
                     value: userStatus.id,
                     label: userStatus.name
                 })
             }
             setUserStatusOptions(userStatusOptions)
-        }
 
+            const types = (await API.getParticipantTypes()).data
+            setUserTypes(types)
+            let userTypeOptions: Option[] = []
+            for (let userType of types) {
+                userTypeOptions.push({
+                    value: userType.id,
+                    label: userType.name
+                })
+            }
+            setUserTypeOptions(userTypeOptions)
+
+            const userData = await API.getUser(id!)
+            if (!userData) return;
+            setUserData(userData)
+
+            const userType = (types as IUserType[])?.find(t => t.id == userData.typeId);
+            if (userType)
+                setIsAdult(userType.isAdult)
+        }
         if (id == -1) {
             setUserData(null)
             return
         }
-        getCases()
-        getUserTypes()
-        getUserStatuses()
-        getUserData()
+        fetch();
     }, [id])
 
 
@@ -78,14 +75,14 @@ const UpdateUserForm = ({ id }: formProps) => {
             {
                 userData &&
                 <>
-                    <Combobox name="typeId" defaultValue={userData.userType.id} label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
+                    <Combobox name="userTypeId" defaultValue={userData.typeId} label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
                     {!isAdult && <Input defaultValue={userData.parentName} label='Полное имя родителя' type='text' name='parentName'  />}
                     <Input defaultValue={userData.email} label='Адрес электронной почты' type='email' name='email' />
                     <Input defaultValue={userData.phone} onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'/>
                     <Input defaultValue={userData.lastName} label='Фамилия участника' type='text' name='lastName'  maxlength={40} />
                     <Input defaultValue={userData.firstName} label='Имя участника' type='text' name='firstName'  maxlength={40} />
                     <Input defaultValue={userData.patronymic} label='Отчество участника' type='text' name='patronymic'  maxlength={40} />
-                    <Input defaultValue={userData.city} label='Город участника' type='text' name='city'  />
+                    <Input defaultValue={userData.city} datalist="Cities" label='Город участника' type='text' name='city' required={true} />
                     <Input defaultValue={userData.institution} label='Учебное заведение' type='text' name='institution'  />
                     {
                         isAdult ?
@@ -95,11 +92,11 @@ const UpdateUserForm = ({ id }: formProps) => {
                             </> :
                             <Input defaultValue={userData.grade} label='Класс' type='number' name='grade' min={1} max={11} />
                     }
-                    <Combobox name="caseId" defaultValue={userData.case.id} label='Направление' options={cases} />
-                    <FileInput initialFileName={userData?.consentId} label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />
-                    <FileInput initialFileName={userData?.solutionId} label='Выполненное задание' name='solution' accept={['.pdf']} />
-                    <Input min={0} label='Балл' type='number' name='score' />
-                    <Combobox name="statusId" defaultValue={userData.status} label='Статус' options={userStatusOptions} />
+                    <Combobox name="caseId" defaultValue={userData.caseId} label='Направление' options={cases} />
+                    <FileInput initialFileName={userData?.consentFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.consentFilename}?displayedName="Согласие_${userData.lastName}"`} label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />
+                    <FileInput initialFileName={userData?.solutionFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.solutionFilename}?displayedName="Решение_${userData.lastName}"`} label='Выполненное задание' name='solution' accept={['.pdf']} />
+                    <Input defaultValue={userData?.rating} min={0} label='Балл' type='number' name='score' />
+                    <Combobox name="status" defaultValue={userData.status} label='Статус' options={userStatusOptions} />
                 </>
             }
         </>

@@ -4,14 +4,15 @@ import Icons from 'images/icons.svg'
 import { API } from 'src/services'
 
 interface props {
-    initialFileName?: string    
+    initialFileName?: string,
+    downloadLink?: string,
     name: string,
     label: string,
     accept?: string[]
     required?: true | undefined,
     changeHandler?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-const FileInput = ({ initialFileName, name, label, required, accept, changeHandler }: props) => {
+const FileInput = ({ initialFileName, downloadLink, name, label, required, accept, changeHandler }: props) => {
     const [filename, setFileName] = useState<string>()
     const [id] = useState(name + '-' + Date.now().toString(36))
     const [showDownload, setShowDownload] = useState(initialFileName != undefined)
@@ -20,11 +21,11 @@ const FileInput = ({ initialFileName, name, label, required, accept, changeHandl
     }, [initialFileName])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const fileName = e.target.value.split(/(\\|\/)/g).pop();        
-        if (fileName != undefined){
+        const fileName = e.target.value.split(/(\\|\/)/g).pop();
+        if (fileName != undefined) {
             setFileName(fileName)
             setShowDownload(false)
-        }  
+        }
         if (changeHandler) changeHandler(e)
     }
 
@@ -45,9 +46,11 @@ const FileInput = ({ initialFileName, name, label, required, accept, changeHandl
             </div>
             {
                 (showDownload && initialFileName) &&
-                <svg className='fileinput_wrapper-icon download' onClick={() => API.getFile(initialFileName)}>
-                    <use xlinkHref={Icons + "#download"} />
-                </svg>
+                <a href={downloadLink} target='_blank'>
+                    <svg className='fileinput_wrapper-icon download' onClick={() => API.getFile(initialFileName)}>
+                        <use xlinkHref={Icons + "#download"} />
+                    </svg>
+                </a>
             }
         </div>
     );

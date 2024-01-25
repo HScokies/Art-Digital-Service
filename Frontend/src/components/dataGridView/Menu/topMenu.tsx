@@ -1,11 +1,12 @@
 import './style.scss'
 import Icons from 'images/icons.svg'
+import { useEffect, useState } from 'react'
 import { Button } from 'src/components'
 
 interface props {
     highlightedRows: Set<number>,
     setHighlightedRows: React.Dispatch<React.SetStateAction<Set<number>>>,
-    exportProvider: (ids?: Set<number>) => void,
+    exportProvider: (ids?: Set<number>) => string,
     searchLabel: string,
     setSearch: React.Dispatch<React.SetStateAction<string | undefined>>
 }
@@ -13,6 +14,16 @@ interface props {
 const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLabel, setSearch }: props) => {
     const deleteDialog = document.getElementById('delete-row-dialog') as HTMLDialogElement
     const createDialog = document.getElementById('dialog-create') as HTMLDialogElement
+    const [exportUrl, setUrl] = useState("");
+    useEffect(() => {
+        const url = exportProvider(highlightedRows);
+        setUrl(url)
+    }, [highlightedRows])
+
+    const download = () => {
+        console.debug(exportUrl)
+        location.href = exportUrl;
+    }
     return (
         <div className='datagrid_menu-top'>
             {
@@ -27,7 +38,7 @@ const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLa
                             <span className='rows-controll-label'>Выделено строк: {highlightedRows.size}</span>
                         </div>
                         <div className='btn-wrapper'>
-                            <Button variant='brand' isActive={true} clickHandler={() => exportProvider(highlightedRows)}>Экспорт</Button>
+                            <Button variant='brand' isActive={true} clickHandler={() => download()}>Экспорт</Button>
                             {
                                 deleteDialog&&
                                 <Button variant='passive' isActive={true} clickHandler={() => deleteDialog.showModal()}>Удалить</Button>
@@ -42,7 +53,7 @@ const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLa
                                 createDialog&&
                                 <Button isActive={true} clickHandler={() => createDialog.showModal()}>Добавить</Button>
                             }                            
-                            <Button variant='passive' isActive={true} clickHandler={() => exportProvider()}>Экспорт</Button>
+                            <Button variant='passive' isActive={true} clickHandler={() => download()}>Экспорт</Button>
                         </div>
                     </>
             }

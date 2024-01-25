@@ -11,8 +11,8 @@ interface props {
     searchLabel: string,
     columns: IColumn[],
     rowsPerPageOptions: Set<number>
-    dataSource: (offset: number, take: number, filters: param[], search?: string, orderBy?: orderBy) => IData,
-    exportProvider: (ids?: Set<number>) => void
+    dataSource: (offset: number, take: number, filters: param[], search?: string, orderBy?: orderBy) => Promise<IData>,
+    exportProvider: (ids?: Set<number>) => string
     deleteProvider?: (ids: Set<number>) => void,
     updateProvider: (id: number, model: FormData) => void,
     createProvider?: (model: FormData) => void,
@@ -36,6 +36,9 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
 
     const [currentRowId, setCurrentRowId] = useState(-1)
 
+    const [trigger, setTrigger] = useState(false);
+    const _trigger = () => setTrigger(!trigger);
+
     //Handle data
     useEffect(() => {
         let search = activeSearch?.trim()
@@ -45,7 +48,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
         activeFilters.forEach((f) => params.push(f.param))
 
         const offset = (currentPage - 1) * rowsPerPage;
-        const fetch = async() => {
+        const fetch = async () => {
             const data = await dataSource(offset, rowsPerPage, params, search, activeSort)
             if (data.currentPage > 0)
                 setCurrentPage(data.currentPage)
@@ -54,20 +57,18 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
         }
         fetch();
 
-    }, [activeSort, activeFilters, activeSearch, rowsPerPage, currentPage])
+    }, [activeSort, activeFilters, activeSearch, rowsPerPage, currentPage, trigger])
 
     // handle highlightedRows
     useEffect(() => {
         const rows = document.getElementsByClassName("datagrid-row")
         for (let i = 1; i < rows.length; i++) {
-            const rowID = +rows[i].id.replace('rowid-', '')
-            const checkbox = rows[i].querySelector('input') as HTMLInputElement
-            if (!checkbox) continue;
-            highlightedRows.has(rowID) ?
-                checkbox.checked = true :
-                checkbox.checked = false
+            const rowID = +(rows[i].id.replace('rowid-', ''))
+
+            if (!highlightedRows.has(rowID)) continue;
+            (rows[i].querySelector('input') as HTMLInputElement).checked = true;            
         }
-    }, [highlightedRows, currentPage])
+    }, [highlightedRows, data])
 
 
 
@@ -87,10 +88,10 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                     <table className='datagrid'>
                         <thead className='datagrid_header'>
                             <tr className='datagrid-row'>
-                                <th className='row-select-header'></th>
+                                <th className='row-select-header' style={{ width: 136 }}></th>
                                 {
                                     columns.map((e, i) => (
-                                        <HeaderCell key={e.id} index={i} columnData={e} setSort={setActiveSort} activeSort={activeSort} activeFilters={activeFilters} setActiveFilters={setActiveFilters} />
+                                        <HeaderCell key={e.id} index={i} sizePx={e.sizePx} columnData={e} setSort={setActiveSort} activeSort={activeSort} activeFilters={activeFilters} setActiveFilters={setActiveFilters} />
                                     ))
                                 }
                             </tr>
@@ -106,26 +107,35 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                                     </tr>
                             }
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colSpan={columns.length + 1}>
+                                    <BottomMenu
+                                        currentPage={currentPage}
+                                        setPage={setCurrentPage}
+                                        setRowsPerPage={setRowsPerPage}
+                                        rowsPerPageOptions={rowsPerPageOptions}
+                                        pageCount={data?.pagesTotal && data.pagesTotal > 0 ? data?.pagesTotal : 1}
+                                    />
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
-                <BottomMenu
-                    currentPage={currentPage}
-                    setPage={setCurrentPage}
-                    setRowsPerPage={setRowsPerPage}
-                    rowsPerPageOptions={rowsPerPageOptions}
-                    pageCount={data?.pagesTotal && data.pagesTotal > 0? data?.pagesTotal : 1}
-                />
             </div>
             {
                 deleteProvider &&
                 <DeleteDialog
+                    trigger={_trigger}
                     deleteProvider={deleteProvider}
                     highlightedRows={highlightedRows}
+                    setHighlighted={setHighlightedRows}
                 />
             }
             {
                 (createProvider && createForm) &&
                 <FormDialog
+                    trigger={_trigger}
                     dialogId='create'
                     onSubmit={createProvider}
                     dialogTitle='Создание записи'
@@ -133,6 +143,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                 />
             }
             <FormDialog
+                trigger={_trigger}
                 dialogId='update'
                 onSubmit={updateProvider}
                 dialogTitle='Обновление записи'

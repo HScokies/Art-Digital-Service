@@ -15,7 +15,7 @@ $RowHeight: 3em;
 */
 
 .datagrid {
-    min-width: 100%;
+    min-width: 772px;
     white-space: nowrap;
     border-collapse: collapse;
     & tr{
@@ -35,6 +35,16 @@ $RowHeight: 3em;
     th {
         top: 0;
         position: sticky;
+    }
+
+    & tfoot{
+        tr{
+            height: unset;
+        }
+        td{
+            padding: unset;
+            border: unset;
+        }
     }
 
     &-row {

@@ -28,7 +28,7 @@ const Combobox = ({ name, label, defaultValue, options, changeHandler = () => { 
     return (
         <div className="combobox">  
             <div className='combobox_wrapper'>
-                <label className='combobox_wrapper-label'>{label}</label>
+                <label className='combobox_wrapper-label' htmlFor={id}>{label}</label>
                 <select id={id} name={name} value={value} onChange={(e) => handleChange(e)} className='combobox_wrapper-input'>
                     {
                         options.map((data) => (

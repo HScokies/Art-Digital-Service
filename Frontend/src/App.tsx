@@ -1,12 +1,13 @@
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import { AccessPage, CaseUpsertPage, CasesDashboardPage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage, StaffDashboardPage, UsersDashboardPage } from "./pages"
 import { RequireAuth } from "./components"
 import { UserTypes } from "./enums"
+import { useEffect } from "react"
+import { UseAuth } from "./hooks/useAuth"
 
 
 const App = () => {
-
-
+  const {setUserType} = UseAuth();
   // refresh token
   // useEffect(() => {    
   //   if (!isAuthorized) return    
@@ -18,6 +19,11 @@ const App = () => {
 
   //   return () => clearInterval(refreshToken);
   // }, [isAuthorized])
+
+  useEffect(() => {
+    const userType = localStorage.getItem("type");
+    setUserType(userType);    
+  }, [])
 
   return (
     <Routes>
@@ -50,6 +56,8 @@ const App = () => {
           <Route path="dashboard/cases/add" element={<CaseUpsertPage />} />
         </Route>
       </Route>
+
+      <Route path="/*" element={<Navigate to="/"/>} />
     </Routes>
   )
 }

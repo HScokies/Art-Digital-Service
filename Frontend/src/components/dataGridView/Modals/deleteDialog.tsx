@@ -3,13 +3,17 @@ import { Button } from "src/components"
 
 interface props{
     deleteProvider: (ids: Set<number>) => void
-    highlightedRows: Set<number>
+    highlightedRows: Set<number>,
+    setHighlighted: React.Dispatch<React.SetStateAction<Set<number>>>,
+    trigger: () => void
 }
-const DeleteDialog = ({deleteProvider, highlightedRows}: props) => {
+const DeleteDialog = ({deleteProvider, highlightedRows, setHighlighted, trigger}: props) => {
     const dialog = document.getElementById('delete-row-dialog') as HTMLDialogElement
     
-    const handleDelete = () => {
-        deleteProvider(highlightedRows)
+    const handleDelete = async() => {
+        await deleteProvider(highlightedRows)
+        setHighlighted(new Set<number>)
+        trigger();
         dialog.close()
     }
 

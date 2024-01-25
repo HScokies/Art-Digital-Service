@@ -5,7 +5,7 @@ import ParameterElement from './parameterElement';
 
 
 
-const HeaderCell = ({ index, columnData, setSort, activeSort, setActiveFilters, activeFilters }: IHeaderCell) => {
+const HeaderCell = ({ index, sizePx, columnData, setSort, activeSort, setActiveFilters, activeFilters }: IHeaderCell) => {
     //#region handleSort
     const sortStates: (orderBy | undefined)[] = [
         undefined,
@@ -55,7 +55,7 @@ const HeaderCell = ({ index, columnData, setSort, activeSort, setActiveFilters, 
 
 
     return (
-        <th className={`datagrid-cell col_${index}`}>
+        <th className={`datagrid-cell col_${index}`} style={{width: sizePx}}>
             <div className='header'>
             <div className='title-wrapper' onClick={() => handleSortChange()}>
                 {columnData.title}

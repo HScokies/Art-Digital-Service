@@ -8,14 +8,13 @@ import UserStatusesMock from './mock/userStatusMock.json'
 import PremissionsMock from './mock/PremissionsMock.json'
 import CaseMock from './mock/caseMock.json'
 import ProfileMock from './mock/userProfileMock.json'
-
-import { ICaseData, IProfileData, IUserData, IUserStatus } from "src/interfaces"
+import { ICaseData, IParticipantStatus, IProfileData, IUserData } from "src/interfaces"
 
 
 export class API{
     static protocol: "http" | "https" = "https"
     static baseURL = "localhost:7220"
-    private static readonly URL = new URL(`${this.protocol}://${this.baseURL}/`)
+    public static readonly URL = new URL(`${this.protocol}://${this.baseURL}/`)
     
     private static api = axios.create({
         withCredentials: true,
@@ -34,14 +33,25 @@ export class API{
     }
 
     static register = async (data:FormData) => {
-        console.debug("user data", data)
         const url = new URL(API.URL + "authentication/register")
         
         return await this.api.post(url.toString(), data);
     }
+
+    static login = async (data:FormData) => {
+        const url = new URL(API.URL + "authentication/login")
+
+        return await this.api.post(url.toString(), data)
+    }
+
+    static getCases = async() => {
+        const url = new URL(API.URL + "cases");
+
+        return await this.api.get(url.toString());
+    }
     
-    // offset take
-    static getUsers = async(offset:number, take:number, filters: param[], search?: string, orderBy?: orderBy) => {
+    //#region Dashboard
+    static getUsers = async(offset:number, take:number, filters: param[], search?: string, orderBy?: orderBy): Promise<IData> => {
         const getUsersURL = new URL(API.URL + "participants");
         getUsersURL.searchParams.append("offset", String(offset))
         getUsersURL.searchParams.append("take", String(take))
@@ -61,55 +71,62 @@ export class API{
         return response.data;
     }
 
-    static exportUsers = (ids?: Set<number>) => {
-        const exportUsersURL = new URL(API.URL);
+    static exportParticipants = (ids?: Set<number>): string => {
+        const url = new URL(API.URL + "participants/export");
         ids?.forEach((id) => {
-            exportUsersURL.searchParams.append("id", String(id))
+            url.searchParams.append("id", String(id))
         })
-        console.debug(exportUsersURL)
+        return url.toString();
     }
 
-    static deleteUsers = (ids: Set<number>) => {
-        const deleteUserURL = new URL(API.URL);
+    static createUser = async(model: FormData) => {
+        const url = new URL(API.URL + "participants")
+        const response = await this.api.post(url.toString(), model)
+        if (response.status != 201){
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else alert("Участник успешно создан!")
+        
+    }
+
+    static getUser = async(id: number): Promise<IUserData | undefined> => {
+        const url = new URL(API.URL + `participants/${id}`)
+        const response =  await this.api.get(url.toString());
+        if (response.status != 200){
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else return response.data;
+    }
+
+    static deleteUsers = async (ids?: Set<number>) => {
+        const url = new URL(API.URL + "participants");
         ids?.forEach((id) => {
-            deleteUserURL.searchParams.append("id", String(id))
+            url.searchParams.append("id", String(id))
         })
-        console.debug(deleteUserURL)
+        await this.api.delete(url.toString());
     }
 
-    static getUserTypes = () => {
-        return UserTypesMock
+    static updateUser = async(id: number, model: FormData) => {
+        const url = new URL(API.URL + `participants/${id}`);
+        
+        const response = await this.api.put(url.toString(), model);
+        if (response.status != 204){
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else alert("Участник успешно обновлен!")
     }
 
-    static getCases = () => {
-        return CasesMock
-    }
+    static getUserStatuses = async(): Promise<IParticipantStatus[]> => {
+        const url = new URL(API.URL + "participants/statuses");
 
-    static getUserStatuses = ():IUserStatus[] => {
-        return UserStatusesMock
+        return (await this.api.get(url.toString())).data;
     }
+    //#endregion
 
-    static createUser = (model: FormData) => {
-        console.debug("CREATE USER", model)
-    }
 
-    static updateUser = (id: number, model: FormData) => {
-        console.debug(`UPDATE USER id=${id}`, model)
-    }
-
-    static getUser = (id: number):IUserData => {
-        return UserMock as IUserData
-    }
 
     static getFile = (id: string) => {
         console.debug("filename:", id)
-    }
-    
-    static login = async(credentials: FormData) => {
-        const url = new URL(API.URL + "authentication/login").toString();
-        var response = await this.api.post(url, credentials)
-        return response.status == 200;
-        
     }
 
     static logout = () => {
@@ -131,7 +148,7 @@ export class API{
         return CaseMock
     }
 
-    static getProfileData = (): IProfileData => {
+    static getProfileData = ()=> {
         return ProfileMock
     }
 }

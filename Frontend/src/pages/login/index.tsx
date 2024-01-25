@@ -4,6 +4,7 @@ import Logo from 'images/logo.webp'
 import { Button, Input, FormMessage } from 'src/components';
 import { API, Validator } from 'src/services';
 import { useState } from 'react';
+import { UseAuth } from 'src/hooks/useAuth';
 
 interface IForm {
     email: HTMLInputElement,
@@ -17,6 +18,7 @@ interface IFormError {
 
 const LoginPage = () => {    
     const { Email } = useParams()
+    const { setUserType } = UseAuth();
     const [hasErrors, setHasErrors] = useState(true);
 
     const [email, setEmail] = useState(Email)
@@ -37,17 +39,13 @@ const LoginPage = () => {
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const isLoggedIn = await API.login(new FormData(e.target as HTMLFormElement));
-        // if (userData){
-        //     setUserInfo(userData)
-        //     return;
-        // }
-        if (!isLoggedIn){
-            setFormError({
-                isActive: true,
-                text: "Данные, использованные вами для входа, недействительны"
-            });
-        }
+        const response = await API.login(new FormData(e.target as HTMLFormElement));
+        const data = response.data;
+        if (response.status == 200) return setUserType(data)
+        setFormError({
+            isActive: true,
+            text: data.title
+        });
     }
 
     return (

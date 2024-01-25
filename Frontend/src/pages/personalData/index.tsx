@@ -147,7 +147,7 @@ const PersonalDataPage = () => {
                                 <Input onKeyUp={validateGrade} label='Класс' type='number' name='grade' required={true} validator={Validator.validateGradeSchool} min={1} max={11} />
                             </>
                     }
-                    <Combobox label='Направление' options={dbdata.cases} />
+                    <Combobox name='case' label='Направление' options={dbdata.cases} />
                     <Checkbox checkedChanged={validateFields} name='acceptedPrivacyPolicy'>
                         Ознакомлен с <a target='_blank' href='https://disk.yandex.ru/i/FrvixFf4IKNtwg'>политикой&nbsp;конфиденциальности</a>
                     </Checkbox>

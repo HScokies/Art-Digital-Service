@@ -13,9 +13,10 @@ interface props {
     rowId?: number
     FormElements: ({ id }: formProps) => JSX.Element,
     onSubmit: Function
+    trigger?: () => void
 }
 
-const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setActiveRow }: props) => {
+const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setActiveRow, trigger }: props) => {
     const thisDialog = document.getElementById(`dialog-${dialogId}`) as HTMLDialogElement
     useEffect(() => {
         const closeHandler = () => {
@@ -27,12 +28,13 @@ const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setA
     
     
 
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitHandler = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.target as HTMLFormElement)
         if (rowId != undefined){
-            onSubmit(rowId, data)
-        } else onSubmit(data)
+            await onSubmit(rowId, data)
+        } else await onSubmit(data)
+        if (trigger) trigger()
     }
     
     return (

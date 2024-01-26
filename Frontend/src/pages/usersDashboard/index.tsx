@@ -50,8 +50,8 @@ const UsersDashboardPage = () => {
         deleteProvider={API.deleteUsers}
         createProvider={API.createUser}
         createForm={CreateUserForm}
-        updateProvider={API.updateUser}
-        updateForm={UpdateUserForm}
+        updateProvider={API.rateUser}//API.updateUser
+        updateForm={RateUserForm}//UpdateUserForm
         rowsPerPageOptions={new Set([5, 10, 15, 20, 25])}
         columns={[
             {
@@ -74,7 +74,7 @@ const UsersDashboardPage = () => {
             {
                 id: "rating",
                 title: "Балл",
-                sizePx: 50,
+                sizePx: 250,
                 filters: [
                     {
                         title: 'Есть значение',

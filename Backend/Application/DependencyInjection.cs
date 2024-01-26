@@ -1,4 +1,5 @@
-﻿using Application.Services.Participant;
+﻿using Application.Services.Case;
+using Application.Services.Participant;
 using Application.Services.Staff;
 using Application.Services.User;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ namespace Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IParticipantService, ParticipantService>();
             services.AddScoped<IStaffService, StaffService>();
+            services.AddScoped<ICaseService, CaseService>();
 
             return services;
         }

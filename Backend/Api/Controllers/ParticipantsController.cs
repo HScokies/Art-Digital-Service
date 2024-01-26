@@ -43,18 +43,19 @@ namespace Api.Controllers
         [HttpGet("statuses"), Authorize(Roles = Roles.Permissions.readUsers)]
         public IActionResult GetParticipantStatuses()
         {
-            Dictionary<string, string> statuses = new()
+            List<ParticipantStatusResponse> statuses = new()
             {
-                {"Ожидание работы", Roles.ParticipantsStatus.sentPersonalData },
-                {"На рассмотрении", Roles.ParticipantsStatus.awaitingResults },
-                {"Приглашен на второй этап", Roles.ParticipantsStatus.invited},
-                {"Выбыл", Roles.ParticipantsStatus.droppedOut }
+                new(){name = "Ожидание персональных данных", id = Roles.ParticipantsStatus.justRegistered },
+                new(){name = "Ожидание работы", id = Roles.ParticipantsStatus.sentPersonalData },
+                new() { name = "На рассмотрении", id = Roles.ParticipantsStatus.awaitingResults },
+                new() { name = "Приглашен на второй этап", id = Roles.ParticipantsStatus.invited },
+                new() { name = "Выбыл", id = Roles.ParticipantsStatus.droppedOut }
             };
             return Ok(statuses);
         }
 
         [HttpGet, Authorize(Roles = Roles.Permissions.readUsers)]
-        public async Task<IActionResult> GetParticipantsList(CancellationToken cancellationToken, [FromQuery] int offset = 0, int take = 5, bool asc = true, bool hasScore = true, bool noScore = true, string? orderBy = null, string? search = null, [FromQuery] int[]? excludeType = null, [FromQuery] int[]? excludeCase = null)
+        public async Task<IActionResult> GetParticipantsList(CancellationToken cancellationToken, int offset = 0, int take = 5, bool asc = true, bool hasScore = true, bool noScore = true, string? orderBy = null, string? search = null, [FromQuery] int[]? excludeType = null, [FromQuery] int[]? excludeCase = null)
         {
             if (offset < 0 || take < 1)
                 return BadRequest();
@@ -69,6 +70,8 @@ namespace Api.Controllers
             var res = await participantService.GetParticipantsAsync(
                 offset: offset,
                 take: take,
+                asc: asc,
+                orderBy: orderBy,
                 participantsOnly: isJudge,
                 cancellationToken: cancellationToken,
                 hasScore: hasScore,
@@ -102,9 +105,10 @@ namespace Api.Controllers
         }
 
         [HttpDelete, Authorize(Roles = Roles.Permissions.deleteUsers)]
-        public async Task<IActionResult> DropParticipants([FromQuery] int[] participantIds, CancellationToken cancellationToken)
+        public async Task<IActionResult> DropParticipants([FromQuery] int[] id, CancellationToken cancellationToken)
         {
-            await participantService.DropParticipantsAsync(participantIds, cancellationToken);
+            if (id.Length < 1) return BadRequest();
+            await participantService.DropParticipantsAsync(id, cancellationToken);
             return NoContent();
         }
 

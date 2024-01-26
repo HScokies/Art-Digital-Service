@@ -51,7 +51,7 @@ namespace Data.Repositories
                 case "case":
                     query = asc ? query.OrderBy(p => p.Case.name) : query.OrderByDescending(p => p.Case.name);
                     break;
-                case "score":
+                case "rating":
                     query = asc ? query.OrderBy(p => p.rating) : query.OrderByDescending(p => p.rating);
                     break;
             }
@@ -62,7 +62,7 @@ namespace Data.Repositories
                 fullName = $"{p.User.lastName} {p.User.firstName} {p.User.patronymic}",
                 typeName = p.Type.name,
                 caseName = p.Case.name,
-                score = p.rating
+                rating = p.rating
             });
 
 
@@ -85,7 +85,7 @@ namespace Data.Repositories
 
         public async Task<ParticipantDto[]> GetAsync(int[]? id, CancellationToken cancellationToken)
         {
-            var participants = ctx.participants.AsQueryable();
+            var participants = ctx.participants.Include(p => p.User).AsQueryable();
             if (id?.Length > 0)
                 participants = participants.Where(p => id.Contains(p.id));
             return await participants.ToArrayAsync(cancellationToken);

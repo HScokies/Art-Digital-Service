@@ -76,26 +76,26 @@ const UpdateUserForm = ({ id }: formProps) => {
                 userData &&
                 <>
                     <Combobox name="userTypeId" defaultValue={userData.typeId} label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
-                    {!isAdult && <Input defaultValue={userData.parentName} label='Полное имя родителя' type='text' name='parentName'  />}
-                    <Input defaultValue={userData.email} label='Адрес электронной почты' type='email' name='email' />
-                    <Input defaultValue={userData.phone} onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'/>
-                    <Input defaultValue={userData.lastName} label='Фамилия участника' type='text' name='lastName'  maxlength={40} />
-                    <Input defaultValue={userData.firstName} label='Имя участника' type='text' name='firstName'  maxlength={40} />
-                    <Input defaultValue={userData.patronymic} label='Отчество участника' type='text' name='patronymic'  maxlength={40} />
-                    <Input defaultValue={userData.city} datalist="Cities" label='Город участника' type='text' name='city' required={true} />
-                    <Input defaultValue={userData.institution} label='Учебное заведение' type='text' name='institution'  />
+                    {!isAdult && <Input defaultValue={userData.parentName} required label='Полное имя родителя' type='text' name='parentName'  />}
+                    <Input defaultValue={userData.email} required label='Адрес электронной почты' type='email' name='email' />
+                    <Input defaultValue={userData.phone} required onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'/>
+                    <Input defaultValue={userData.lastName} required label='Фамилия участника' type='text' name='lastName'  maxlength={40} />
+                    <Input defaultValue={userData.firstName} required label='Имя участника' type='text' name='firstName'  maxlength={40} />
+                    <Input defaultValue={userData.patronymic} required label='Отчество участника' type='text' name='patronymic'  maxlength={40} />
+                    <Input defaultValue={userData.city} required datalist="Cities" label='Город участника' type='text' name='city'/>
+                    <Input defaultValue={userData.institution} required label='Учебное заведение' type='text' name='institution'  />
                     {
                         isAdult ?
                             <>
-                                <Input defaultValue={userData.grade} label='Курс' type='number' name='grade'  min={1} max={11} />
-                                <Input defaultValue={userData.speciality} label='Специальность' type='text' name='speciality'  />
+                                <Input defaultValue={userData.grade} required label='Курс' type='number' name='grade'  min={1} max={11} />
+                                <Input defaultValue={userData?.speciality} required label='Специальность' type='text' name='speciality'  />
                             </> :
-                            <Input defaultValue={userData.grade} label='Класс' type='number' name='grade' min={1} max={11} />
+                            <Input defaultValue={userData.grade} required label='Класс' type='number' name='grade' min={1} max={11} />
                     }
                     <Combobox name="caseId" defaultValue={userData.caseId} label='Направление' options={cases} />
                     <FileInput initialFileName={userData?.consentFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.consentFilename}?displayedName="Согласие_${userData.lastName}"`} label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />
                     <FileInput initialFileName={userData?.solutionFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.solutionFilename}?displayedName="Решение_${userData.lastName}"`} label='Выполненное задание' name='solution' accept={['.pdf']} />
-                    <Input defaultValue={userData?.rating} min={0} label='Балл' type='number' name='score' />
+                    <Input defaultValue={userData?.rating} min={0} label='Балл' type='number' name='rating' />
                     <Combobox name="status" defaultValue={userData.status} label='Статус' options={userStatusOptions} />
                 </>
             }

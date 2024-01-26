@@ -11,6 +11,7 @@ namespace Domain.Entities
         public int typeId { get; set; }
         public int? caseId { get; set; }
         public string status { get; set; } = Roles.ParticipantsStatus.justRegistered;
+        public string? parentName { get; set; } = null;
         public string phone { get; set; } = string.Empty;
         public string city { get; set; } = string.Empty;
         public string institution { get; set; } = string.Empty;

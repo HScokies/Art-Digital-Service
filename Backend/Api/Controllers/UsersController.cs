@@ -1,12 +1,5 @@
 ﻿using Api.Controllers.Base;
-using Api.Controllers.Extensions;
 using Application.Services.User;
-using Contracts.User;
-using Domain.Entities;
-using Domain.Enumeration;
-using Infrastructure.Authentication;
-using Infrastructure.Emails;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers

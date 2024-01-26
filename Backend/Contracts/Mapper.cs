@@ -1,9 +1,11 @@
-﻿using Contracts.Participant;
+﻿using Contracts.Cases;
+using Contracts.Participant;
 using Contracts.Staff;
 using Contracts.User;
 using Domain.Entities;
 using Domain.Enumeration;
 using System.Diagnostics;
+using static Domain.Enumeration.CommonErrors;
 
 namespace Contracts
 {
@@ -46,6 +48,7 @@ namespace Contracts
         public static ParticipantDto toParticipant(this CreateParticipantRequest request) => new ParticipantDto()
         {
             User = new UserDto() { email = request.email, password = request.password, firstName = request.firstName, lastName = request.lastName, patronymic = request.patronymic },
+            parentName = request.parentName,
             typeId = request.typeId,
             caseId = request.caseId,
             status = request.solution is null || request.consent is null ? Roles.ParticipantsStatus.sentPersonalData : Roles.ParticipantsStatus.awaitingResults,
@@ -65,6 +68,7 @@ namespace Contracts
             if (request.caseId is not null)
                 participant.caseId = (int)request.caseId;
 
+            participant.parentName = request.parentName;
             participant.User.email = request.email;
             participant.phone = request.phone;            
             participant.User.firstName = request.firstName;
@@ -74,7 +78,7 @@ namespace Contracts
             participant.institution = request.institution;
             participant.grade = request.grade;
             participant.speciality = request.speciality;
-            participant.rating = request.score;
+            participant.rating = request.rating;
             participant.status = request.status;
 
             return participant;
@@ -94,6 +98,8 @@ namespace Contracts
 
         public static GetParticipantResponse toParticipantResponse(this ParticipantDto participant) => new GetParticipantResponse()
         {
+            parentName = participant.parentName,
+            email = participant.User.email,
             firstName = participant.User.firstName,
             lastName = participant.User.lastName,
             patronymic = participant.User.patronymic,
@@ -143,6 +149,25 @@ namespace Contracts
             staff.User.patronymic = request.patronymic;
 
             return staff;
+        }
+
+        public static CaseDto toCase(this UpsertCaseRequest request) => new CaseDto()
+        {
+            name = request.name,
+            task = request.task,
+            youtubeId = request.youtubeId,
+            stages = request.stage,
+            criterias = request.criteria
+        };
+
+        public static CaseDto updateCase(this CaseDto _case, UpsertCaseRequest request)
+        {
+            _case.name = request.name;
+            _case.task = request.task;
+            _case.youtubeId = request.youtubeId;
+            _case.stages = request.stage;
+            _case.criterias = request.criteria;
+            return _case;
         }
     }
 }

@@ -70,7 +70,7 @@ const CaseData = ({ userStatus, caseData, isPreview = false }: props) => {
                 <h2 className='profilepage_guide-title'>
                     Мастер-класс
                 </h2>
-                <iframe className='profilepage_guide-video' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen={true} src={caseInfo.video}></iframe>
+                <iframe className='profilepage_guide-video' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen={true} src={`https://www.youtube.com/embed/${caseData.youtubeId}`}></iframe>
             </section>
             <section className='profilepage_stages'>
                 <h2 className='profilepage_stages-title'>

@@ -7,6 +7,7 @@ namespace Contracts.User
         public int? userTypeId { get; set; } = null!;
         public int? caseId { get; set; } = null!;
 
+        public string? parentName { get; set; } = null;
         public string email { get; set; } = null!;
         public string phone { get; set; } = null!;
         public string firstName { get; set; } = null!;
@@ -18,7 +19,7 @@ namespace Contracts.User
         public string? speciality { get; set; } = null;  
         public IFormFile? consent { get; set; } = null!;
         public IFormFile? solution { get; set; } = null!;
-        public int score { get; set; } = 1;
+        public int? rating { get; set; } = null;
         public string status { get; set; } = null!;
     }
 }

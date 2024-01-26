@@ -6,15 +6,15 @@ import { formProps } from "../dataGridView/Modals/createUpdateDialog"
 import { Option } from "src/components/combobox"
 
 const RateUserForm = ({ id }: formProps) => {
-    const [userData, setUserData] = useState<IUserData | null>(null)
+    const [userData, setUserData] = useState<IUserData | undefined>()
     const [userStatusOptions, setUserStatusOptions] = useState<Option[]>([])
     useEffect(() => {
-        const getUserData = () => {
-            const data = API.getUser(id!)
+        const getUserData = async() => {
+            const data = await API.getUser(id!)
             setUserData(data)
         }
-        const getUserStatuses = () => {
-            const data = API.getUserStatuses()
+        const getUserStatuses = async() => {
+            const data = await API.getUserStatuses()
             let userStatusOptions: Option[] = []
             for (let userStatus of data) {
                 userStatusOptions.push({
@@ -25,7 +25,7 @@ const RateUserForm = ({ id }: formProps) => {
             setUserStatusOptions(userStatusOptions)
         }
         if (id == -1) {
-            setUserData(null)
+            setUserData(undefined)
             return
         }
         getUserStatuses()
@@ -37,11 +37,11 @@ const RateUserForm = ({ id }: formProps) => {
                 userData &&
                 <>
                     <div className="aside-dialog-filebuttons">
-                        <Button type="button" clickHandler={() => API.getFile(userData?.solutionFilename)} isActive={true} variant='passive'>Согласие</Button>
-                        <Button  type="button" clickHandler={() => API.getFile(userData?.consentFilename)} isActive={true} variant='passive'>Работа</Button>
+                        <Button type="button" clickHandler={() => location.href = `${API.URL}files/user-uploaded/${userData?.consentFilename}?displayedName="Согласие_${userData.lastName}"`} isActive={true} variant='passive'>Согласие</Button>
+                        <Button  type="button" clickHandler={() => location.href = `${API.URL}files/user-uploaded/${userData?.solutionFilename}?displayedName="Решение_${userData.lastName}"`} isActive={true} variant='passive'>Работа</Button>
                     </div>
-                    <Input min={0} label='Балл' type='number' name='rating' />
-                    <Combobox name="statusId" defaultValue={userData.status} label='Статус' options={userStatusOptions} />
+                    <Input min={0} defaultValue={userData.rating} label='Балл' type='number' name='rating' />
+                    <Combobox name="status" defaultValue={userData.status} label='Статус' options={userStatusOptions} />
                 </>
             }</>
     )

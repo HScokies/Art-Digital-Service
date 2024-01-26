@@ -8,6 +8,7 @@ namespace Contracts.Participant
         public int typeId { get; set; } = 1;
         public int caseId { get; set; } = 1;
 
+        public string? parentName { get; set; } = null;
         public string email { get; set; } = null!;
         public string password { get; set; } = null!;
         public string phone { get; set; } = null!;

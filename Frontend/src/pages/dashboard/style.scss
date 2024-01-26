@@ -1,3 +1,5 @@
+@import 'styles/variables.scss';
+
 .dashboardpage {
     display: flex;
     flex-flow: row nowrap;
@@ -14,7 +16,7 @@
     }
 
     .aside-dialog{
-        min-width: 40em;
+        width: 750px;
         &-filebuttons {
             width: 100%;
             display: inline-flex;
@@ -57,22 +59,32 @@
             flex-flow: row wrap;
             gap: 1em;
             &_element{
-                display: inline-flex;
+                min-width: 560px;
+                display: flex;
+                align-items: center;
                 justify-content: space-between;
                 width: calc(50% - 1em);
                 border: 0.1vmin solid #e6e8eb;
                 padding: 1em 1.25em;
                 font-size: 1.3em;
-                cursor: pointer;
+                cursor: default;
+                & .icon-wrapper{
+                    display: inline-flex;
+                    gap: 1em;
+                }
                 & svg{
                     aspect-ratio: 1;
                     height: 1.3em;
                     stroke: #b1b3b6;
                     transition: all ease-in-out .3s;
+                    &:hover{
+                        stroke: black;
+                    }
+                    &#drop:hover{
+                        stroke: $Danger;
+                    }
                 }
-                &:hover svg{
-                    stroke: black;
-                }
+                
             }
         }
     }

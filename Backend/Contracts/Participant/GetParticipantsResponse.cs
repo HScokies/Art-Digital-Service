@@ -13,6 +13,6 @@
         public string fullName { get; set; } = null!;
         public string typeName { get; set; } = null!;
         public string caseName { get; set; } = null!;
-        public int? score { get; set; }
+        public int? rating { get; set; }
     }
 }

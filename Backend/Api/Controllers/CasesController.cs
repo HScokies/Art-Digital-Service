@@ -1,4 +1,6 @@
 ﻿using Api.Controllers.Base;
+using Application.Services.Case;
+using Contracts.Cases;
 using Domain.Enumeration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,24 +9,46 @@ namespace Api.Controllers
 {
     public class CasesController : ApiController
     {
-        public CasesController(ILogger<ApiController> logger) : base(logger)
-        {
+        private readonly ICaseService caseService;
 
-        }
-        
-        [HttpPost, Authorize(Roles = Roles.Permissions.createCases)]
-        public IActionResult Create() => throw new NotImplementedException();
+        public CasesController(ILogger<ApiController> logger, ICaseService caseService) : base(logger)
+        {
+            this.caseService = caseService;
+        }       
 
         [HttpGet]
-        public IActionResult Get() => throw new NotImplementedException();
+        public IActionResult Get(string? search = null)
+        {
+            var res = caseService.Get(search);
+            return Ok(res);
+        }
 
         [HttpGet("{id:int}")]
-        public IActionResult Get(int id) => throw new NotImplementedException();
+        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+        {
+            var Result = await caseService.GetAsync(id, cancellationToken);
+            return Result.isSuccess ? Ok(Result.value) : Problem(Result.error);
+        }
+
+        [HttpPost, Authorize(Roles = Roles.Permissions.createCases)]
+        public async Task<IActionResult> Create([FromForm] UpsertCaseRequest request, CancellationToken cancellationToken)
+        {
+            var entityId = await caseService.CreateAsync(request, cancellationToken);
+            return CreatedAtAction(nameof(Create), entityId);
+        }
 
         [HttpPut("{id:int}"), Authorize(Roles = Roles.Permissions.updateCases)]
-        public IActionResult Update(int id) => throw new NotImplementedException();
+        public async Task<IActionResult> Update(int id, [FromForm] UpsertCaseRequest request, CancellationToken cancellationToken)
+        {
+            var Result = await caseService.UpdateAsync(id, request, cancellationToken);
+            return Result.isSuccess? NoContent() : Problem(Result.error);
+        }
 
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id) => throw new NotImplementedException();
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        {
+            var Result = await caseService.DropAsync(id, cancellationToken);
+            return Result.isSuccess ? NoContent() : Problem(Result.error);
+        }
     }
 }

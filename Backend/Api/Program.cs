@@ -1,6 +1,7 @@
 using Data;
 using Application;
 using Infrastructure;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,16 @@ builder.Services.AddExportService();
 
 builder.Services.AddHttpContextAccessor();
 
+const string corsPolicyName = "corsPolicy";
+builder.Services.AddCors(
+    p => p.AddPolicy(
+        name: corsPolicyName,
+        build =>
+        {
+            build.AllowCredentials().AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173");
+        })
+    );
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -32,5 +43,6 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapControllers();
+app.UseCors(corsPolicyName);
 
 app.Run();

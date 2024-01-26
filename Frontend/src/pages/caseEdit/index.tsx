@@ -11,37 +11,44 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const CaseUpsertPage = () => {
     const navigate = useNavigate()
-    const { id } = useParams()    
-    
+    const { id } = useParams()
+
     const [caseName, setName] = useState<string>('')
     const [caseTask, setTask] = useState<string>('')
-    const [caseGuide, setGuide] = useState<string>('')
+    const [youtubeId, setId] = useState<string>('')
     const [caseStages, setStages] = useState<string[]>([])
     const [caseCriterias, setCriterias] = useState<string[]>([])
 
     const preview = useRef<HTMLDialogElement>(null)
-    const [previewData, setPreview] = useState<ICaseData>({name: caseName, task: caseTask, video: caseGuide, stages: caseStages, criterias: caseCriterias})
+    const [previewData, setPreview] = useState<ICaseData>({ name: caseName, task: caseTask, youtubeId: youtubeId, stages: caseStages, criterias: caseCriterias })
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const form = e.target as HTMLFormElement
-        const formData = new FormData(form)        
-        console.debug("formData", formData)
+        const formData = new FormData(form)
+
+        if (id == undefined || isNaN(+id)) return await API.createCase(formData)
+        return await API.updateCase(+id, formData);
     }
 
-    const showPreview = async() =>  {
-        await setPreview({name: caseName, task: caseTask, video: caseGuide, stages: caseStages, criterias: caseCriterias})
+    const showPreview = async () => {
+        await setPreview({ name: caseName, task: caseTask, youtubeId: youtubeId, stages: caseStages, criterias: caseCriterias })
         preview.current?.showModal()
     }
 
-    useEffect(() => {        
+    useEffect(() => {
         if (id == undefined) return
-        const data = API.getCase(+id)
-        setName(data.name)
-        setTask(data.task)
-        setGuide(data.video)
-        setStages(data.stages)
-        setCriterias(data.criterias)
+        const fetch = async () => {
+            const response = await API.getCase(+id)
+            if (response.status != 200) return;
+            const data = response.data as ICaseData;
+            setName(data.name)
+            setTask(data.task)
+            setId(data.youtubeId)
+            setStages(data.stages)
+            setCriterias(data.criterias)
+        }
+        fetch();
     }, [id])
 
     return (
@@ -51,9 +58,9 @@ const CaseUpsertPage = () => {
             </header>
             <main className='casePage-main'>
                 <form id='upsert-form' onSubmit={(e) => handleSubmit(e)}>
-                    <Input defaultValue={caseName} label='Направление' name='case' type='text' onChange={(e) => setName(e.target.value)} />
-                    <TextArea defaultValue={caseTask} label='Задание' name='task' onChange={(e) => setTask(e.target.value)}/>
-                    <Input label='Мастер-класс' name='video' type='text' defaultValue={caseGuide} onChange={(e) => setGuide(e.target.value)} />
+                    <Input defaultValue={caseName} label='Направление' name='name' type='text' onChange={(e) => setName(e.target.value)} />
+                    <TextArea defaultValue={caseTask} label='Задание' name='task' onChange={(e) => setTask(e.target.value)} />
+                    <Input label='Мастер-класс (id youtube видео)' name='youtubeId' type='text' defaultValue={youtubeId} onChange={(e) => setId(e.target.value)} />
                     <Stages _stages={caseStages} />
                     <Criterias _criterias={caseCriterias} />
                     <div className='btn-container'>

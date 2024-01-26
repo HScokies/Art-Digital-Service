@@ -56,7 +56,7 @@ export interface IProfileData{
 export interface ICaseData{
     name: string,
     task: string,
-    video: string,
+    youtubeId: string,
     stages: string[],
     criterias: string[]
 }

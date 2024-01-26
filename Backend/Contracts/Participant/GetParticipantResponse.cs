@@ -4,6 +4,8 @@ namespace Contracts.Participant
 {
     public sealed class GetParticipantResponse
     {
+        public string? parentName { get; set; } = null;
+        public string email { get; set; } = null!;
         public string firstName { get; set; } = null!;
         public string lastName { get; set; } = null!;
         public string patronymic { get; set; } = null!;

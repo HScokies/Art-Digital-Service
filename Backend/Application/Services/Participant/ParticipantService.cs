@@ -219,6 +219,8 @@ namespace Application.Services.Participant
                 cancellationToken: cancellationToken,
                 offset: offset,
                 take: take,
+                asc: asc,
+                orderBy: orderBy,
                 participantsOnly: participantsOnly,
                 hasScore: hasScore,
                 noScore: noScore,
@@ -289,7 +291,7 @@ namespace Application.Services.Participant
             if (participant is null)
                 return new Result<bool>(CommonErrors.User.NotFound);
 
-            participant.rating = request.score;
+            participant.rating = request.rating;
             participant.status = request.status;
 
             await repository.SaveChangesAsync(cancellationToken);
@@ -299,7 +301,8 @@ namespace Application.Services.Participant
         public async Task DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken)
         {
             var participants = await participantRepository.GetAsync(participantIds, cancellationToken);
-            await participantRepository.DropAsync(participants, cancellationToken);
+            
+            await userRepository.DropAsync(participants.Select(p => p.User), cancellationToken);
 
             foreach (var participant in participants)
             {

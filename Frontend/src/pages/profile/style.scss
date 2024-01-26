@@ -161,6 +161,7 @@
 
     &_task {
         margin-top: 4em; // header
+        white-space: pre-wrap;
         @include section();
 
         &-title {
@@ -169,8 +170,6 @@
 
         &-descr {
             font-size: 2em;
-            width: 60%;
-            max-width: 50em;
 
             @media (max-width: 799px) {
                 width: 100%;

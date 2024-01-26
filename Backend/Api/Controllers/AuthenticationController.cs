@@ -17,6 +17,7 @@ namespace Api.Controllers
         private readonly IJWTProvider jwtProvider;
         private readonly IEmailProvider emailProvider;
 
+        //GET USER ROLES BASED ON TOKEN, CALL IT ON USE EFFECT INSIDE APP
         public AuthenticationController(ILogger<ApiController> logger, IUserService userService, IJWTProvider jwtProvider, IEmailProvider emailProvider) : base(logger)
         {
             this.userService = userService;
@@ -58,7 +59,6 @@ namespace Api.Controllers
             return NoContent();
         }
 
-
         [HttpGet("reset"), Authorize] //TODO
         public async Task<IActionResult> ResetPassword(CancellationToken cancellationToken)
         {
@@ -73,13 +73,13 @@ namespace Api.Controllers
         private IActionResult LoginAsStaff(StaffDto staff)
         {
             jwtProvider.IssueStaffToken(staff.userId, staff.Role.PermissionsList);
-            return Ok();
+            return Ok(UserTypes.staff);
         }
 
         private IActionResult LoginAsParticipant(ParticipantDto participant)
         {
             jwtProvider.IssueUserToken(participant.userId, participant.status);
-            return Ok();
+            return Ok(participant.status == Roles.ParticipantsStatus.justRegistered? UserTypes.user : UserTypes.participant);
         }
         
     }

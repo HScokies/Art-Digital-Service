@@ -3,21 +3,27 @@ import './style.scss'
 import { AsideMenu } from 'src/components'
 import { menuElement } from 'src/components/asideMenu'
 import { API } from 'src/services'
-import { IPermissions } from 'src/interfaces'
 import { Outlet } from 'react-router-dom'
+import { UsePermissions } from 'src/hooks/usePermissions'
 
 
 const DashboardPage = () => {
     const [navElements, setNavElements] = useState<menuElement[]>([])
-    const [permissions, setPermissions] = useState<IPermissions>()
+    const { setPermissions, permissions } = UsePermissions()
 
     useEffect(() => {
-        setPermissions(API.getPremissions())
+        const fetch = async () => {
+            const response = await API.getPremissions()
+            if (response.status != 200) return;
+            const premissionsData = response.data;
+            setPermissions(premissionsData);
+        }
+        fetch()
     }, [])
 
     useEffect(() => {
         let elements = []
-        if (permissions?.users.read){
+        if (permissions?.readUsers) {
             elements.push(
                 {
                     iconId: '#users',
@@ -26,14 +32,14 @@ const DashboardPage = () => {
                 }
             )
         }
-        if (permissions?.cases.read){
+        if (permissions?.readCases) {
             elements.push({
                 iconId: '#book',
                 title: 'Направления',
                 to: 'dashboard/cases'
             })
         }
-        if (permissions?.staff.read){
+        if (permissions?.readStaff) {
             elements.push(
                 {
                     iconId: '#shield',
@@ -45,14 +51,14 @@ const DashboardPage = () => {
     }, [permissions])
 
     return (
-        <div className='dashboardpage'>
-            <AsideMenu
-                items={navElements}
-            />
-            <section className='dashboardpage-content'>
-                <Outlet/>
-            </section>
-        </div>
+            <div className='dashboardpage'>
+                <AsideMenu
+                    items={navElements}
+                />
+                <section className='dashboardpage-content'>
+                    <Outlet />
+                </section>
+            </div>
     )
 }
 

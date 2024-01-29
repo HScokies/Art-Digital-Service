@@ -1,7 +1,6 @@
 
 import Icons from 'images/icons.svg'
 import { IRow } from "../interfaces";
-
 interface props {
     row: IRow,
     setHighlightedRows: React.Dispatch<React.SetStateAction<Set<number>>>,

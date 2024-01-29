@@ -13,6 +13,8 @@ import CreateUserForm from "./createUserForm";
 import UpdateUserForm from "./updateUserForm";
 import RateUserForm from "./rateUserForm"
 import RequireAuth from "./requireAuth";
+import CreateStaffForm from "./createStaffForm";
+import UpdateStaffForm from "./updateStaffForm";
 
 export {
     Input,
@@ -29,5 +31,7 @@ export {
     CreateUserForm,
     UpdateUserForm,
     RateUserForm,
-    RequireAuth
+    RequireAuth,
+    CreateStaffForm,
+    UpdateStaffForm
 }

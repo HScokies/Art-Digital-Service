@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { formProps } from "../dataGridView/Modals/createUpdateDialog"
 import { Option } from "src/components/combobox"
-import { IUserData, IUserType } from "src/interfaces"
+import { ICity, IUserData, IUserType } from "src/interfaces"
 import { API, PhoneChange } from "src/services"
 import { Combobox, Input, FileInput } from ".."
 
@@ -12,6 +12,7 @@ const UpdateUserForm = ({ id }: formProps) => {
     const [userTypes, setUserTypes] = useState<IUserType[]>()
     const [userTypeOptions, setUserTypeOptions] = useState<Option[]>([])
     const [userStatusOptions, setUserStatusOptions] = useState<Option[]>([])
+    const [cities, setCities] = useState<ICity[]>()
     useEffect(() => {
         const fetch = async() => {
             const cases = (await API.getCases()).data
@@ -60,6 +61,16 @@ const UpdateUserForm = ({ id }: formProps) => {
         fetch();
     }, [id])
 
+    useEffect(() => {
+        const fetch = async() => {
+            const response = await API.getCities()
+            if (response.status != 200) return;
+            const data = response.data;
+            setCities(data)
+        }
+        fetch()
+    },[])
+
 
     const toggleUserType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         if (!userTypes) return
@@ -83,6 +94,13 @@ const UpdateUserForm = ({ id }: formProps) => {
                     <Input defaultValue={userData.firstName} required label='Имя участника' type='text' name='firstName'  maxlength={40} />
                     <Input defaultValue={userData.patronymic} required label='Отчество участника' type='text' name='patronymic'  maxlength={40} />
                     <Input defaultValue={userData.city} required datalist="Cities" label='Город участника' type='text' name='city'/>
+                    <datalist id="Cities">
+                        {
+                            cities?.map((e) => 
+                            <option value={e.name} key={e.id}></option>
+                            )
+                        }
+                    </datalist>
                     <Input defaultValue={userData.institution} required label='Учебное заведение' type='text' name='institution'  />
                     {
                         isAdult ?

@@ -77,7 +77,7 @@ namespace Data.Repositories
             if (pageCount < 1)
                 return response;
 
-            response.participants = await participants.Skip((currentPage - 1) * take).Take(take).ToArrayAsync(cancellationToken);
+            response.rows = await participants.Skip((currentPage - 1) * take).Take(take).ToArrayAsync(cancellationToken);
             return response;
         }
 

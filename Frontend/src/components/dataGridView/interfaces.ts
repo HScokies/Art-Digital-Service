@@ -37,7 +37,7 @@ export interface IColumn{
 export interface IData{
     currentPage: number,
     pagesTotal: number
-    participants: IRow[]
+    rows: IRow[]
 }
 
 export interface IRow{

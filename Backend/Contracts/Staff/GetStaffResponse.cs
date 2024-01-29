@@ -2,7 +2,7 @@
 {
     public sealed class GetStaffResponse
     {
-        public StaffPreview[] staff { get; set; } = null!;
+        public StaffPreview[] rows { get; set; } = null!;
         public int currentPage { get; set; }
         public int pagesTotal { get; set; }
     }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { CreateUserForm, DataGridView, RateUserForm, UpdateUserForm } from "src/components"
 import { param } from "src/components/dataGridView/interfaces"
+import { UsePermissions } from "src/hooks/usePermissions"
 import { API } from "src/services"
 
 
@@ -8,7 +9,8 @@ import { API } from "src/services"
 const UsersDashboardPage = () => {
     const [userTypeFilter, setUserTypeFilter] = useState<param[]>([])
     const [casesFilter, setCasesFilter] = useState<param[]>([])
-
+    const { permissions } = UsePermissions()
+    
     useEffect(() => {                
         const createUserTypesFilter = async() => {
             const data = (await API.getParticipantTypes()).data
@@ -41,17 +43,28 @@ const UsersDashboardPage = () => {
         createCasesFilter()
     }, [])
 
+    const updateProvider = () => {
+        if (permissions?.updateUsers) return API.updateUser
+        return API.rateUser
+    }
+
+    const updateForm = () => {
+        if (permissions?.updateUsers) return UpdateUserForm
+        if (permissions?.rateUsers) return RateUserForm
+        return undefined
+    }
+
 
     return(
         <DataGridView
         searchLabel="Участник"
         dataSource={API.getUsers}
         exportProvider={API.exportParticipants}
-        deleteProvider={API.deleteUsers}
+        deleteProvider={permissions?.deleteUsers? API.deleteUsers : undefined}
         createProvider={API.createUser}
-        createForm={CreateUserForm}
-        updateProvider={API.rateUser}//API.updateUser
-        updateForm={RateUserForm}//UpdateUserForm
+        createForm={permissions?.createUsers ? CreateUserForm : undefined}
+        updateProvider={updateProvider()}
+        updateForm={updateForm()}//
         rowsPerPageOptions={new Set([5, 10, 15, 20, 25])}
         columns={[
             {

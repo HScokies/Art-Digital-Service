@@ -3,6 +3,8 @@ import './style.scss'
 import Logo from 'images/logo.webp'
 import Icons from 'images/icons.svg'
 import { NavLink } from 'react-router-dom'
+import { API } from 'src/services'
+import { UseAuth } from 'src/hooks/useAuth'
 
 interface props {
     items: menuElement[]
@@ -15,9 +17,15 @@ export interface menuElement {
 }
 
 const AsideMenu = ({ items }: props) => {
-    const handleLogout = () => {
-        alert("logout!")
+    const { setUserType } = UseAuth();
+
+    const handleLogout = async() => {
+        const response = await API.logout();
+        if (response.status != 204) return;
+        localStorage.removeItem("type");
+        setUserType();
     }
+    
     return (
         <aside className='aside'>
             <div className="aside_menu">

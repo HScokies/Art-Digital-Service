@@ -4,6 +4,7 @@ import { RequireAuth } from "./components"
 import { UserTypes } from "./enums"
 import { useEffect } from "react"
 import { UseAuth } from "./hooks/useAuth"
+import { PermissionsProvider } from "./context/premissionsContext"
 
 
 const App = () => {
@@ -47,7 +48,8 @@ const App = () => {
 
 
       <Route element={<RequireAuth allowed={UserTypes.staff} />}>
-        <Route element={<DashboardPage />}>
+      
+        <Route element={<PermissionsProvider><DashboardPage /></PermissionsProvider>}>
           <Route path="/dashboard" element={<></>} />
           <Route path="dashboard/users" element={<UsersDashboardPage />} />
           <Route path="dashboard/staff" element={<StaffDashboardPage />} />

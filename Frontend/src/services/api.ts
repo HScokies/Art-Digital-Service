@@ -1,14 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { IData, orderBy, param } from "src/components/dataGridView/interfaces"
-import UsersMock from './mock/usersMock.json'
-import UserTypesMock from './mock/userTypesMock.json'
-import CasesMock from './mock/casesMock.json'
-import UserMock from './mock/userMock/A_userMock.json'
-import UserStatusesMock from './mock/userStatusMock.json'
-import PremissionsMock from './mock/PremissionsMock.json'
-import CaseMock from './mock/caseMock.json'
 import ProfileMock from './mock/userProfileMock.json'
-import { ICaseData, IParticipantStatus, IProfileData, IUserData } from "src/interfaces"
+import { IParticipantStatus, IUserData } from "src/interfaces"
 
 
 
@@ -22,76 +15,70 @@ export class API{
         validateStatus: () => true
     });
 
-    static trimData = (data: FormData) => {
-        for (let pair of data.entries()){
-            pair[1] = String(pair[1]).trim()
-        }
-        console.debug(data);
-    }
-
     static emailExists = async (email:string) => {
-        const url = new URL(API.URL + "users")
+        const url = new URL("users", API.URL)
         url.searchParams.append("email", email);
         return await this.api.get(url.toString());
     }
 
     static getParticipantTypes = async () => {
-        const url = new URL(API.URL + "participants/types")
+        const url = new URL("participants/types", API.URL)
         return await this.api.get(url.toString());
     }
 
     static register = async (data:FormData) => {
-        const url = new URL(API.URL + "authentication/register")
-        
+        const url = new URL("authentication/register", API.URL) 
         return await this.api.post(url.toString(), data);
     }
 
     static login = async (data:FormData) => {
-        const url = new URL(API.URL + "authentication/login")
-
+        const url = new URL("authentication/login", API.URL)
         return await this.api.post(url.toString(), data)
     }
 
     static getCases = async(search?: string) => {
-        const url = new URL(API.URL + "cases");
+        const url = new URL("cases", API.URL);
         if (search)
             url.searchParams.append("search", search);
-
         return await this.api.get(url.toString());
     }
     
+    static getCities = async () => {
+        const url = new URL("utils/cities", API.URL);
+        return await this.api.get(url.toString())
+    }
     //#region Users dashboard
     static getUsers = async(offset:number, take:number, filters: param[], search?: string, orderBy?: orderBy): Promise<IData> => {
-        const getUsersURL = new URL(API.URL + "participants");
-        getUsersURL.searchParams.append("offset", String(offset))
-        getUsersURL.searchParams.append("take", String(take))
+        const url = new URL("participants", API.URL);
+        url.searchParams.append("offset", String(offset))
+        url.searchParams.append("take", String(take))
         if (search){
-            getUsersURL.searchParams.append("search", search)
+            url.searchParams.append("search", search)
         }
         if (orderBy){
-            getUsersURL.searchParams.append("orderBy",orderBy.column)
-            getUsersURL.searchParams.append("asc",(orderBy.asc as unknown) as string)
+            url.searchParams.append("orderBy",orderBy.column)
+            url.searchParams.append("asc",(orderBy.asc as unknown) as string)
         }
 
         filters.forEach((f) => {
-            getUsersURL.searchParams.append(f.name, String(f.value))
+            url.searchParams.append(f.name, String(f.value))
         })
         
-        var response = await this.api.get(getUsersURL.toString())
+        var response = await this.api.get(url.toString())
         return response.data;
     }
 
     static exportParticipants = (ids?: Set<number>): string => {
-        const url = new URL(API.URL + "participants/export");
+        const url = new URL("participants/export", API.URL);
         ids?.forEach((id) => {
             url.searchParams.append("id", String(id))
         })
         return url.toString();
     }
 
-    static createUser = async(model: FormData) => {
-        const url = new URL(API.URL + "participants")
-        const response = await this.api.post(url.toString(), model)
+    static createUser = async(data: FormData) => {
+        const url = new URL("participants", API.URL)
+        const response = await this.api.post(url.toString(), data)
         if (response.status != 201){
             alert("Произошла ошибка! Проверьте консоль браузера для деталей");
             console.error(response)
@@ -100,7 +87,7 @@ export class API{
     }
 
     static getUser = async(id: number): Promise<IUserData | undefined> => {
-        const url = new URL(API.URL + `participants/${id}`)
+        const url = new URL(`participants/${id}`, API.URL)
         const response =  await this.api.get(url.toString());
         if (response.status != 200){
             alert("Произошла ошибка! Проверьте консоль браузера для деталей");
@@ -109,17 +96,16 @@ export class API{
     }
 
     static deleteUsers = async (ids?: Set<number>) => {
-        const url = new URL(API.URL + "participants");
+        const url = new URL("participants", API.URL);
         ids?.forEach((id) => {
             url.searchParams.append("id", String(id))
         })
         await this.api.delete(url.toString());
     }
 
-    static updateUser = async(id: number, model: FormData) => {
-        const url = new URL(API.URL + `participants/${id}`);
-        
-        const response = await this.api.put(url.toString(), model);
+    static updateUser = async(id: number, data: FormData) => {
+        const url = new URL(`participants/${id}`, API.URL);        
+        const response = await this.api.put(url.toString(), data);
         if (response.status != 204){
             alert("Произошла ошибка! Проверьте консоль браузера для деталей");
             console.error(response)
@@ -127,15 +113,14 @@ export class API{
     }
 
     static getUserStatuses = async(): Promise<IParticipantStatus[]> => {
-        const url = new URL(API.URL + "participants/statuses");
+        const url = new URL("participants/statuses", API.URL);
 
         return (await this.api.get(url.toString())).data;
     }
 
-    static rateUser = async(id: number, model: FormData) => {
-        const url = new URL(API.URL + `participants/${id}`);
-
-        await this.api.patch(url.toString(), model);
+    static rateUser = async(id: number, data: FormData) => {
+        const url = new URL(`participants/${id}`, API.URL);
+        await this.api.patch(url.toString(), data);
     } 
     //#endregion
 
@@ -174,20 +159,90 @@ export class API{
 
     }
     //#endregion
-    static logout = () => {
+    
+    //#region Staff dashboard
+    static getStaffRoles = async() => {
+        const url = new URL("staff/roles", API.URL);
+        return await this.api.get(url.toString());
+    }
 
+    static getStaff =async (offset:number, take:number, filters: param[], search?: string, orderBy?: orderBy) => {
+        const url = new URL("staff", API.URL);
+        url.searchParams.append("offset", String(offset))
+        url.searchParams.append("take", String(take))
+        if (search){
+            url.searchParams.append("search", search)
+        }
+        if (orderBy){
+            url.searchParams.append("orderBy",orderBy.column)
+            url.searchParams.append("asc",(orderBy.asc as unknown) as string)
+        }
+
+        filters.forEach((f) => {
+            url.searchParams.append(f.name, String(f.value))
+        })
+        var response = await this.api.get(url.toString())
+        return response.data;
+    }
+
+    static createStaff = async(data: FormData) => {
+        const url = new URL("staff", API.URL)
+        const response = await this.api.post(url.toString(), data)
+        if (response.status != 201){
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else alert("Сотрудник успешно создан!")
+    }
+
+    static getStaffById = async(id: number) => {
+        const url = new URL(`staff/${id}`, API.URL)
+        const response =  await this.api.get(url.toString());
+        if (response.status != 200){
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else return response.data;
+    }
+
+    static updateStaff = async (id: number, data: FormData) => {
+        const url = new URL(`staff/${id}`, API.URL)
+        const response = await this.api.put(url.toString(), data);
+        if (response.status != 204){
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else alert("Сотрудник успешно обновлен!")
+    }
+
+    static deleteStaff = async(ids?: Set<number>) => {
+        const url = new URL("staff", API.URL)
+        ids?.forEach((id) => {
+            url.searchParams.append("id", String(id))
+        })
+        await this.api.delete(url.toString());
+    }
+
+    static exportStaff = (ids?: Set<number>): string => {
+        const url = new URL("staff/export", API.URL);
+        ids?.forEach((id) => {
+            url.searchParams.append("id", String(id))
+        })
+        return url.toString();
+    }
+    //#endregion
+    static getPremissions = async() => {
+        const url = new URL("staff/permissions", API.URL)
+        return await this.api.get(url.toString())
+    }
+    
+    
+    static logout = async() => {
+        const url = new URL("authentication/logout", API.URL);
+        
+        const response = await this.api.get(url.toString());
+        return response;
     }
 
     static refreshToken = () => {
         return true
-    }
-
-    static getPremissions = () => {
-        return PremissionsMock
-    }
-
-    static upsertCase = (data: FormData, id?: number) => {
-        return id? 'update' : 'insert'
     }
 
     static getProfileData = ()=> {

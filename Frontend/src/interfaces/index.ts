@@ -9,6 +9,11 @@ export interface IUserType {
     isAdult: boolean,    
 }
 
+export interface ICity{
+    id: number,
+    name: string
+}
+
 export interface IParticipantStatus{
     id: string,
     name: string    
@@ -33,19 +38,33 @@ export interface IUserData {
     status: string
 }
 
+export interface IStaffData{
+    email: string,
+    firstName: string,
+    lastName: string,
+    patronymic: string,
+    roleId: number
+}
+
 
 export interface IPermissions{
-    users: IPermission,
-    cases: IPermission,
-    staff: IPermission
+    readUsers: boolean
+    createUsers: boolean,
+    updateUsers: boolean,
+    rateUsers: boolean,
+    deleteUsers: boolean,
+
+    readStaff: boolean,
+    createStaff: boolean,
+    updateStaff: boolean,
+    deleteStaff: boolean,
+    
+    readCases: boolean,
+    createCases: boolean,
+    updateCases: boolean,
+    deleteCases: boolean
 }
 
-interface IPermission{
-    create: boolean,
-    read: boolean,
-    update: boolean,
-    delete: boolean
-}
 
 export interface IProfileData{
     case: ICaseData,
@@ -71,6 +90,11 @@ interface IUserInfo{
 export default interface IProfileStatus{
     name: string,
     file?: string
+}
+
+export interface IRole{
+    id: number,
+    name: string
 }
 
 interface ILegalInfo{

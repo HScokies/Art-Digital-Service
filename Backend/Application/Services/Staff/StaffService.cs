@@ -18,12 +18,14 @@ namespace Application.Services.Staff
         private readonly IStaffRepository staffRepository;
         private readonly IRepository repository;
         private readonly IExportProvider exportProvider;
+        private readonly IUserRepository userRepository;
 
-        public StaffService(IStaffRepository staffRepository, IRepository repository, IExportProvider exportProvider)
+        public StaffService(IStaffRepository staffRepository, IRepository repository, IExportProvider exportProvider, IUserRepository userRepository)
         {
             this.staffRepository = staffRepository;
             this.repository = repository;
             this.exportProvider = exportProvider;
+            this.userRepository = userRepository;
         }
 
         public async Task<Result<int>> CreateAsync(CreateStaffRequest request, CancellationToken cancellationToken)
@@ -32,6 +34,11 @@ namespace Application.Services.Staff
                 return new Result<int>(CommonErrors.User.InvalidEmail);
             if (!Ensure.isPassword(request.password))
                 return new Result<int>(CommonErrors.User.InvalidPassword);
+
+            var userExists = await userRepository.ExistsAsync(request.email, cancellationToken);
+            if (userExists)
+                return new Result<int>(CommonErrors.User.NonUniqueEmail);
+
 
             var roleExists = await staffRepository.RoleExistsAsync(request.roleId, cancellationToken);
             if (!roleExists)
@@ -46,7 +53,7 @@ namespace Application.Services.Staff
         public async Task DropStaffAsync(int[] id, CancellationToken cancellationToken)
         {
             var staff = await staffRepository.GetAsync(id, cancellationToken);
-            await staffRepository.DropAsync(staff, cancellationToken);
+            await userRepository.DropAsync(staff.Select(s => s.User), cancellationToken);
         }
 
         public async Task<FileResponse> ExportStaffAsync(int[]? id, CancellationToken cancellationToken)

@@ -171,6 +171,10 @@ namespace Application.Services.Participant
             if (!Ensure.isEmail(request.email))
                 return new Result<int>(CommonErrors.User.InvalidEmail);
 
+            var userExists = await userRepository.ExistsAsync(request.email, cancellationToken);
+            if (userExists)
+                return new Result<int>(CommonErrors.User.NonUniqueEmail);
+
             var typeExists = await participantRepository.TypeExistsAsync(request.typeId, cancellationToken);
             if (!typeExists)
                 return new Result<int>(CommonErrors.User.InvalidUserType);

@@ -15,9 +15,9 @@ interface props {
     exportProvider: (ids?: Set<number>) => string
     deleteProvider?: (ids: Set<number>) => void,
     updateProvider: (id: number, model: FormData) => void,
-    createProvider?: (model: FormData) => void,
+    createProvider: (model: FormData) => void,
     createForm?: () => JSX.Element,
-    updateForm: ({ id }: formProps) => JSX.Element
+    updateForm?: ({ id }: formProps) => JSX.Element
 }
 
 
@@ -64,9 +64,9 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
         const rows = document.getElementsByClassName("datagrid-row")
         for (let i = 1; i < rows.length; i++) {
             const rowID = +(rows[i].id.replace('rowid-', ''))
-
-            if (!highlightedRows.has(rowID)) continue;
-            (rows[i].querySelector('input') as HTMLInputElement).checked = true;            
+            const element = rows[i].querySelector('input') as HTMLInputElement;
+            if (element)
+                element.checked = highlightedRows.has(rowID);
         }
     }, [highlightedRows, data])
 
@@ -98,7 +98,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                         </thead>
                         <tbody className='datagrid_body'>
                             {
-                                data && data.participants?.length > 0 ? data.participants.map((e) => <DatagridRow key={e.id} row={e} setCurrentRowId={setCurrentRowId} setHighlightedRows={setHighlightedRows} />)
+                                data && data.rows?.length > 0 ? data.rows.map((e) => <DatagridRow key={e.id} row={e} setCurrentRowId={setCurrentRowId} setHighlightedRows={setHighlightedRows} />)
                                     :
                                     <tr className='datagrid-row error'>
                                         <td colSpan={columns.length + 1}>

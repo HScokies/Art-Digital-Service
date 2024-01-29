@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Option } from "src/components/combobox"
-import { IUserType } from "src/interfaces"
+import { ICity, IUserType } from "src/interfaces"
 import { API, PhoneChange, Validator } from "src/services"
 import { Combobox, Input, FileInput } from "components/index"
 
@@ -9,6 +9,7 @@ const CreateUserForm = () => {
     const [cases, setCases] = useState<Option[]>([])
     const [userTypes, setUserTypes] = useState<IUserType[]>()
     const [userTypeOptions, setUserTypeOptions] = useState<Option[]>([])
+    const [cities, setCities] = useState<ICity[]>()
 
     useEffect(() => {
         const getCases = async() => {
@@ -34,10 +35,17 @@ const CreateUserForm = () => {
             }
             setUserTypeOptions(userTypeOptions)
             setIsAdult(data[0].isAdult);
-        }        
+        }     
+        const getCities = async() => {
+            const response = await API.getCities()
+            if (response.status != 200) return;
+            const data = response.data
+            setCities(data)
+        }   
 
         getCases()
         getUserTypes()
+        getCities()
     }, [])
 
     const toggleUserType = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -51,23 +59,30 @@ const CreateUserForm = () => {
     return (
 
         <>
-            <Input label='Адрес электронной почты' type='email' name='email'  validator={Validator.validateEmail} />
-            <Input label='Пароль' type='password' name='password'  validator={Validator.validatePassword} />
+            <Input label='Адрес электронной почты' type='email' name='email'  validator={Validator.validateEmail} required />
+            <Input label='Пароль' type='password' name='password'  validator={Validator.validatePassword} required />
             <Combobox name="typeId" label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
-            {!isAdult && <Input label='Полное имя родителя' type='text' name='parentName' />}
-            <Input onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'  validator={Validator.validatePhoneNumber} />
-            <Input label='Фамилия участника' type='text' name='lastName'  maxlength={40} />
-            <Input label='Имя участника' type='text' name='firstName'  maxlength={40} />
-            <Input label='Отчество участника' type='text' name='patronymic'  maxlength={40} />
-            <Input datalist="Cities" label='Город участника' type='text' name='city' required={true} />
-            <Input label='Учебное заведение' type='text' name='institution'/>
+            {!isAdult && <Input label='Полное имя родителя' type='text' name='parentName' required />}
+            <Input onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'  validator={Validator.validatePhoneNumber} required />
+            <Input label='Фамилия участника' type='text' name='lastName'  maxlength={40} required />
+            <Input label='Имя участника' type='text' name='firstName'  maxlength={40} required />
+            <Input label='Отчество участника' type='text' name='patronymic'  maxlength={40} required />
+            <Input datalist="Cities" label='Город участника' type='text' name='city' required />
+            <datalist id="Cities">
+                {
+                    cities?.map((e) => 
+                    <option value={e.name} key={e.id}></option>
+                    )
+                }
+            </datalist>
+            <Input label='Учебное заведение' type='text' name='institution' required/>
             {
                 isAdult ?
                     <>
-                        <Input label='Курс' type='number' name='grade' validator={Validator.validateGradeStudent} min={1} max={11} />
-                        <Input label='Специальность' type='text' name='speciality' />
+                        <Input label='Курс' type='number' name='grade' validator={Validator.validateGradeStudent} min={1} max={11} required />
+                        <Input label='Специальность' type='text' name='speciality' required />
                     </> :
-                    <Input label='Класс' type='number' name='grade' validator={Validator.validateGradeSchool} min={1} max={11} />
+                    <Input label='Класс' type='number' name='grade' validator={Validator.validateGradeSchool} min={1} max={11} required />
             }
             <Combobox name="caseId" label='Направление' options={cases} />
             <FileInput label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />

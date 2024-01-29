@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import './style.scss'
 import { Button } from 'src/components'
 
@@ -17,14 +17,14 @@ interface props {
 }
 
 const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setActiveRow, trigger }: props) => {
-    const thisDialog = document.getElementById(`dialog-${dialogId}`) as HTMLDialogElement
+    const dialogRef = useRef<HTMLDialogElement>(null)
     useEffect(() => {
         const closeHandler = () => {
             if (setActiveRow) 
                 setActiveRow(-1)
         }
-        thisDialog?.addEventListener('close', closeHandler)
-    }, [thisDialog])
+        dialogRef.current?.addEventListener('close', closeHandler)
+    }, [dialogRef])
     
     
 
@@ -38,7 +38,7 @@ const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setA
     }
     
     return (
-        <dialog id={`dialog-${dialogId}`} className='aside-dialog'>
+        <dialog ref={dialogRef} id={`dialog-${dialogId}`} className='aside-dialog'>
             <div className='aside-dialog-wrapper'>
                 <div className='aside-dialog-title'>
                     {dialogTitle}
@@ -47,7 +47,7 @@ const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setA
                     <FormElements id={rowId} />
                 </form>
                 <div className='aside-dialog-buttons'>
-                    <Button clickHandler={() => thisDialog.close()} variant='passive' isActive={true}>Отмена</Button>
+                    <Button clickHandler={() => dialogRef.current?.close()} variant='passive' isActive={true}>Отмена</Button>
                     <Button type='submit' form={`aside-menu-form-${dialogId}`} isActive={true}>Сохранить</Button>
                 </div>
             </div>

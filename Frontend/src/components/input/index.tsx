@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './style.scss'
 import Icons from 'images/icons.svg'
 
@@ -25,25 +25,26 @@ const Input = ({ label, type, name, required = undefined, validator, onChange, o
     const [active, setActive] = useState(defaultValue ? true : false)
     const [id] = useState(name + '-' + Date.now().toString(36))
     const [showPassword, setShowPassword] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const EnableField = async () => {
         await setActive(true)
         await setError(undefined)
-        document.getElementById(id)?.focus()
+        inputRef.current?.focus()
     }
 
     const handleBlur = async () => {
         if (type != "tel")
             await setValue(String(value).trim())
-        const field = document.getElementById(id) as HTMLInputElement
-        if (field?.value.length < 1) {
+        const fieldValue  = inputRef.current?.value || '';
+        if (fieldValue.length < 1) {
             if (required) {
                 setError("Обязательно")
             }
             return setActive(false)
         }
         if (validator) {
-            await setError(validator(field?.value));
+            await setError(validator(fieldValue));
         }
 
     }
@@ -54,7 +55,7 @@ const Input = ({ label, type, name, required = undefined, validator, onChange, o
     return (
         <div className="input">
             <div className={`input_wrapper ${error ? 'error' : ''}`} onClick={() => EnableField()}>
-                <input readOnly={readonly} placeholder='' list={datalist} maxLength={maxlength} value={value} onChange={(e) => { if (onChange) onChange(e); if (!readonly) setValue(e.target.value) }} onKeyUp={(e) => { if (onKeyUp) onKeyUp(e) }} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={id} name={name} type={showPassword ? "text" : type} min={min} max={max} required={required} />
+                <input ref={inputRef} readOnly={readonly} placeholder='' list={datalist} maxLength={maxlength} value={value} onChange={(e) => { if (onChange) onChange(e); if (!readonly) setValue(e.target.value) }} onKeyUp={(e) => { if (onKeyUp) onKeyUp(e) }} onFocus={() => EnableField()} onBlur={() => handleBlur()} className={`input_wrapper-field${active ? ' active' : ''}`} id={id} name={name} type={showPassword ? "text" : type} min={min} max={max} required={required} />
                 <label className={`input_wrapper-label${active ? ' active' : ''}`} htmlFor={name}>{label}</label>
                 {
                     type == "password" && value?.length > 0 ?

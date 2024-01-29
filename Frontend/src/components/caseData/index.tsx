@@ -47,7 +47,7 @@ const CaseData = ({ userStatus, caseData, isPreview = false }: props) => {
                             <p className='profilepage_status-text'>{status.name}</p>
                             {
                                 status.file &&
-                                <a onClick={() => API.getFile(status.file!)} className='profilepage_status-text link'>
+                                <a onClick={() => console.debug("file")} className='profilepage_status-text link'>
                                     Скачать сертификат участника
                                 </a>
                             }

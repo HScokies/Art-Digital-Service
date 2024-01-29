@@ -20,12 +20,6 @@ namespace Data.Repositories
             return res.Entity;
         }
 
-        public async Task DropAsync(StaffDto[] staff, CancellationToken cancellationToken)
-        {
-            ctx.staff.RemoveRange(staff);
-            await ctx.SaveChangesAsync(cancellationToken);
-        }
-
 
         public async Task<GetStaffResponse> GetAsync(CancellationToken cancellationToken, bool asc = true, int offset = 0, int take =5, string? orderBy = null, string? search = null, int[]? excludeRole = null)
         {
@@ -64,13 +58,13 @@ namespace Data.Repositories
             if (pageCount < 1)
                 return response;
 
-            response.staff = await staff.Skip((currentPage - 1) * take).Take(take).ToArrayAsync(cancellationToken);
+            response.rows = await staff.Skip((currentPage - 1) * take).Take(take).ToArrayAsync(cancellationToken);
             return response;
         }
 
         public async Task<StaffDto?> GetAsync(int id, CancellationToken cancellationToken) => await ctx.staff.Include(s => s.User).FirstOrDefaultAsync(s => s.id == id, cancellationToken);
 
-        public async Task<StaffDto[]> GetAsync(int[] id, CancellationToken cancellationToken) => await ctx.staff.Where(s => id.Contains(s.id)).ToArrayAsync(cancellationToken);
+        public async Task<StaffDto[]> GetAsync(int[] id, CancellationToken cancellationToken) => await ctx.staff.Include(s => s.User).Where(s => id.Contains(s.id)).ToArrayAsync(cancellationToken);
 
         public async Task<StaffExportModel[]> GetExportModelsAsync(int[]? id, CancellationToken cancellationToken)
         {

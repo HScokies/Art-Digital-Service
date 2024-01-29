@@ -1,11 +1,16 @@
 import './style.scss'
 import Logo from 'images/logo.webp'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Combobox, Input, Checkbox } from 'src/components'
-import { Validator } from 'src/services'
+import { Option } from 'src/components/combobox'
+import { ICase, ICity } from 'src/interfaces'
+import { API, Validator } from 'src/services'
 
 const PersonalDataPage = () => {
     const [hasErrors, setHasErrors] = useState(true);
+
+    const [cases, setCases] = useState<Option[]>([])
+    const [cities, setCities] = useState<ICity[]>([])
 
     const dbdata = {
         isAdult: true,
@@ -60,6 +65,30 @@ const PersonalDataPage = () => {
             "Сосновский муниципальный район"
         ]
     }
+
+    useEffect(() => {
+        const getCases = async() => {
+            const response = await API.getCases()
+            if (response.status != 200) return
+            const data = response.data as ICase[];
+            const caseOptions: Option[] = []
+            for (let _case of data){
+                caseOptions.push({
+                    label: _case.name,
+                    value: _case.id
+                })
+            }
+            setCases(caseOptions)
+        }
+        const getCities  =async () => {
+            const response = await API.getCities()
+            if (response.status != 200) return
+            setCities(response.data)
+        }
+
+        getCases()
+        getCities()
+    }, [])
 
     const validateFields = () => {
         setHasErrors(true)
@@ -131,8 +160,8 @@ const PersonalDataPage = () => {
                     <Input onChange={validateFields} datalist="Cities" label='Город участника' type='text' name='city' required={true} />
                     <datalist id='Cities'>
                         {
-                            dbdata.cities.map((city, index) => (
-                                <option key={index} value={city}></option>
+                            cities?.map((e) => (
+                                <option key={e.id} value={e.name}></option>
                             ))
                         }
                     </datalist>
@@ -147,7 +176,7 @@ const PersonalDataPage = () => {
                                 <Input onKeyUp={validateGrade} label='Класс' type='number' name='grade' required={true} validator={Validator.validateGradeSchool} min={1} max={11} />
                             </>
                     }
-                    <Combobox name='case' label='Направление' options={dbdata.cases} />
+                    <Combobox name='case' label='Направление' options={cases} />
                     <Checkbox checkedChanged={validateFields} name='acceptedPrivacyPolicy'>
                         Ознакомлен с <a target='_blank' href='https://disk.yandex.ru/i/FrvixFf4IKNtwg'>политикой&nbsp;конфиденциальности</a>
                     </Checkbox>

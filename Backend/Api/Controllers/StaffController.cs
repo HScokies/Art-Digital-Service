@@ -4,6 +4,7 @@ using Contracts.Staff;
 using Domain.Enumeration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -56,6 +57,32 @@ namespace Api.Controllers
         {
             await staffService.DropStaffAsync(id, cancellationToken);
             return NoContent();
+        }
+
+        [HttpGet("permissions"), Authorize]
+        public IActionResult GetPermissions()
+        {
+            var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).ToArray();
+            Dictionary<string, bool> permissions = new()
+            {
+                {"readUsers", roles.Any(r => r.Value == Roles.Permissions.readUsers) },
+                {"createUsers", roles.Any(r => r.Value == Roles.Permissions.createUsers) },
+                {"updateUsers", roles.Any(r => r.Value == Roles.Permissions.updateUsers) },
+                {"rateUsers", roles.Any(r => r.Value == Roles.Permissions.rateUsers) },
+                {"deleteUsers", roles.Any(r => r.Value == Roles.Permissions.deleteUsers) },
+
+                {"readStaff", roles.Any(r => r.Value == Roles.Permissions.readStaff) },
+                {"createStaff", roles.Any(r => r.Value == Roles.Permissions.createStaff) },
+                {"updateStaff", roles.Any(r => r.Value == Roles.Permissions.updateStaff) },
+                {"deleteStaff", roles.Any(r => r.Value == Roles.Permissions.deleteStaff) },
+
+                {"readCases", roles.Any(r => r.Value == Roles.Permissions.readCases) },
+                {"createCases", roles.Any(r => r.Value == Roles.Permissions.createCases) },
+                {"updateCases", roles.Any(r => r.Value == Roles.Permissions.updateCases) },
+                {"deleteCases", roles.Any(r => r.Value == Roles.Permissions.deleteCases) },
+            };
+
+            return Ok(permissions);
         }
 
         [HttpGet("export")]//, Authorize(Roles = Roles.Permissions.readStaff)

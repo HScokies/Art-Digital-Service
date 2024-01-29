@@ -24,7 +24,7 @@ namespace Application.Services.User
         
         private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await participantRepository.TypeExistsAsync(request.userType, cancellationToken);
         
-        private async Task<bool> isUserExists(string email, CancellationToken cancellationToken) => await userRepository.UserExistsAsync(email, cancellationToken);
+        private async Task<bool> isUserExists(string email, CancellationToken cancellationToken) => await userRepository.ExistsAsync(email, cancellationToken);
         
         public async Task<Result<bool>> CheckIfUserExistsAsync(string email, CancellationToken cancellationToken)
         {

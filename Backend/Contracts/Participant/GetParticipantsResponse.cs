@@ -2,7 +2,7 @@
 {
     public sealed class GetParticipantsResponse
     {
-        public ParticipantPreview[] participants { get; set; } = null!;
+        public ParticipantPreview[] rows { get; set; } = null!;
         public int currentPage { get; set; }
         public int pagesTotal { get; set; }
     }

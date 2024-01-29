@@ -4,8 +4,11 @@ import { ICase } from "src/interfaces"
 import { API } from "src/services"
 import Icons from "images/icons.svg"
 import { NavLink, useNavigate } from "react-router-dom"
+import { UsePermissions } from "src/hooks/usePermissions"
 
 const CasesDashboardPage = () => {
+    const { permissions } = UsePermissions()
+
     const navigate = useNavigate()
     const [cases, setCases] = useState<ICase[]>([])
     const dialog = useRef<HTMLDialogElement>(null);
@@ -27,8 +30,8 @@ const CasesDashboardPage = () => {
         dialog.current?.showModal();
     }
 
-    const handleDelete = async() => {
-        if (id){
+    const handleDelete = async () => {
+        if (id) {
             await API.dropCase(id)
             setTrigger(!trigger);
         }
@@ -39,7 +42,9 @@ const CasesDashboardPage = () => {
         <div className="cases">
             <div className="controls">
                 <input className="searchbar" type="text" placeholder="Направление" onChange={(e) => setSearch(e.target.value)} />
-                <Button clickHandler={() => navigate('/dashboard/cases/add')} isActive={true}>Добавить</Button>
+                {
+                    permissions?.createCases && <Button clickHandler={() => navigate('/dashboard/cases/add')} isActive={true}>Добавить</Button>
+                }
             </div>
             <div className="cases-wrapper">
                 {
@@ -47,14 +52,17 @@ const CasesDashboardPage = () => {
                         <div key={c.id} className="cases-wrapper_element">
                             {c.name}
                             <div className="icon-wrapper">
-                                <NavLink to={`/dashboard/cases/${c.id}`}>
+                                <NavLink to={permissions?.updateCases ? `/dashboard/cases/${c.id}` : '/dashboard/cases'}>
                                     <svg>
                                         <use xlinkHref={Icons + '#expand'} />
                                     </svg>
                                 </NavLink>
-                                <svg id="drop" onClick={() => OpenDialog(c.id)}>
-                                    <use xlinkHref={Icons + "#trash"} />
-                                </svg>
+                                {
+                                    permissions?.deleteCases &&
+                                    <svg id="drop" onClick={() => OpenDialog(c.id)}>
+                                        <use xlinkHref={Icons + "#trash"} />
+                                    </svg>
+                                }
                             </div>
                         </div>
                     ))

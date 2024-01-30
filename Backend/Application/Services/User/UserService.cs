@@ -6,7 +6,8 @@ using Domain.Core.Utility;
 using Domain.Entities;
 using Domain.Enumeration;
 using Domain.Repositories;
-using Infrastructure.Files;
+using Infrastructure.Authentication;
+using System.IdentityModel.Tokens.Jwt;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
@@ -15,11 +16,15 @@ namespace Application.Services.User
     {
         private readonly IUserRepository userRepository;
         private readonly IParticipantRepository participantRepository;
+        private readonly IJWTProvider jwtProvider;
+        private readonly IRefreshTokenRepository tokenRepository;
 
-        public UserService(IUserRepository userRepository, IParticipantRepository participantRepository)
+        public UserService(IUserRepository userRepository, IParticipantRepository participantRepository, IJWTProvider jwtProvider, IRefreshTokenRepository tokenRepository)
         {
             this.userRepository = userRepository;
             this.participantRepository = participantRepository;
+            this.jwtProvider = jwtProvider;
+            this.tokenRepository = tokenRepository;
         }
         
         private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await participantRepository.TypeExistsAsync(request.userType, cancellationToken);
@@ -53,25 +58,52 @@ namespace Application.Services.User
 
             var createdParticipant = await participantRepository.CreateAsync(ParticipantModel, cancellationToken);
 
+            await jwtProvider.IssueRefreshTokenAsync(createdParticipant.id, cancellationToken);
+            jwtProvider.IssueUserToken(createdParticipant.id, Roles.ParticipantsStatus.justRegistered);
+
+
             return new Result<int>(createdParticipant.id);
         }
 
-        public async Task<Result<UserDto>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken)
+        public async Task<Result<string>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken)
         {
             if (!Ensure.isEmail(request.email))
-                return new Result<UserDto>(CommonErrors.User.InvalidEmail);
+                return new Result<string>(CommonErrors.User.InvalidEmail);
 
             if (!Ensure.isPassword(request.password))
-                return new Result<UserDto>(CommonErrors.User.InvalidPassword);
+                return new Result<string>(CommonErrors.User.InvalidPassword);
 
             var res = await userRepository.GetUserByEmailAsync(request.email, cancellationToken);
             if (res is null)
-                return new Result<UserDto>(CommonErrors.User.NotFound);
+                return new Result<string>(CommonErrors.User.NotFound);
 
             if (!Bcrypt.EnhancedVerify(request.password, res.password))
-                return new Result<UserDto>(CommonErrors.User.InvalidCredentials);
+                return new Result<string>(CommonErrors.User.InvalidCredentials);
 
-            return new Result<UserDto>(res);
+            var userRoleResult =  GetUserRole(res);
+            if (userRoleResult.isSuccess) await jwtProvider.IssueRefreshTokenAsync(res.id, cancellationToken); ;
+
+            return userRoleResult;
+        }
+
+        private Result<string> GetUserRole(UserDto user)
+        {
+            if (user.Staff is not null)
+            {
+                jwtProvider.IssueStaffToken(user.id, user.Staff.Role.PermissionsList);
+                return new Result<string>(UserTypes.staff);
+            }
+            if (user.Participant is not null)
+            {
+                jwtProvider.IssueUserToken(user.id, user.Participant.status);
+                return new Result<string>(user.Participant.status == Roles.ParticipantsStatus.justRegistered ? UserTypes.user : UserTypes.participant);
+            }
+            return new Result<string>(CommonErrors.Unknown);
+        }
+
+        public async Task<Result<bool>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken)
+        {
+            return await jwtProvider.TryIssueAccessToken(userId, deviceId, cancellationToken);
         }
     }
 }

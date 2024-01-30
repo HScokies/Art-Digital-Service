@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext();
 builder.Services.AddRepositories();
 builder.Services.AddAppServices();
+builder.Services.AddBackgroundWorkers();
 builder.Services.AddJwtAuthentication();
 builder.Services.AddEmailService();
 builder.Services.AddFilesService();

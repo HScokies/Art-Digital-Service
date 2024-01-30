@@ -1,4 +1,6 @@
-﻿using Domain.Core.Utility;
+﻿using Data.Interfaces;
+using Domain.Core.Utility;
+using Domain.Repositories;
 using Infrastructure.Authentication;
 using Infrastructure.Emails;
 using Infrastructure.Export;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.Text;
 
 namespace Infrastructure
@@ -15,19 +18,44 @@ namespace Infrastructure
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
         {
-            string Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "MIDiS";
-            string Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "olymp.midis.ru";
-            string? strTokenLifetime_H = Environment.GetEnvironmentVariable("JWT_TOKEN_LIFETIME_HOURS");
-            int TokenLifetime_H = strTokenLifetime_H is null ? 5 : int.Parse(strTokenLifetime_H);
-            string JwtSecret = Environment.GetEnvironmentVariable("JWT_KEY") ?? "ZEfYWI3WFxEUuALpMZLXhpHWn/1uxml/Xjm1ybaShZm7T6OD1OYgFSsYcH4JwcJW8uk=";
-            string tokenCookieName = "token";
+            string tokenCookieName = "ACCESS_TOKEN";
 
-            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(JwtSecret));
+            string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "ZEfYWI3WFxEUuALpMZLXhpHWn/1uxml/Xjm1ybaShZm7T6OD1OYgFSsYcH4JwcJW8uk=";
+            string JWT_ISSUER = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "MIDiS";
+            string JWT_AUDIENCE = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "olymp.midis.ru";
+
+            string JWT_REFRESH_EXPIRY = Environment.GetEnvironmentVariable("JWT_REFRESH_EXPIRY_HOURS")!;
+            int refreshExpiry;
+            if (!int.TryParse(JWT_REFRESH_EXPIRY, out refreshExpiry))
+            {
+                Debug.WriteLine("Could not parse JWT_REFRESH_EXPIRY variable");
+                refreshExpiry = 7; // Default JWT_REFRESH_EXPIRY
+            }
+
+            string JWT_ACCESS_EXPIRY = Environment.GetEnvironmentVariable("JWT_ACCESS_EXPIRY_MINUTES")!;
+            int accessExpiry;
+            if (!int.TryParse(JWT_ACCESS_EXPIRY, out accessExpiry))
+            {
+                Debug.WriteLine("Could not parse JWT_ACCESS_EXPIRY variable");
+                accessExpiry = 5; // Default JWT_ACCESS_EXPIRY    
+            }        
+
+            SymmetricSecurityKey JWT_KEY = new(Encoding.UTF8.GetBytes(JWT_SECRET));
 
             services.AddTransient<IJWTProvider, JWTProvider>(options =>
             {
                 var httpContextAccessor = options.GetRequiredService<IHttpContextAccessor>();
-                return new JWTProvider(tokenCookieName, key, Issuer, Audience, TokenLifetime_H, httpContextAccessor);
+                var tokenRepository = options.GetRequiredService<IRefreshTokenRepository>();
+                return new JWTProvider(
+                    accessTokenCookieName: tokenCookieName,
+                    key: JWT_KEY,
+                    issuer: JWT_ISSUER,
+                    audience: JWT_AUDIENCE,
+                    refreshExpiry: refreshExpiry,
+                    accessExpiry: accessExpiry,
+                    httpContextAccessor: httpContextAccessor,
+                    tokenRepository: tokenRepository
+                    );
             });
 
             services.AddAuthentication(
@@ -39,9 +67,9 @@ namespace Infrastructure
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = Issuer,
-                        ValidAudience = Audience,
-                        IssuerSigningKey = key,
+                        ValidIssuer = JWT_ISSUER,
+                        ValidAudience = JWT_AUDIENCE,
+                        IssuerSigningKey = JWT_KEY,
                         LifetimeValidator = Ensure.isValidExpireTime
                     };
                     options.Events = new()

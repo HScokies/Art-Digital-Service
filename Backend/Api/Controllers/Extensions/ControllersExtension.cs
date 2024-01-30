@@ -33,6 +33,15 @@ namespace Api.Controllers.Extensions
             return new Result<int>(id);
         }
 
+        public static Result<string> GetDeviceId(this HttpRequest request)
+        {
+            var deviceId = request.Cookies.FirstOrDefault(c => c.Key == "DEVICE_ID").Value;
+            if (deviceId is null)
+                return new Result<string>(CommonErrors.User.DeviceIdCookieNotFound);
+
+            return new Result<string>(deviceId);
+        }
+
         public static bool ShowOnlyParticipants(this ClaimsPrincipal User) => User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(r => r.Value == Roles.Permissions.rateUsers);
     }
 }

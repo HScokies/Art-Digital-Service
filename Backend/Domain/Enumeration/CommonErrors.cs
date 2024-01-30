@@ -10,6 +10,9 @@ namespace Domain.Enumeration
         public static class User
         {
             public static Error NotFound = new(HttpStatusCode.NotFound, "Указанный пользователь не обнаружен!", "User not found");
+            public static Error DeviceIdCookieNotFound = new(HttpStatusCode.Unauthorized, "ID устройства не обнаружен!", "DeviceId cookie not found");
+            public static Error RefreshTokenNotFound = new(HttpStatusCode.Unauthorized, "Refresh токен не обнаружен!", "Refresh token not found");
+            public static Error RefreshTokenExpired = new(HttpStatusCode.Unauthorized, "Срок действия сессии истек!", "Refresh token expired");
             public static Error InvalidCredentials = new(HttpStatusCode.BadRequest, "Неверный логин или пароль!", "Invalid credentials");
             public static Error NonUniqueEmail = new(HttpStatusCode.BadRequest, "Пользователь с указанным email уже существует!", "Non-unique email");
             public static Error InvalidEmail = new(HttpStatusCode.BadRequest, "Указанный email не прошел валидацию!", "Invalid email");

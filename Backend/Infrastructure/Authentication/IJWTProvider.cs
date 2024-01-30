@@ -1,6 +1,5 @@
-﻿using Domain.Enumeration;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
+﻿
+using Domain.Core.Primitives;
 
 namespace Infrastructure.Authentication
 {
@@ -8,8 +7,14 @@ namespace Infrastructure.Authentication
     {
         public void IssueUserToken(int userId, string status);
         public void IssueStaffToken(int userId, List<string> permissions);
+
         public void IssueUserToken(string userId, string status);
         public void IssueStaffToken(string userId, List<string> permissions);
+
+        public Task IssueRefreshTokenAsync(int userId, CancellationToken cancellationToken);
+
+        public Task<Result<bool>> TryIssueAccessToken(int userId, string deviceId, CancellationToken cancellationToken);
+
         public void ClearToken();
 
     }

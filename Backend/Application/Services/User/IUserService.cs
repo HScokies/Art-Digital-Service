@@ -8,6 +8,7 @@ namespace Application.Services.User
     {
         Task<Result<bool>> CheckIfUserExistsAsync(string email, CancellationToken cancellationToken);
         Task<Result<int>> RegisterUserAsync(RegisterRequest request, CancellationToken cancellationToken);        
-        Task<Result<UserDto>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken);        
+        Task<Result<string>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken);
+        Task<Result<bool>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken);
     }
 }

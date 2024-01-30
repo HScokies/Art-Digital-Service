@@ -35,6 +35,7 @@ namespace Data
             services.AddScoped<IParticipantRepository, ParticipantRepository>();
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<ICaseRepository, CaseRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IRepository, Repository>();
             
             return services;

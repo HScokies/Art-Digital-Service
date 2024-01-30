@@ -1,4 +1,5 @@
 ﻿using Api.Controllers.Base;
+using Api.Controllers.Extensions;
 using Application.Services.User;
 using Contracts.User;
 using Domain.Entities;
@@ -31,7 +32,7 @@ namespace Api.Controllers
             var result = await userService.RegisterUserAsync(request, cancellationToken);
             if (!result.isSuccess)
                 return Problem(result.error);
-            jwtProvider.IssueUserToken(result.value, Roles.ParticipantsStatus.justRegistered);
+
             return CreatedAtAction(nameof(RegisterNewParticipant), result.value);
         }
 
@@ -39,17 +40,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Login([FromForm] LoginRequest request, CancellationToken cancellationToken)
         {
             var result = await userService.LoginUserAsync(request, cancellationToken);
-            if (!result.isSuccess)
-                return Problem(result.error);
-
-            var user = result.value;
-            if (user.Participant is not null)
-                return LoginAsParticipant(user.Participant);
-
-            if (user.Staff is not null)
-                    return LoginAsStaff(user.Staff);
-
-            return Problem(CommonErrors.Unknown);
+            return result.isSuccess ? Ok(result.value) : Problem(result.error);
         }
 
         [HttpGet("logout"), Authorize]
@@ -70,16 +61,17 @@ namespace Api.Controllers
             return Ok("sent");
         }
 
-        private IActionResult LoginAsStaff(StaffDto staff)
+        [HttpGet("refresh"), Authorize]
+        public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
         {
-            jwtProvider.IssueStaffToken(staff.userId, staff.Role.PermissionsList);
-            return Ok(UserTypes.staff);
-        }
+            var deviceIdResult = Request.GetDeviceId();
+            if (!deviceIdResult.isSuccess) return Problem(deviceIdResult.error);
 
-        private IActionResult LoginAsParticipant(ParticipantDto participant)
-        {
-            jwtProvider.IssueUserToken(participant.userId, participant.status);
-            return Ok(participant.status == Roles.ParticipantsStatus.justRegistered? UserTypes.user : UserTypes.participant);
+            var userIdResult = User.GetUserId();
+            if (!userIdResult.isSuccess) return Problem(userIdResult.error);
+
+            var res = await userService.RefreshTokenAsync(userIdResult.value, deviceIdResult.value, cancellationToken);
+            return res.isSuccess? Ok() : Problem(res.error);
         }
         
     }

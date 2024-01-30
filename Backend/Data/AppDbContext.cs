@@ -37,7 +37,8 @@ namespace Data
         public DbSet<ParticipantDto> participants { get; set; }
 
         public DbSet<ParticipantTypeDto> types { get; set; }
-        public DbSet<StaffRoleDto> roles { get; set; }   
+        public DbSet<StaffRoleDto> roles { get; set; }  
+        public DbSet<TokenDto> tokens { get; set; }
 
         
 

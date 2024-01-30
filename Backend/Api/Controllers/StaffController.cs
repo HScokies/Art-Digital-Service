@@ -21,7 +21,7 @@ namespace Api.Controllers
         public async Task<IActionResult> CreateStaff([FromForm] CreateStaffRequest request,CancellationToken cancellationToken)
         {
             var Result = await staffService.CreateAsync(request, cancellationToken);
-            return Result.isSuccess? Created(nameof(CreateStaff), Result.value) : Problem(Result.error);
+            return Result.isSuccess? CreatedAtAction(nameof(CreateStaff), Result.value) : Problem(Result.error);
         }
 
         [HttpGet("roles"), Authorize(Roles = Roles.Permissions.readStaff)]

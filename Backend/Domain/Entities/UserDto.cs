@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Entities
 {
     public class UserDto
     {
@@ -13,6 +15,9 @@
 
         public string email { get; set; } = null!;
         public string password { get; set; } = null!; // salt + hash
+
+        [JsonIgnore]
+        public ICollection<TokenDto> refreshTokens = null!;
     }
 
 }

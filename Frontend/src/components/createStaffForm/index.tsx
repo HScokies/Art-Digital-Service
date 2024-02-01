@@ -28,9 +28,9 @@ const CreateStaffForm = () => {
         <>
         <Input label='Адрес электронной почты' type='email' name='email'  validator={Validator.validateEmail} required />
         <Input label='Пароль' type='password' name='password'  validator={Validator.validatePassword} required />
-        <Input label='Фамилия сотрудника' type='text' name='lastName'  maxlength={40} required />
-        <Input label='Имя сотрудника' type='text' name='firstName'  maxlength={40} required />
-        <Input label='Отчество сотрудника' type='text' name='patronymic'  maxlength={40} required />
+        <Input label='Фамилия сотрудника' type='text' name='lastName'  maxlength={20} required />
+        <Input label='Имя сотрудника' type='text' name='firstName'  maxlength={20} required />
+        <Input label='Отчество сотрудника' type='text' name='patronymic'  maxlength={20} required />
         <Combobox name="roleId" label='Роль' options={roleOptions} />
         </>
     )

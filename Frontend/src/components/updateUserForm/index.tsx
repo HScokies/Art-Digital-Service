@@ -90,9 +90,9 @@ const UpdateUserForm = ({ id }: formProps) => {
                     {!isAdult && <Input defaultValue={userData.parentName} required label='Полное имя родителя' type='text' name='parentName'  />}
                     <Input defaultValue={userData.email} required label='Адрес электронной почты' type='email' name='email' />
                     <Input defaultValue={userData.phone} required onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'/>
-                    <Input defaultValue={userData.lastName} required label='Фамилия участника' type='text' name='lastName'  maxlength={40} />
-                    <Input defaultValue={userData.firstName} required label='Имя участника' type='text' name='firstName'  maxlength={40} />
-                    <Input defaultValue={userData.patronymic} required label='Отчество участника' type='text' name='patronymic'  maxlength={40} />
+                    <Input defaultValue={userData.lastName} required label='Фамилия участника' type='text' name='lastName'  maxlength={20} />
+                    <Input defaultValue={userData.firstName} required label='Имя участника' type='text' name='firstName'  maxlength={20} />
+                    <Input defaultValue={userData.patronymic} required label='Отчество участника' type='text' name='patronymic'  maxlength={20} />
                     <Input defaultValue={userData.city} required datalist="Cities" label='Город участника' type='text' name='city'/>
                     <datalist id="Cities">
                         {

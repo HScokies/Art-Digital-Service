@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './style.scss'
 import { Button } from 'src/components'
 
 export interface formProps {
-    id?: number
+    id?: number,
 }
 
 interface props {
@@ -18,22 +18,29 @@ interface props {
 
 const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setActiveRow, trigger }: props) => {
     const dialogRef = useRef<HTMLDialogElement>(null)
+    const [render, setRender] = useState(true)
     useEffect(() => {
         const closeHandler = () => {
-            if (setActiveRow) 
-                setActiveRow(-1)
+            if (setActiveRow) setActiveRow(-1)            
         }
+
         dialogRef.current?.addEventListener('close', closeHandler)
     }, [dialogRef])
-    
-    
 
+    useEffect(()=> {
+        if (!render) setRender(true)
+    }, [render])
+
+    
     const submitHandler = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.target as HTMLFormElement)
         if (rowId != undefined){
             await onSubmit(rowId, data)
-        } else await onSubmit(data)
+        } else {
+            await onSubmit(data)
+            setRender(false)
+        }
         if (trigger) trigger()
     }
     
@@ -44,7 +51,7 @@ const FormDialog = ({ dialogId, dialogTitle, rowId, FormElements, onSubmit, setA
                     {dialogTitle}
                 </div>
                 <form id={`aside-menu-form-${dialogId}`} className='aside-dialog-form' onSubmit={(e) => submitHandler(e)}>
-                    <FormElements id={rowId} />
+                    {render&&<FormElements id={rowId}/>}
                 </form>
                 <div className='aside-dialog-buttons'>
                     <Button clickHandler={() => dialogRef.current?.close()} variant='passive' isActive={true}>Отмена</Button>

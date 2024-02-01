@@ -4,7 +4,7 @@ import { ICity, IUserType } from "src/interfaces"
 import { API, PhoneChange, Validator } from "src/services"
 import { Combobox, Input, FileInput } from "components/index"
 
-const CreateUserForm = () => {
+const CreateUserForm = (clear: boolean) => {
     const [isAdult, setIsAdult] = useState(true)
     const [cases, setCases] = useState<Option[]>([])
     const [userTypes, setUserTypes] = useState<IUserType[]>()
@@ -56,17 +56,16 @@ const CreateUserForm = () => {
         setIsAdult(userType?.isAdult)
     }
 
-    return (
-
+    return (       
         <>
             <Input label='Адрес электронной почты' type='email' name='email'  validator={Validator.validateEmail} required />
             <Input label='Пароль' type='password' name='password'  validator={Validator.validatePassword} required />
             <Combobox name="typeId" label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
             {!isAdult && <Input label='Полное имя родителя' type='text' name='parentName' required />}
-            <Input onChange={PhoneChange} maxlength={13} label='Телефон' type='tel' name='phone'  validator={Validator.validatePhoneNumber} required />
-            <Input label='Фамилия участника' type='text' name='lastName'  maxlength={40} required />
-            <Input label='Имя участника' type='text' name='firstName'  maxlength={40} required />
-            <Input label='Отчество участника' type='text' name='patronymic'  maxlength={40} required />
+            <Input onChange={PhoneChange} defaultValue="+7 " maxlength={13} label='Телефон' type='tel' name='phone'  validator={Validator.validatePhoneNumber} required />
+            <Input label='Фамилия участника' type='text' name='lastName'  maxlength={20} required />
+            <Input label='Имя участника' type='text' name='firstName'  maxlength={20} required />
+            <Input label='Отчество участника' type='text' name='patronymic'  maxlength={20} required />
             <Input datalist="Cities" label='Город участника' type='text' name='city' required />
             <datalist id="Cities">
                 {

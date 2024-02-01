@@ -36,9 +36,9 @@ const UpdateStaffForm = ({ id }: formProps) => {
     return (
         <>
             <Input label='Адрес электронной почты' type='email' name='email' validator={Validator.validateEmail} defaultValue={staff?.email} required />
-            <Input label='Фамилия сотрудника' type='text' name='lastName' maxlength={40} defaultValue={staff?.lastName} required />
-            <Input label='Имя сотрудника' type='text' name='firstName' maxlength={40} defaultValue={staff?.firstName} required />
-            <Input label='Отчество сотрудника' type='text' name='patronymic' maxlength={40} defaultValue={staff?.patronymic} required />
+            <Input label='Фамилия сотрудника' type='text' name='lastName' maxlength={20} defaultValue={staff?.lastName} required />
+            <Input label='Имя сотрудника' type='text' name='firstName' maxlength={20} defaultValue={staff?.firstName} required />
+            <Input label='Отчество сотрудника' type='text' name='patronymic' maxlength={20} defaultValue={staff?.patronymic} required />
             <Combobox name="roleId" label='Роль' options={roleOptions} defaultValue={staff?.roleId} />
         </>
     );

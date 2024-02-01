@@ -133,7 +133,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                 />
             }
             {
-                (createProvider && createForm) &&
+                createForm &&
                 <FormDialog
                     trigger={_trigger}
                     dialogId='create'
@@ -142,7 +142,9 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                     FormElements={createForm}
                 />
             }
-            <FormDialog
+            {
+                updateForm&&
+                <FormDialog
                 trigger={_trigger}
                 dialogId='update'
                 onSubmit={updateProvider}
@@ -151,6 +153,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
                 setActiveRow={setCurrentRowId}
                 FormElements={updateForm}
             />
+            }
         </>
 
     )

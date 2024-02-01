@@ -15,8 +15,7 @@ const AuthContext = createContext<IAuthContext>({
 export const AuthProvider = ({children} : any) => {
     const[userType, setType] = useState<UserTypes | null>(null)
     const setUserType = (value: UserTypes | null) => {
-        setType(value);
-        if (value) localStorage.setItem("type", value)            
+        setType(value);         
     }
     return(
         <AuthContext.Provider value={{userType, setUserType}}>

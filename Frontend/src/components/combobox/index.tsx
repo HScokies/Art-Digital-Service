@@ -6,10 +6,7 @@ export interface Option {
     label: string
 }
 
-export interface ICity{
-    id: number,
-    name: string
-}
+
 
 interface props {
     name: string,

@@ -1,30 +1,42 @@
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom"
 import { AccessPage, CaseUpsertPage, CasesDashboardPage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage, StaffDashboardPage, UsersDashboardPage } from "./pages"
 import { RequireAuth } from "./components"
 import { UserTypes } from "./enums"
 import { useEffect } from "react"
 import { UseAuth } from "./hooks/useAuth"
 import { PermissionsProvider } from "./context/premissionsContext"
+import { API } from "./services"
 
 
 const App = () => {
-  const {setUserType} = UseAuth();
-  // refresh token
-  // useEffect(() => {    
-  //   if (!isAuthorized) return    
-  //   const TOKEN_LIFETIME_MS = (import.meta.env.TOKEN_LIFETIME_MS || 300_000)  as number
-  //   const refreshToken = setInterval(() => {
-  //     console.debug("refreshing token...")
-  //     setAuthorized(API.refreshToken())
-  //   }, TOKEN_LIFETIME_MS);
+  const {setUserType, userType} = UseAuth();
+  const navigate = useNavigate()
 
-  //   return () => clearInterval(refreshToken);
-  // }, [isAuthorized])
+  useEffect(() => {    
+    const fetch = async () => {
+      const type = await API.refreshToken();
+      if (!type) return;
+      setUserType(type)
+    } 
+    fetch()
+  }, [])
 
   useEffect(() => {
-    const userType = localStorage.getItem("type");
-    setUserType(userType);    
-  }, [])
+    const JWT_ACCESS_EXPIRY_MINUTES = (import.meta.env.JWT_ACCESS_EXPIRY_MINUTES || 5)  as number;
+    const MS_IN_MINUTE = 60_000;
+    const TOKEN_LIFETIME_MS = JWT_ACCESS_EXPIRY_MINUTES  * MS_IN_MINUTE / 2;
+
+
+    const refreshToken = setInterval(async() => {
+      if (!userType) return;
+      const type = await API.refreshToken();
+      if (!type) navigate("/")
+      setUserType(type)
+    }, TOKEN_LIFETIME_MS);
+
+    return () => clearInterval(refreshToken);
+  }, [userType])
+
 
   return (
     <Routes>

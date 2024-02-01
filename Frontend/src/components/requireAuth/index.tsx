@@ -11,7 +11,6 @@ interface props{
 
 const RequireAuth = ({allowed}: props) => {
     const {userType} = UseAuth();
-
     if (userType == allowed) return <Outlet/>
     switch(userType){
         case UserTypes.newUser:

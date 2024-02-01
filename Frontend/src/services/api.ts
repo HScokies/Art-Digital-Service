@@ -241,8 +241,11 @@ export class API{
         return response;
     }
 
-    static refreshToken = () => {
-        return true
+    static refreshToken = async() => {
+        const url = new URL("authentication/refresh", API.URL)
+        const response = await this.api.get(url.toString());
+        if (response.status == 200) return response.data;
+        return undefined
     }
 
     static getProfileData = ()=> {

@@ -5,7 +5,7 @@ namespace Infrastructure.Emails
 {
     public interface IEmailProvider
     {
-        public Task SendWelcomeEmail(MailboxAddress recipient, string youtubeId, CancellationToken cancellationToken);
-        public Task SendPasswordResetEmail(MailboxAddress recipient, string resetToken, CancellationToken cancellationToken);
+        Task SendWelcomeEmail(MailboxAddress recipient, string youtubeId, bool isAdult, CancellationToken cancellationToken);
+        Task SendPasswordResetEmail(MailboxAddress recipient, string resetToken, CancellationToken cancellationToken);
     }
 }

@@ -6,6 +6,7 @@ import { Button, CaseData, Input, TextArea } from 'src/components'
 import Criterias from './criterias'
 import Stages from './stages'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Pages } from 'src/enums'
 
 
 
@@ -66,7 +67,7 @@ const CaseUpsertPage = () => {
                     <div className='btn-container'>
                         <Button type='submit' isActive={true}>Сохранить</Button>
                         <Button type='button' clickHandler={() => showPreview()} isActive={true} variant='passive'>Предпросмотр</Button>
-                        <Button type='button' clickHandler={() => navigate('/dashboard/cases')} isActive={true} variant='passive'>Отменить</Button>
+                        <Button type='button' clickHandler={() => navigate(Pages.dashboard+'cases')} isActive={true} variant='passive'>Отменить</Button>
                     </div>
                 </form>
             </main>

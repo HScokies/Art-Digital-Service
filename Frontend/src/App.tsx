@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom"
 import { AccessPage, CaseUpsertPage, CasesDashboardPage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage, StaffDashboardPage, UsersDashboardPage } from "./pages"
 import { RequireAuth } from "./components"
-import { UserTypes } from "./enums"
+import { Pages, UserTypes } from "./enums"
 import { useEffect } from "react"
 import { UseAuth } from "./hooks/useAuth"
 import { PermissionsProvider } from "./context/premissionsContext"
@@ -30,7 +30,7 @@ const App = () => {
     const refreshToken = setInterval(async() => {
       if (!userType) return;
       const type = await API.refreshToken();
-      if (!type) navigate("/")
+      if (!type) navigate(Pages.auth)
       setUserType(type)
     }, TOKEN_LIFETIME_MS);
 

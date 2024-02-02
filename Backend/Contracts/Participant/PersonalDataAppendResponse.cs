@@ -10,5 +10,6 @@ namespace Contracts.Participant
         public string email { get; set; } = null!;
         public string firstName { get; set; } = null!;
         public string youtubeId { get; set; } = null!;
+        public bool isAdult { get; set; }
     }
 }

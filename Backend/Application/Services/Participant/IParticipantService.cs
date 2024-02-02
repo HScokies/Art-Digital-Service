@@ -20,5 +20,6 @@ namespace Application.Services.Participant
         Task<Result<FileResponse>> GetParticipantFileAsync(string filename, CancellationToken cancellationToken);
         Task DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken);
         Task<FileResponse> ExportParticipantsAsync(int[]? participants, CancellationToken cancellationToken);
+        Task<bool> isAdultAsync(int userId, CancellationToken cancellationToken);
     }
 }

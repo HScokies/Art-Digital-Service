@@ -119,5 +119,7 @@ namespace Data.Repositories
                 grade = p.grade
             }).ToArrayAsync(cancellationToken);
         }
+
+        public async Task<bool> isAdult(int userId, CancellationToken cancellationToken) => await ctx.participants.Where(p => p.userId == userId).Select(p => p.Type.isAdult).FirstAsync(cancellationToken);
     }
 }

@@ -13,7 +13,7 @@ const Checkbox = ({ children, name, defaultValue = false, checkedChanged }: prop
     const [checked, setChecked] = useState(defaultValue)
 
     return (
-        <div className='checkbox'>
+        <div className='checkbox' onClick={() => {if (checkedChanged) checkedChanged()}}>
             <label className='checkbox-label' htmlFor={name}>
                 {
                     children

@@ -1,13 +1,13 @@
 import { API, Validator } from 'src/services'
 import './style.scss'
 import Logo from 'images/logo.webp'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button, Combobox, FormMessage, Input } from 'src/components'
 import { Option } from 'src/components/combobox'
 import { IUserType } from 'src/interfaces'
 import { UseAuth } from 'src/hooks/useAuth'
-import { UserTypes } from 'src/enums'
+import { Pages, UserTypes } from 'src/enums'
 
 interface IFormError {
     isActive: boolean,
@@ -69,7 +69,7 @@ const RegisterPage = () => {
     return (
         <div className="authpage">
             <div className="authpage_modal">
-                <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
+                <Link to={Pages.auth}><img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' /></Link>
                 <FormMessage type='error' text={formError.text} isActive={formError.isActive} />
                 <h1 className='authpage_modal-title'>Зарегистрироваться</h1>
                 <form id='register-form' onSubmit={(e) => handleSubmit(e)}>

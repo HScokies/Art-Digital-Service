@@ -1,70 +1,22 @@
 import './style.scss'
 import Logo from 'images/logo.webp'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button, Combobox, Input, Checkbox } from 'src/components'
 import { Option } from 'src/components/combobox'
+import { Pages } from 'src/enums'
+import { UseAuth } from 'src/hooks/useAuth'
 import { ICase, ICity } from 'src/interfaces'
 import { API, Validator } from 'src/services'
 
 const PersonalDataPage = () => {
     const [hasErrors, setHasErrors] = useState(true);
+    const navigate = useNavigate()
+    const {setUserType} = UseAuth()
 
     const [cases, setCases] = useState<Option[]>([])
     const [cities, setCities] = useState<ICity[]>([])
-
-    const dbdata = {
-        isAdult: true,
-        cases: [
-            {
-                value: 0,
-                label: "Графический дизайн"
-            },
-            {
-                value: 1,
-                label: "Дизайн одежды"
-            },
-            {
-                value: 2,
-                label: "Дизайн интерьера"
-            },
-            {
-                value: 3,
-                label: "3D моделирование для компьютерных игр"
-            },
-            {
-                value: 4,
-                label: "Веб-разработка"
-            },
-            {
-                value: 5,
-                label: "Разработка компьютерных игр"
-            },
-            {
-                value: 6,
-                label: "Туризм"
-            },
-            {
-                value: 7,
-                label: "Ресторанное дело"
-            },
-            {
-                value: 8,
-                label: "Интернет-маркетинг"
-            },
-            {
-                value: 9,
-                label: "Веб-дизайн"
-            },
-        ],
-        cities: [
-            "Челябинск",
-            "Копейск",
-            "Южноуральск",
-            "Миасс",
-            "Златоуст",
-            "Сосновский муниципальный район"
-        ]
-    }
+    const [isAdult, setAdult] = useState<boolean>()
 
     useEffect(() => {
         const getCases = async() => {
@@ -80,12 +32,18 @@ const PersonalDataPage = () => {
             }
             setCases(caseOptions)
         }
-        const getCities  =async () => {
+        const getCities  = async () => {
             const response = await API.getCities()
             if (response.status != 200) return
             setCities(response.data)
         }
 
+        const checkIfAdult = async() => {
+            const response = await API.checkIfAdult()
+            if (response.status != 200) return
+            setAdult(response.data)
+        }
+        checkIfAdult()
         getCases()
         getCities()
     }, [])
@@ -142,14 +100,21 @@ const PersonalDataPage = () => {
         validateFields()
     }
 
+    const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const response = await API.appendPersonalData(new FormData(e.target as HTMLFormElement))
+        if (response.status != 200) return;
+        setUserType(response.data)
+        navigate(Pages.profile)
+    }
     return (
         <div className="authpage">
             <div className="authpage_modal">
                 <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
                 <h1 className='authpage_modal-title'>Персональные данные</h1>
-                <form id='personaldata-form' onSubmit={() => console.debug("submit")}>
+                <form id='personaldata-form' onSubmit={(e) => onSubmit(e)}>
                     {
-                        dbdata.isAdult ?
+                        isAdult ?
                             null :
                             <Input onChange={validateFields} label='Полное имя родителя' type='text' name='parentName' required={true} />
                     }
@@ -167,7 +132,7 @@ const PersonalDataPage = () => {
                     </datalist>
                     <Input onChange={validateFields} label='Учебное заведение' type='text' name='institution' required={true} />
                     {
-                        dbdata.isAdult ?
+                        isAdult ?
                             <>
                                 <Input onKeyUp={validateGrade} label='Курс' type='number' name='grade' required={true} validator={Validator.validateGradeStudent} min={1} max={11} />
                                 <Input onChange={validateFields} label='Специальность' type='text' name='speciality' required={true} />
@@ -176,7 +141,7 @@ const PersonalDataPage = () => {
                                 <Input onKeyUp={validateGrade} label='Класс' type='number' name='grade' required={true} validator={Validator.validateGradeSchool} min={1} max={11} />
                             </>
                     }
-                    <Combobox name='case' label='Направление' options={cases} />
+                    <Combobox name='caseId' label='Направление' options={cases} />
                     <Checkbox checkedChanged={validateFields} name='acceptedPrivacyPolicy'>
                         Ознакомлен с <a target='_blank' href='https://disk.yandex.ru/i/FrvixFf4IKNtwg'>политикой&nbsp;конфиденциальности</a>
                     </Checkbox>

@@ -130,11 +130,12 @@ namespace Api.Controllers
                     address: response.email
                     ),
                 youtubeId: response.youtubeId,
+                isAdult: response.isAdult,
                 cancellationToken: cancellationToken
                 );
 
             JWTProvider.IssueUserToken(response.userId, response.status);
-            return Ok(response);
+            return Ok(UserTypes.participant);
         }
 
         [HttpPatch("append-files"), Authorize(Roles = Roles.ParticipantsStatus.sentPersonalData)]
@@ -158,6 +159,16 @@ namespace Api.Controllers
         {
             var res = await participantService.ExportParticipantsAsync(id, cancellationToken);
             return File(res.fileStream, res.contentType, $"Участники {DateTime.UtcNow}");
+        }
+
+        [HttpGet("isAdult"), Authorize(Roles = Roles.ParticipantsStatus.justRegistered)]
+        public async Task<IActionResult> isAdult(CancellationToken cancellationToken)
+        {
+            var userIdResult = User.GetUserId();
+            if (!userIdResult.isSuccess)
+                return Problem(userIdResult.error);
+            var res = await participantService.isAdultAsync(userIdResult.value, cancellationToken);
+            return Ok(res);
         }
     }
 }

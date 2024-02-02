@@ -113,7 +113,8 @@ namespace Application.Services.Participant
             if (!Ensure.isPhone(request.phone))
                 return new Result<PersonalDataAppendResponse>(CommonErrors.User.InvalidPhone);
 
-            if (!await caseRepository.ExistsAsync(request.caseId, cancellationToken))
+            var _case = await caseRepository.GetAsync(request.caseId, cancellationToken);
+            if (_case is null)
                 return new Result<PersonalDataAppendResponse>(CommonErrors.Case.NotFound);
 
             var participant = await userRepository.GetParticipantByUserIdAsync(userId, cancellationToken);
@@ -122,6 +123,7 @@ namespace Application.Services.Participant
 
             participant.appendPersonalData(request);
             await repository.SaveChangesAsync(cancellationToken);
+            participant.Case = _case;
 
             var res = participant.toPersonalDataResponse();
 
@@ -322,5 +324,7 @@ namespace Application.Services.Participant
             ParticipantExportModel[] participantList = await participantRepository.GetExportModelsAsync(participants, cancellationToken);
             return exportProvider.ExportParticipants(participantList);
         }
+
+        public async Task<bool> isAdultAsync(int userId, CancellationToken cancellationToken) => await participantRepository.isAdult(userId, cancellationToken);
     }
 }

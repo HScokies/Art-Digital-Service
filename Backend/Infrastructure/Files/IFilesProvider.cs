@@ -6,9 +6,10 @@ namespace Infrastructure.Files
 {
     public interface IFilesProvider
     {
-        public Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken);
-        public void DropUserFile(string fileName);
-        public Task<Result<FileResponse>> DownloadUserFileAsync(string fileName, CancellationToken cancellationToken);
-        public Result<string> getMimeType(IFormFile file);
+        Task<Result<string>> UploadUserFileAsync(IFormFile file, CancellationToken cancellationToken);
+        void DropUserFile(string fileName);
+        Task<Result<FileResponse>> DownloadUserFileAsync(string fileName, CancellationToken cancellationToken);
+        Result<string> getMimeType(IFormFile file);
+        Task<Result<FileResponse>> DownloadLegalFileAsync(string fileName, CancellationToken cancellationToken);
     }
 }

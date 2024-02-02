@@ -23,7 +23,7 @@ namespace Infrastructure.Authentication
         private readonly string audience;
         private readonly int refreshExpiry; // in hours,
         private readonly int accessExpiry; // in minutes
-        private readonly int resetExpiry;
+        private readonly int resetExpiry; // in minutes
         private readonly IRefreshTokenRepository tokenRepository;
         private readonly SigningCredentials Credentials;
         private readonly HttpContext httpContext;

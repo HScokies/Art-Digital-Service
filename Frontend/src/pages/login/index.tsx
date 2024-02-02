@@ -5,6 +5,7 @@ import { Button, Input, FormMessage } from 'src/components';
 import { API, Validator } from 'src/services';
 import { useState } from 'react';
 import { UseAuth } from 'src/hooks/useAuth';
+import { Pages } from 'src/enums';
 
 interface IForm {
     email: HTMLInputElement,
@@ -51,7 +52,7 @@ const LoginPage = () => {
     return (
         <div className="authpage">
             <div className="authpage_modal">
-                <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
+                <Link to={Pages.auth}><img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' /></Link>
                 <FormMessage type='error' text={formError.text} isActive={formError.isActive} />
                 <h1 className='authpage_modal-title'>Войти в учетную запись</h1>
                 <form id='login-form' onSubmit={(e) => handleSubmit(e)}>

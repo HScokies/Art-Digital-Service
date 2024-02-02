@@ -13,6 +13,7 @@ namespace Data.Interfaces
         Task<bool> TypeExistsAsync(int participantTypeId, CancellationToken cancellationToken);
         Task<ParticipantDto> CreateAsync(ParticipantDto participant, CancellationToken cancellationToken);
         Task<ParticipantTypeDto[]> GetTypesAsync(CancellationToken cancellationToken);
+        Task<bool> isAdult(int userId, CancellationToken cancellationToken);
         Task DropAsync(ParticipantDto[] participants, CancellationToken cancellationToken);
     }
 }

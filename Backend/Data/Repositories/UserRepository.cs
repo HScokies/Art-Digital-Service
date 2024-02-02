@@ -14,7 +14,7 @@ namespace Data.Repositories
         public UserRepository(AppDbContext ctx) => this.ctx = ctx;        
 
         public async Task<bool> ExistsAsync(string email, CancellationToken cancellationToken = default) => await ctx.users.AnyAsync(u => u.email == email, cancellationToken);        
-        public async Task<ParticipantDto?> GetParticipantByUserIdAsync(int id, CancellationToken cancellationToken = default) => await ctx.participants.Include(p => p.User).Include(p => p.Case).FirstOrDefaultAsync(p => p.userId == id, cancellationToken);        
+        public async Task<ParticipantDto?> GetParticipantByUserIdAsync(int id, CancellationToken cancellationToken = default) => await ctx.participants.Include(p => p.User).Include(p => p.Case).Include(p => p.Type).FirstOrDefaultAsync(p => p.userId == id, cancellationToken);        
 
         public async Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default) => await ctx.users.Include(u => u.Staff).Include(u => u.Staff!.Role).Include(u => u.Participant).FirstOrDefaultAsync(u => u.email == email, cancellationToken);
 

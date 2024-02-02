@@ -258,6 +258,16 @@ export class API{
         return await this.api.post(url.toString(), data)
     } 
 
+    static checkIfAdult = async() => {
+        const url = new URL("participants/isAdult", API.URL)
+        return await this.api.get(url.toString())
+    }
+
+    static appendPersonalData = async(data: FormData) => {
+        const url = new URL("participants/append-data", API.URL)
+        return await this.api.patch(url.toString(), data)
+    }
+
     static getProfileData = ()=> {
         return ProfileMock
     }

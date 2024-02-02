@@ -42,7 +42,8 @@ namespace Contracts
             status = participant.status,
             email = participant.User.email,
             firstName = participant.User.firstName,
-            youtubeId = participant.Case.youtubeId
+            youtubeId = participant.Case.youtubeId,
+            isAdult = participant.Type.isAdult
         };
 
         public static ParticipantDto toParticipant(this CreateParticipantRequest request) => new ParticipantDto()

@@ -4,6 +4,7 @@ using MailKit.Security;
 using MailKit.Net.Smtp;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
+using Domain.Enumeration;
 
 namespace Infrastructure.Emails
 {
@@ -52,7 +53,7 @@ namespace Infrastructure.Emails
             await SendEmailAsync(message);
         }
 
-        public async Task SendWelcomeEmail(MailboxAddress recipient, string youtubeId, CancellationToken cancellationToken)
+        public async Task SendWelcomeEmail(MailboxAddress recipient, string youtubeId, bool isAdult, CancellationToken cancellationToken)
         {
             const string templateName = "welcome-message";
             const string subject = "Добро пожаловать на олимпиаду 'Цифра. Дизайн. Сервис'";
@@ -61,7 +62,8 @@ namespace Infrastructure.Emails
                 {"{{server_url}}", SERVER_URL },
                 {"{{app_url}}", APP_URL},
                 {"{{user_name}}", recipient.Name},
-                {"{{youtube_id}}", youtubeId }
+                {"{{youtube_id}}", youtubeId },
+                {"{{consent_filename}}", isAdult? LegalFiles.adultConsent : LegalFiles.youthConsent}
             };
 
             var content = await GetTemplate(templateName, cancellationToken);

@@ -12,6 +12,8 @@ namespace Infrastructure.Files
     public class FilesProvider : IFilesProvider
     {
         private readonly string userFiles = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "user-uploaded");
+        private readonly string legalFiles = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "legal");
+        private readonly string certificateFiles = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "certificate");
         private readonly ContentInspector contentInspector;
         public FilesProvider()
         {
@@ -21,23 +23,27 @@ namespace Infrastructure.Files
             }.Build();
 
             Directory.CreateDirectory(userFiles);
+            Directory.CreateDirectory(legalFiles);
+            Directory.CreateDirectory(certificateFiles);
         }
         private async Task<Result<MemoryStream>> DownloadFileAsync(string directory, string fileName, CancellationToken cancellationToken)
         {
             try
             {
                 string path = Path.Combine(directory, fileName);
+                using FileStream fs = new(path, FileMode.Open);
 
-                MemoryStream stream = new();
-                using (FileStream fs = new(path, FileMode.Open))
-                {
-                    await fs.CopyToAsync(stream);
-                }
+                MemoryStream stream = new();                
+                await fs.CopyToAsync(stream, cancellationToken);
                 stream.Position = 0;
 
                 return new Result<MemoryStream>(stream);
             }
-            catch
+            catch (FileNotFoundException)
+            {
+                return new Result<MemoryStream>(CommonErrors.File.NotFound);
+            }
+            catch(Exception)
             {
                 return new Result<MemoryStream>(CommonErrors.Unknown);
             }
@@ -119,6 +125,21 @@ namespace Infrastructure.Files
             {
                 fileStream = streamResult.value,
                 contentType = mimeTypeResult.value,
+            };
+
+            return new Result<FileResponse>(fileData);
+        }
+    
+        public async Task<Result<FileResponse>> DownloadLegalFileAsync(string fileName, CancellationToken cancellationToken)
+        {
+            var streamResult = await DownloadFileAsync(legalFiles, fileName, cancellationToken);
+            if (!streamResult.isSuccess)
+                return new Result<FileResponse>(streamResult.error);
+
+            var fileData = new FileResponse()
+            {
+                fileStream = streamResult.value,
+                contentType = "application/pdf",
             };
 
             return new Result<FileResponse>(fileData);

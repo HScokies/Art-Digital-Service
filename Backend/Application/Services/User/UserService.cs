@@ -7,7 +7,7 @@ using Domain.Entities;
 using Domain.Enumeration;
 using Domain.Repositories;
 using Infrastructure.Authentication;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
@@ -18,13 +18,15 @@ namespace Application.Services.User
         private readonly IParticipantRepository participantRepository;
         private readonly IJWTProvider jwtProvider;
         private readonly IRefreshTokenRepository tokenRepository;
+        private readonly IRepository repository;
 
-        public UserService(IUserRepository userRepository, IParticipantRepository participantRepository, IJWTProvider jwtProvider, IRefreshTokenRepository tokenRepository)
+        public UserService(IUserRepository userRepository, IParticipantRepository participantRepository, IJWTProvider jwtProvider, IRefreshTokenRepository tokenRepository, IRepository repository)
         {
             this.userRepository = userRepository;
             this.participantRepository = participantRepository;
             this.jwtProvider = jwtProvider;
             this.tokenRepository = tokenRepository;
+            this.repository = repository;
         }
         
         private async Task<bool> isValidUserType(RegisterRequest request, CancellationToken cancellationToken) => await participantRepository.TypeExistsAsync(request.userType, cancellationToken);
@@ -101,9 +103,54 @@ namespace Application.Services.User
             return new Result<string>(CommonErrors.Unknown);
         }
 
-        public async Task<Result<bool>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken)
+        public async Task<Result<string>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken)
         {
             return await jwtProvider.TryIssueAccessToken(userId, deviceId, cancellationToken);
+        }
+
+        public async Task<Result<PasswordResetResponse>> RequestPasswordReset(string email, CancellationToken cancellationToken)
+        {
+            if (!Ensure.isEmail(email))
+                return new Result<PasswordResetResponse>(CommonErrors.User.InvalidEmail);
+
+            var user = await userRepository.GetUserByEmailAsync(email, cancellationToken);
+            if (user is null)
+                return new Result<PasswordResetResponse>(CommonErrors.User.NotFound);
+
+            string reset_token = jwtProvider.IssuePasswordResetToken();
+            user.resetToken = reset_token;
+            await repository.SaveChangesAsync(cancellationToken);
+
+            PasswordResetResponse response = new()
+            {
+                name = user.firstName,
+                email = user.email,
+                token = reset_token
+            };
+            return new Result<PasswordResetResponse>(response);
+        }
+
+        public async Task<Result<bool>> ResetPassword(string token, string password, CancellationToken cancellationToken)
+        {
+            if (!await jwtProvider.isValidTokenAsync(token))
+                return new Result<bool>(CommonErrors.User.InvalidToken);
+
+            if (!jwtProvider.isTokenActive(token))
+                return new Result<bool>(CommonErrors.User.ResetTokenExpired);
+
+            if (!Ensure.isPassword(password))
+                return new Result<bool>(CommonErrors.User.InvalidPassword);
+
+            var user = await userRepository.GetUserByResetTokenAsync(token, cancellationToken);
+            if (user is null)
+                return new Result<bool>(CommonErrors.User.NotFound);
+            
+            password = Bcrypt.EnhancedHashPassword(password);
+            user.password = password;
+            user.resetToken = null;
+            await repository.SaveChangesAsync(cancellationToken);
+
+            return new Result<bool>();
         }
     }
 }

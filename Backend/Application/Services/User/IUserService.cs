@@ -1,6 +1,5 @@
 ﻿using Contracts.User;
 using Domain.Core.Primitives;
-using Domain.Entities;
 
 namespace Application.Services.User
 {
@@ -9,6 +8,9 @@ namespace Application.Services.User
         Task<Result<bool>> CheckIfUserExistsAsync(string email, CancellationToken cancellationToken);
         Task<Result<int>> RegisterUserAsync(RegisterRequest request, CancellationToken cancellationToken);        
         Task<Result<string>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken);
-        Task<Result<bool>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken);
+        Task<Result<string>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken);
+        Task<Result<PasswordResetResponse>> RequestPasswordReset(string email, CancellationToken cancellationToken);
+        Task<Result<bool>> ResetPassword(string token, string password, CancellationToken cancellationToken);
+        
     }
 }

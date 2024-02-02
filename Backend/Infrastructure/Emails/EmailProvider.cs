@@ -11,15 +11,16 @@ namespace Infrastructure.Emails
     {
         private readonly string templatesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Emails","Templates");
 
-        private readonly MailboxAddress sender;
+        private readonly MailboxAddress sender;        
         private readonly string login;
         private readonly string password;
         private readonly string host;
         private readonly int port;
+        private readonly string SERVER_URL;
         private readonly string APP_URL;
 
-        public EmailProvider(string login, string password, string host, int port, IHttpContextAccessor httpContextAccessor)
-        {
+        public EmailProvider(string app_url, string login, string password, string host, int port, IHttpContextAccessor httpContextAccessor)
+        {            
             this.login = login;
             this.password = password;
             this.host = host;
@@ -27,7 +28,8 @@ namespace Infrastructure.Emails
             this.sender = new MailboxAddress("Цифра. Дизайн. Сервис", "noreply@midis.ru");
 
             var RequestContext = httpContextAccessor.HttpContext?.Request;
-            APP_URL = RequestContext is null? "https://localhost:7220" : $"{RequestContext.Scheme}://{RequestContext.Host}";
+            SERVER_URL = RequestContext is null? "https://localhost:7220" : $"{RequestContext.Scheme}://{RequestContext.Host}";
+            this.APP_URL = app_url;
         }
 
         public async Task SendPasswordResetEmail(MailboxAddress recipient, string resetUrl, CancellationToken cancellationToken)
@@ -36,8 +38,10 @@ namespace Infrastructure.Emails
             const string subject = "Инструкции для смены пароля учетной записи олимпиады 'Цифра. Дизайн. Сервис'";
             Dictionary<string, string> placeholders = new()
             {
-                {"{{user}}", recipient.Name},
-                {"{{url}}", resetUrl }
+                {"{{server_url}}", SERVER_URL },
+                {"{{app_url}}", APP_URL},
+                {"{{user_name}}", recipient.Name},                
+                {"{{reset_token}}", resetUrl }
             };
             
             var content = await GetTemplate(templateName, cancellationToken);
@@ -48,16 +52,16 @@ namespace Infrastructure.Emails
             await SendEmailAsync(message);
         }
 
-        public async Task SendWelcomeEmail(MailboxAddress recipient, string youtubeId, string continueUrl, CancellationToken cancellationToken)
+        public async Task SendWelcomeEmail(MailboxAddress recipient, string youtubeId, CancellationToken cancellationToken)
         {
             const string templateName = "welcome-message";
             const string subject = "Добро пожаловать на олимпиаду 'Цифра. Дизайн. Сервис'";
             Dictionary<string, string> placeholders = new()
             {
-                {"{{base_url}}", APP_URL},
-                {"{{user}}", recipient.Name},
-                {"{{youtubeId}}", youtubeId },
-                {"{{url}}", continueUrl }
+                {"{{server_url}}", SERVER_URL },
+                {"{{app_url}}", APP_URL},
+                {"{{user_name}}", recipient.Name},
+                {"{{youtube_id}}", youtubeId }
             };
 
             var content = await GetTemplate(templateName, cancellationToken);

@@ -130,7 +130,6 @@ namespace Api.Controllers
                     address: response.email
                     ),
                 youtubeId: response.youtubeId,
-                continueUrl: $"https://example.com/{Guid.NewGuid()}",
                 cancellationToken: cancellationToken
                 );
 

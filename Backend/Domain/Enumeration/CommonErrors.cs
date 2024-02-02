@@ -21,6 +21,7 @@ namespace Domain.Enumeration
             public static Error InvalidUserType = new(HttpStatusCode.BadRequest, "Неизвестный тип учетной записи!", "Invalid user type");
             public static Error InvalidStatus = new(HttpStatusCode.BadRequest, "Неизвестный статус участника!", "Invalid user status");
             public static Error InvalidToken = new(HttpStatusCode.Unauthorized, "Неверный формат токена!", "Invalid token format");
+            public static Error ResetTokenExpired = new(HttpStatusCode.Unauthorized, "Время действия ссылки истекло, запросите новую!", "Reset token expired");
         }
         public static class Case
         {

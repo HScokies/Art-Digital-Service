@@ -22,6 +22,13 @@ namespace Data.Repositories
             await ctx.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task DropAsync(string deviceId, CancellationToken cancellationToken)
+        {
+            var entity = await ctx.tokens.FirstOrDefaultAsync(t => t.deviceId == deviceId, cancellationToken);
+            if (entity is null) return;
+            await DropAsync(entity, cancellationToken);
+        }
+
         public async Task DropExpiredAsync(CancellationToken cancellationToken)
         {
             var expired = ctx.tokens.Where(t => t.expires < DateTime.UtcNow);

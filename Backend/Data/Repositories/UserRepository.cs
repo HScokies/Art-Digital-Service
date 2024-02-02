@@ -27,5 +27,7 @@ namespace Data.Repositories
             ctx.users.RemoveRange(users);
             await ctx.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task<UserDto?> GetUserByResetTokenAsync(string resetToken, CancellationToken cancellationToken) => await ctx.users.FirstOrDefaultAsync(u => u.resetToken == resetToken, cancellationToken);
     }
 }

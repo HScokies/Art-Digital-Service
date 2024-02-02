@@ -17,8 +17,6 @@ namespace Api.Controllers
         private readonly IUserService userService;
         private readonly IJWTProvider jwtProvider;
         private readonly IEmailProvider emailProvider;
-
-        //GET USER ROLES BASED ON TOKEN, CALL IT ON USE EFFECT INSIDE APP
         public AuthenticationController(ILogger<ApiController> logger, IUserService userService, IJWTProvider jwtProvider, IEmailProvider emailProvider) : base(logger)
         {
             this.userService = userService;
@@ -44,21 +42,10 @@ namespace Api.Controllers
         }
 
         [HttpGet("logout"), Authorize]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout(CancellationToken cancellationToken)
         {
-            jwtProvider.ClearToken();
+            await jwtProvider.ClearToken(cancellationToken);
             return NoContent();
-        }
-
-        [HttpGet("reset"), Authorize] //TODO
-        public async Task<IActionResult> ResetPassword(CancellationToken cancellationToken)
-        {
-            await emailProvider.SendPasswordResetEmail(
-                new MimeKit.MailboxAddress("Иван", "email@example.com"),
-                resetUrl: $"https://example.com/{Guid.NewGuid()}",
-                cancellationToken: cancellationToken
-                );
-            return Ok("sent");
         }
 
         [HttpGet("refresh"), Authorize]
@@ -71,9 +58,34 @@ namespace Api.Controllers
             if (!userIdResult.isSuccess) return Problem(userIdResult.error);
 
             var res = await userService.RefreshTokenAsync(userIdResult.value, deviceIdResult.value, cancellationToken);
-            return res.isSuccess? Ok() : Problem(res.error);
+            return res.isSuccess ? Ok(res.value) : Problem(res.error);
         }
-        
+
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> RequestPasswordReset([FromForm] string email, CancellationToken cancellationToken)
+        {
+
+            var Result = await userService.RequestPasswordReset(email, cancellationToken);
+            if (!Result.isSuccess)
+                return Problem(Result.error);
+
+            var user = Result.value;          
+            await emailProvider.SendPasswordResetEmail(
+                new MimeKit.MailboxAddress(user.name, user.email),
+                resetToken: user.token,
+                cancellationToken: cancellationToken
+                );
+
+            return NoContent();
+        }
+
+        [HttpPost("reset/{token}")]
+        public async Task<IActionResult> ResetPassword(string token,[FromForm] string password, CancellationToken cancellationToken)
+        {
+            var Result = await userService.ResetPassword(token, password, cancellationToken);
+            return Result.isSuccess? NoContent() : Problem(Result.error);
+        }
     }
     
 }

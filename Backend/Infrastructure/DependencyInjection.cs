@@ -1,6 +1,5 @@
 ﻿using Data.Interfaces;
 using Domain.Core.Utility;
-using Domain.Repositories;
 using Infrastructure.Authentication;
 using Infrastructure.Emails;
 using Infrastructure.Export;
@@ -38,7 +37,15 @@ namespace Infrastructure
             {
                 Debug.WriteLine("Could not parse JWT_ACCESS_EXPIRY variable");
                 accessExpiry = 5; // Default JWT_ACCESS_EXPIRY    
-            }        
+            }  
+            
+            string JWT_RESET_EXPIRY = Environment.GetEnvironmentVariable("JWT_RESET_EXPIRY_MINUTES")!;
+            int resetExpiry;
+            if (!int.TryParse(JWT_RESET_EXPIRY, out resetExpiry))
+            {
+                Debug.WriteLine("Could not parse JWT_RESET_EXPIRY variable");
+                resetExpiry = 5; // Default JWT_RESET_EXPIRY
+            }
 
             SymmetricSecurityKey JWT_KEY = new(Encoding.UTF8.GetBytes(JWT_SECRET));
 
@@ -53,6 +60,7 @@ namespace Infrastructure
                     audience: JWT_AUDIENCE,
                     refreshExpiry: refreshExpiry,
                     accessExpiry: accessExpiry,
+                    resetExpiry: resetExpiry,
                     httpContextAccessor: httpContextAccessor,
                     tokenRepository: tokenRepository
                     );
@@ -87,23 +95,30 @@ namespace Infrastructure
         }
         public static IServiceCollection AddEmailService(this IServiceCollection services)
         {
-            string host = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "smtp.ethereal.email";
-            string port_str = Environment.GetEnvironmentVariable("SMTP_PORT")!;
-            string login = Environment.GetEnvironmentVariable("SMTP_LOGIN") ?? "earline.howe@ethereal.email";
-            string password = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? "7q7CrPCD4n8S1BctY7";
-
-            int port = port_str is null ? 587 : int.Parse(port_str);
+            string APP_URL = Environment.GetEnvironmentVariable("APP_URL") ?? "http://localhost:5173";
+            string SMTP_HOST = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "smtp.ethereal.email";            
+            string SMTP_LOGIN = Environment.GetEnvironmentVariable("SMTP_LOGIN") ?? "earline.howe@ethereal.email";
+            string SMTP_PASSWORD = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? "7q7CrPCD4n8S1BctY7";
+            
+            string SMTP_PORT = Environment.GetEnvironmentVariable("SMTP_PORT")!;
+            int port;
+            if (!int.TryParse(SMTP_PORT, out port))
+            {
+                Debug.WriteLine("Could not parse SMTP_PORT variable");
+                port = 587;
+            }
 
             
             services.AddScoped<IEmailProvider, EmailProvider>(options =>
             {
                 var httpContextAccessor = options.GetRequiredService<IHttpContextAccessor>();
                 return new EmailProvider(
-                    login: login,
-                    password: password,
-                    host: host,
+                    login: SMTP_LOGIN,
+                    password: SMTP_PASSWORD,
+                    host: SMTP_HOST,
                     port: port,
-                    httpContextAccessor: httpContextAccessor
+                    httpContextAccessor: httpContextAccessor,
+                    app_url: APP_URL
                     );
             });
             return services;

@@ -245,8 +245,18 @@ export class API{
         const url = new URL("authentication/refresh", API.URL)
         const response = await this.api.get(url.toString());
         if (response.status == 200) return response.data;
-        return undefined
+        return undefined 
     }
+
+    static forgotPassword =async (data:FormData) => {
+        const url = new URL(`authentication/forgot-password`, API.URL)
+        return await this.api.post(url.toString(), data)
+    }
+
+    static resetPassword = async (token: string, data:FormData) => {
+        const url = new URL(`authentication/reset/${token}`, API.URL)
+        return await this.api.post(url.toString(), data)
+    } 
 
     static getProfileData = ()=> {
         return ProfileMock

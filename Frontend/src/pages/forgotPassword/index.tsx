@@ -2,14 +2,24 @@ import './style.scss'
 import { useNavigate, useParams } from 'react-router-dom';
 import Logo from 'images/logo.webp'
 import { Button, Input, FormMessage } from 'src/components';
-import { Validator } from 'src/services';
+import { API, Validator } from 'src/services';
 import { useState } from 'react';
 import './style.scss'
+
+interface IFormError {
+    isActive: boolean,
+    text: string
+}
 
 const ForgotPasswordPage = () => {
     const { Email } = useParams()
     const [hasErrors, setHasErrors] = useState<boolean>(Validator.validateEmail(Email as string).length > 0);
-    const [showMessage, setShow] = useState(false)
+    const [showFormMessage, setShowFormMessage] = useState(false)
+    const [email, setEmail] = useState(Email)
+    const [formError, setFormError] = useState<IFormError>({
+        isActive: false,
+        text: ""
+    });
     const navigate = useNavigate()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,14 +27,34 @@ const ForgotPasswordPage = () => {
             setHasErrors(true)
         }
         else setHasErrors(false)
+        setEmail(email)
 
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const clearFormError = () => {
+        setFormError({
+            isActive: false,
+            text: ""
+        });
+    }
+
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        setShow(true)
+        
+        const response = await API.forgotPassword(new FormData(e.target as HTMLFormElement))
+        if (response.status != 204){
+            setShowFormMessage(false)
+            const data = response.data;
+            return setFormError({
+                isActive: true,
+                text: data.title
+            });
+
+        }
+        clearFormError()
+        setShowFormMessage(true)
         setTimeout(() => {
-            navigate("/login")
+            navigate(`/login/${email}`)
         }, 3000)
     }
 
@@ -32,7 +62,8 @@ const ForgotPasswordPage = () => {
         <div className="authpage">
             <div className="authpage_modal">
                 <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
-                <FormMessage type='info' text={"Проверьте свою электронную почту на наличие ссылки для сброса пароля. Если оно не появится в течение нескольких минут, проверьте папку «Спам»."} isActive={showMessage}/>                
+                <FormMessage type='error' text={formError.text} isActive={formError.isActive} />
+                <FormMessage type='info' text={"Проверьте свою электронную почту на наличие ссылки для сброса пароля. Если оно не появится в течение нескольких минут, проверьте папку «Спам»."} isActive={showFormMessage}/>                
                 <h1 className='authpage_modal-title'>Забыли пароль?</h1>
                 <form id='forgot-form' onSubmit={(e) => handleSubmit(e)}>
                     <span className={`authpage_modal-tip`}>Введите адрес электронной почты вашей учетной записи, и мы вышлем вам ссылку для сброса пароля.</span>

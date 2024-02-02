@@ -1,9 +1,11 @@
 import './style.scss'
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Logo from 'images/logo.webp'
 import { Button, Input, FormMessage } from 'src/components';
-import { Validator } from 'src/services';
-import { useState } from 'react';
+import { API, Validator } from 'src/services';
+import { useEffect, useState } from 'react';
+import { Pages } from 'src/enums';
+import { error } from 'console';
 
 interface IForm{
     password: HTMLInputElement,
@@ -16,12 +18,14 @@ interface IFormError{
 
 const PasswordResetPage = () => {
     const { Token } = useParams()
+    const navigate = useNavigate()
 
+    const [hasErrors, setHasErrors] = useState(true);
     const [formError, setFormError] = useState<IFormError>({
         isActive: false,
         text: ""
     });
-    const [hasErrors, setHasErrors] = useState(true);
+    
 
     const handleChange = () => {
         const form: IForm = (document.querySelector("#login-form") as unknown) as IForm
@@ -30,22 +34,37 @@ const PasswordResetPage = () => {
         } else setHasErrors(false)
     }
 
-    const handleSubmit = () => {
+    const setError = (error: string) => {
         setFormError({
             isActive: true,
-            text: "Время действия ссылки истекло, запросите новую"
-        });
+            text: error
+        })
     }
+
+    const handleSubmit = async(e : React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const response = await API.resetPassword(Token!, new FormData(e.target as HTMLFormElement))
+        if (response.status != 204){
+            const data = response.data;
+            return setError(data.title)
+        }
+        navigate(Pages.auth)
+    }
+
+    useEffect(() => {
+        if (!Token) navigate(Pages.auth)
+    }, [Token])
 
     return(
         <div className="authpage">
         <div className="authpage_modal">
-            <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
+            <Link to={Pages.auth}><img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' /></Link>
             <FormMessage type='error' text={formError.text} isActive={formError.isActive}/>
             <h1 className='authpage_modal-title'>Обновление пароля</h1>
-            <form id='login-form'>
+            <form id='login-form' onSubmit={(e) => handleSubmit(e)}>
             <Input label='Новый пароль' type='password' name='password' required={true} validator={Validator.validatePassword} onChange={handleChange} maxlength={24} />
-            <Button isActive={!hasErrors} clickHandler={handleSubmit}>Продолжить</Button>
+            <Button isActive={!hasErrors}>Продолжить</Button>
             </form>            
         </div>
     </div>

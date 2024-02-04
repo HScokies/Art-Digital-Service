@@ -268,6 +268,15 @@ export class API{
         return await this.api.patch(url.toString(), data)
     }
 
+    static appendFiles = async(data: FormData) => {
+        const url = new URL("participants/append-files", API.URL)
+        return await this.api.patch(url.toString(), data)
+    }
+
+    static getProfile = async() => {
+        const url = new URL("participants/profile", API.URL)
+        return await this.api.get(url.toString());
+    }
     static getProfileData = ()=> {
         return ProfileMock
     }

@@ -67,9 +67,17 @@ export interface IPermissions{
 
 
 export interface IProfileData{
-    case: ICaseData,
-    user: IUserInfo,
-    legal: ILegalInfo
+    firstName: string,
+    lastName: string,
+    email: string,
+    status?: IStatus,
+    isAdult: boolean,
+    case: ICaseData
+}
+
+export interface IStatus{
+    text: string,
+    download: boolean
 }
 
 export interface ICaseData{
@@ -80,13 +88,6 @@ export interface ICaseData{
     criterias: string[]
 }
 
-interface IUserInfo{
-    firstName: string,
-    lastName: string,
-    email: string,
-    status?: IProfileStatus
-}
-
 export default interface IProfileStatus{
     name: string,
     file?: string
@@ -95,13 +96,4 @@ export default interface IProfileStatus{
 export interface IRole{
     id: number,
     name: string
-}
-
-interface ILegalInfo{
-    phone: string,
-    email: string,
-    address: string,
-    regulations: string,
-    privacyPolicy: string,
-    processingConsent: string
 }

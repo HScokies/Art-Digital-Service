@@ -9,7 +9,7 @@ interface IAuthContext{
 
 const AuthContext = createContext<IAuthContext>({
     userType: null,
-    setUserType: (userType: UserTypes) => {}
+    setUserType: () => {}
 });
 
 export const AuthProvider = ({children} : any) => {

@@ -18,7 +18,7 @@ namespace Data.Repositories
 
         public async Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default) => await ctx.users.Include(u => u.Staff).Include(u => u.Staff!.Role).Include(u => u.Participant).FirstOrDefaultAsync(u => u.email == email, cancellationToken);
 
-        public async Task<UserDto?> GetUserByIdAsync(int id, CancellationToken cancellationToken = default) => await ctx.users.FirstOrDefaultAsync(u => u.id == id, cancellationToken);
+        public async Task<UserDto?> GetUserByIdAsync(int id, CancellationToken cancellationToken) => await ctx.users.Include(u => u.Participant).Include(u => u.Participant).Include(u => u.Staff).Include(u => u.Staff!.Role).FirstOrDefaultAsync(u => u.id == id, cancellationToken);
 
         public IEnumerable<UserDto> GetUsersByParticipantIds(int[] id) => ctx.users.Where(u => id.Contains(u.Participant!.id));
 

@@ -121,5 +121,16 @@ namespace Data.Repositories
         }
 
         public async Task<bool> isAdult(int userId, CancellationToken cancellationToken) => await ctx.participants.Where(p => p.userId == userId).Select(p => p.Type.isAdult).FirstAsync(cancellationToken);
+
+        public async Task<GetProfileResponse?> GetProfileAsync(int userId, CancellationToken cancellationToken) => await ctx.participants.Where(p => p.userId == userId).Select(p => new GetProfileResponse()
+        {
+            firstName = p.User.firstName,
+            lastName = p.User.lastName,
+            email = p.User.email,
+            status = new Status() { text = p.status },
+            isAdult = p.Type.isAdult,
+            Case = p.Case
+
+        }).FirstOrDefaultAsync(cancellationToken);
     }
 }

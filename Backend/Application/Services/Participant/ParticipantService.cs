@@ -87,7 +87,7 @@ namespace Application.Services.Participant
             if (!solutionMimeResult.isSuccess)
                 return new Result<T>(solutionMimeResult.error);
 
-            if (!Ensure.isValidConsentMimeType(solutionMimeResult.value))
+            if (!Ensure.isValidSolutionMimeType(solutionMimeResult.value))
                 return new Result<T>(CommonErrors.File.UnsupportedMediaType);
 
             return new Result<T>();
@@ -326,5 +326,19 @@ namespace Application.Services.Participant
         }
 
         public async Task<bool> isAdultAsync(int userId, CancellationToken cancellationToken) => await participantRepository.isAdult(userId, cancellationToken);
+
+        public async Task<Result<GetProfileResponse>> GetProfileAsync(int userId, CancellationToken cancellationToken)
+        {
+            var res = await participantRepository.GetProfileAsync(userId,cancellationToken);
+            if (res is null) return new Result<GetProfileResponse>(CommonErrors.User.NotFound);
+            res.status = res.status?.text switch
+            {
+                Roles.ParticipantsStatus.awaitingResults => new Status() { text = "Ваша заявки принята и находится на рассмотрении.\nОжидайте результатов!", download = false},
+                Roles.ParticipantsStatus.invited => new Status() { text = "Поздравляем, вы приглашены на второй этап!", download = true },
+                Roles.ParticipantsStatus.droppedOut => new Status() { text = "К сожалению, ваша работа не прошла на второй этап, но вы можете скачать сертификат участника", download = true },
+                _ => null
+            };
+            return new Result<GetProfileResponse>(res);
+        }
     }
 }

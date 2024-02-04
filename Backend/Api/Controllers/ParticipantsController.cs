@@ -134,7 +134,7 @@ namespace Api.Controllers
                 cancellationToken: cancellationToken
                 );
 
-            JWTProvider.IssueUserToken(response.userId, response.status);
+            JWTProvider.IssueUserToken(UserIdResult.value, response.status);
             return Ok(UserTypes.participant);
         }
 
@@ -150,8 +150,8 @@ namespace Api.Controllers
                 return Problem(Result.error);
 
             var res = Result.value;
-            JWTProvider.IssueUserToken(res.userId, res.status);
-            return Ok(res);
+            JWTProvider.IssueUserToken(userIdResult.value, res.status);
+            return Ok(res.status);
         }
 
         [HttpGet("export"), Authorize(Roles = Roles.Permissions.readUsers)] // Опциональный параметр id => экспорт только выделенных
@@ -169,6 +169,16 @@ namespace Api.Controllers
                 return Problem(userIdResult.error);
             var res = await participantService.isAdultAsync(userIdResult.value, cancellationToken);
             return Ok(res);
+        }
+
+        [HttpGet("profile"), Authorize(Roles=$"{Roles.ParticipantsStatus.sentPersonalData},{Roles.ParticipantsStatus.awaitingResults},{Roles.ParticipantsStatus.invited},{Roles.ParticipantsStatus.droppedOut}")]
+        public async Task<IActionResult> Profile(CancellationToken cancellationToken)
+        {
+            var userIdResult = User.GetUserId();
+            if (!userIdResult.isSuccess) return Problem(userIdResult.error);
+
+            var Result = await participantService.GetProfileAsync(userIdResult.value, cancellationToken);
+            return Result.isSuccess? Ok(Result.value) : Problem(Result.error);
         }
     }
 }

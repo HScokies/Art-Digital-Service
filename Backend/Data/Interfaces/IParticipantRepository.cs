@@ -14,6 +14,7 @@ namespace Data.Interfaces
         Task<ParticipantDto> CreateAsync(ParticipantDto participant, CancellationToken cancellationToken);
         Task<ParticipantTypeDto[]> GetTypesAsync(CancellationToken cancellationToken);
         Task<bool> isAdult(int userId, CancellationToken cancellationToken);
+        Task<GetProfileResponse?> GetProfileAsync(int userId, CancellationToken cancellationToken);
         Task DropAsync(ParticipantDto[] participants, CancellationToken cancellationToken);
     }
 }

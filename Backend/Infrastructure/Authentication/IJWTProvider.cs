@@ -13,7 +13,7 @@ namespace Infrastructure.Authentication
 
         Task IssueRefreshTokenAsync(int userId, CancellationToken cancellationToken);
 
-        Task<Result<string>> TryIssueAccessToken(int userId, string deviceId, CancellationToken cancellationToken);
+        Task<Result<bool>> ValidateRefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken);
 
         string IssuePasswordResetToken();
         bool isTokenActive(string token);

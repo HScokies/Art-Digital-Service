@@ -21,5 +21,6 @@ namespace Application.Services.Participant
         Task DropParticipantsAsync(int[] participantIds, CancellationToken cancellationToken);
         Task<FileResponse> ExportParticipantsAsync(int[]? participants, CancellationToken cancellationToken);
         Task<bool> isAdultAsync(int userId, CancellationToken cancellationToken);
+        Task<Result<GetProfileResponse>> GetProfileAsync(int userId, CancellationToken cancellationToken);
     }
 }

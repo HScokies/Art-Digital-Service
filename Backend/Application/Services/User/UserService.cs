@@ -8,6 +8,7 @@ using Domain.Enumeration;
 using Domain.Repositories;
 using Infrastructure.Authentication;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System.Diagnostics;
 using Bcrypt = BCrypt.Net.BCrypt;
 
 namespace Application.Services.User
@@ -82,13 +83,14 @@ namespace Application.Services.User
             if (!Bcrypt.EnhancedVerify(request.password, res.password))
                 return new Result<string>(CommonErrors.User.InvalidCredentials);
 
-            var userRoleResult =  GetUserRole(res);
-            if (userRoleResult.isSuccess) await jwtProvider.IssueRefreshTokenAsync(res.id, cancellationToken); ;
+            var roleResult =  GetUserRoleAndIssueAccessToken(res);
+            if (!roleResult.isSuccess) return roleResult; // Result<Error>
 
-            return userRoleResult;
+            await jwtProvider.IssueRefreshTokenAsync(res.id, cancellationToken);
+            return roleResult;
         }
 
-        private Result<string> GetUserRole(UserDto user)
+        private Result<string> GetUserRoleAndIssueAccessToken(UserDto user)
         {
             if (user.Staff is not null)
             {
@@ -105,7 +107,13 @@ namespace Application.Services.User
 
         public async Task<Result<string>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken)
         {
-            return await jwtProvider.TryIssueAccessToken(userId, deviceId, cancellationToken);
+            var user = await userRepository.GetUserByIdAsync(userId, cancellationToken);
+            if (user is null) return new Result<string>(CommonErrors.User.NotFound);
+            
+            var validateRefreshTokenResult = await jwtProvider.ValidateRefreshTokenAsync(userId, deviceId, cancellationToken);
+            if (!validateRefreshTokenResult.isSuccess) return new Result<string>(validateRefreshTokenResult.error);
+
+            return GetUserRoleAndIssueAccessToken(user);
         }
 
         public async Task<Result<PasswordResetResponse>> RequestPasswordReset(string email, CancellationToken cancellationToken)

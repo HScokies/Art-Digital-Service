@@ -10,7 +10,6 @@ namespace Application.Services.User
         Task<Result<string>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken);
         Task<Result<string>> RefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken);
         Task<Result<PasswordResetResponse>> RequestPasswordReset(string email, CancellationToken cancellationToken);
-        Task<Result<bool>> ResetPassword(string token, string password, CancellationToken cancellationToken);
-        
+        Task<Result<bool>> ResetPassword(string token, string password, CancellationToken cancellationToken);        
     }
 }

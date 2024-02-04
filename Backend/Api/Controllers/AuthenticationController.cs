@@ -41,13 +41,6 @@ namespace Api.Controllers
             return result.isSuccess ? Ok(result.value) : Problem(result.error);
         }
 
-        [HttpGet("logout"), Authorize]
-        public async Task<IActionResult> Logout(CancellationToken cancellationToken)
-        {
-            await jwtProvider.ClearToken(cancellationToken);
-            return NoContent();
-        }
-
         [HttpGet("refresh"), Authorize]
         public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
         {
@@ -60,7 +53,6 @@ namespace Api.Controllers
             var res = await userService.RefreshTokenAsync(userIdResult.value, deviceIdResult.value, cancellationToken);
             return res.isSuccess ? Ok(res.value) : Problem(res.error);
         }
-
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> RequestPasswordReset([FromForm] string email, CancellationToken cancellationToken)
@@ -85,6 +77,13 @@ namespace Api.Controllers
         {
             var Result = await userService.ResetPassword(token, password, cancellationToken);
             return Result.isSuccess? NoContent() : Problem(Result.error);
+        }
+
+        [HttpGet("logout"), Authorize]
+        public async Task<IActionResult> Logout(CancellationToken cancellationToken)
+        {
+            await jwtProvider.ClearToken(cancellationToken);
+            return NoContent();
         }
     }
     

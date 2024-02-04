@@ -182,32 +182,17 @@ namespace Infrastructure.Authentication
         }
 
 
-        public async Task<Result<string>> TryIssueAccessToken(int userId, string deviceId, CancellationToken cancellationToken)
+        public async Task<Result<bool>> ValidateRefreshTokenAsync(int userId, string deviceId, CancellationToken cancellationToken)
         {
             var res = await tokenRepository.GetAsync(deviceId, userId, cancellationToken);
-            if (res is null) return new Result<string>(CommonErrors.User.RefreshTokenNotFound);
+            if (res is null) return new Result<bool>(CommonErrors.User.RefreshTokenNotFound);
 
             if (!isTokenActive(res.token))
             {
                 await tokenRepository.DropAsync(res, cancellationToken);
-                return new Result<string>(CommonErrors.User.RefreshTokenExpired);
+                return new Result<bool>(CommonErrors.User.RefreshTokenExpired);
             }
-            var claims = httpContext.User.Claims;
-            CreateAndAppendToken(claims);
-            return getStatusFromClaims(claims);
-        }
-        private Result<string> getStatusFromClaims(IEnumerable<Claim> claims)
-        {
-            string firstRoleClaim = claims.First(c => c.Type == ClaimTypes.Role).Value;
-            if (Ensure.isStatus(firstRoleClaim))
-            {
-                return new Result<string>(firstRoleClaim == Roles.ParticipantsStatus.justRegistered ? UserTypes.user : UserTypes.participant);
-            }
-
-            List<string> staffReadPermissions = new(){ Roles.Permissions.readUsers, Roles.Permissions.readStaff, Roles.Permissions.readCases };
-            return claims.Where(c => c.Type == ClaimTypes.Role).Any(c => staffReadPermissions.Contains(c.Value))? 
-            new Result<string>(UserTypes.staff) :
-            new Result<string>(CommonErrors.User.InvalidToken);
+            return new Result<bool>();
         }
 
         public string IssuePasswordResetToken()

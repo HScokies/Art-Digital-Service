@@ -8,7 +8,7 @@ interface IPermissionsContext{
 
 const PermissionsContext = createContext<IPermissionsContext>({
     permissions: null,
-    setPermissions: (premissions: IPermissions) => {}
+    setPermissions: () => {}
 });
 
 export const PermissionsProvider = ({children} : any) => {

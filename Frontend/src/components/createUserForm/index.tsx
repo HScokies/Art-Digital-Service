@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { Option } from "src/components/combobox"
-import { ICity, IUserType } from "src/interfaces"
+import { ICity, ICreateForm, IUserType } from "src/interfaces"
 import { API, PhoneChange, Validator } from "src/services"
 import { Combobox, Input, FileInput } from "components/index"
 
-const CreateUserForm = (clear: boolean) => {
+
+const CreateUserForm = ({formId}: ICreateForm) => {
     const [isAdult, setIsAdult] = useState(true)
     const [cases, setCases] = useState<Option[]>([])
     const [userTypes, setUserTypes] = useState<IUserType[]>()
@@ -56,8 +57,13 @@ const CreateUserForm = (clear: boolean) => {
         setIsAdult(userType?.isAdult)
     }
 
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        await API.createUser(new FormData(e.target as HTMLFormElement))
+    }
+    
     return (       
-        <>
+        <form id={formId} onSubmit={(e) => handleSubmit(e)}>
             <Input label='Адрес электронной почты' type='email' name='email'  validator={Validator.validateEmail} required />
             <Input label='Пароль' type='password' name='password'  validator={Validator.validatePassword} required />
             <Combobox name="typeId" label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
@@ -86,7 +92,7 @@ const CreateUserForm = (clear: boolean) => {
             <Combobox name="caseId" label='Направление' options={cases} />
             <FileInput label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />
             <FileInput label='Выполненное задание' name='solution' accept={['.pdf']} />
-        </>
+        </form>
     )
 
 }

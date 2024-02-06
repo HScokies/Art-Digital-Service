@@ -22,7 +22,7 @@ const LoginPage = () => {
     const { setUserType } = UseAuth();
     const [hasErrors, setHasErrors] = useState(true);
 
-    const [email, setEmail] = useState(Email)
+    const [email, setEmail] = useState(Email||"")
 
     const [formError, setFormError] = useState<IFormError>({
         isActive: false,

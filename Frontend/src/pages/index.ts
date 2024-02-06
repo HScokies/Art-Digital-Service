@@ -11,6 +11,7 @@ import UsersDashboardPage from "./usersDashboard";
 import CasesDashboardPage from "./casesDashboard";
 import CaseUpsertPage from "./caseEdit";
 import StaffDashboardPage from "./staffDashboard";
+import UtilsDashboardPage from "./utilsDashboard";
 
 
 
@@ -27,5 +28,6 @@ export{
     UsersDashboardPage,
     CasesDashboardPage,
     StaffDashboardPage,
-    CaseUpsertPage
+    CaseUpsertPage,
+    UtilsDashboardPage
 }

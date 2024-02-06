@@ -15,6 +15,11 @@ import RateUserForm from "./rateUserForm"
 import RequireAuth from "./requireAuth";
 import CreateStaffForm from "./createStaffForm";
 import UpdateStaffForm from "./updateStaffForm";
+import MenuCard from "./menuCard";
+import DialogMenu from "./dialogMenu";
+import DialogConfirm from "./dialogConfirm";
+import LegalDocumentsForm from "./legalDocumentsForm";
+import CertificateForm from "./certificateForm";
 
 export {
     Input,
@@ -33,5 +38,10 @@ export {
     RateUserForm,
     RequireAuth,
     CreateStaffForm,
-    UpdateStaffForm
+    UpdateStaffForm,
+    MenuCard,
+    DialogMenu,
+    DialogConfirm,
+    LegalDocumentsForm,
+    CertificateForm
 }

@@ -19,9 +19,11 @@ $RowHeight: 3em;
     width: 100%;
     white-space: nowrap;
     border-collapse: collapse;
-    & tr{
+
+    & tr {
         height: $RowHeight;
     }
+
     & td,
     th {
         border: .1vmin solid #e6e8eb;
@@ -38,11 +40,12 @@ $RowHeight: 3em;
         position: sticky;
     }
 
-    & tfoot{
-        tr{
+    & tfoot {
+        tr {
             height: unset;
         }
-        td{
+
+        td {
             padding: unset;
             border: unset;
         }
@@ -64,34 +67,40 @@ $RowHeight: 3em;
     &-cell {
         min-width: 45px;
         font-size: calc(.7em + .5vw);
-        & .controll{
+
+        & .controll {
             display: flex;
             align-items: center;
             justify-content: space-evenly;
             gap: 1em;
-            & .datagrid-expand{
+
+            & .datagrid-expand {
                 visibility: hidden;
                 aspect-ratio: 1;
                 min-height: 1em;
                 display: inline-flex;
                 align-items: center;
                 border-radius: 50%;
-                padding: .1em;                
-                &:hover{
+                padding: .1em;
+
+                &:hover {
                     background-color: #ededed;
                 }
-                & svg{
+
+                & svg {
                     stroke: black;
                     aspect-ratio: 1;
                     height: 1.25em;
                 }
             }
-            &:hover{
-                & .datagrid-expand{
+
+            &:hover {
+                & .datagrid-expand {
                     visibility: visible;
                 }
             }
         }
+
         & .header {
             width: 100%;
             display: inline-flex;
@@ -195,5 +204,18 @@ $RowHeight: 3em;
                 }
             }
         }
+    }
+
+
+    &_upsert-dialog {
+        position: relative;
+        margin-left: auto;
+        height: 100%;
+        width: 50%;
+        width: 750px;
+    }
+    &_delete-dialog{
+        background-color: #f8f9fa;
+        margin: auto;
     }
 }

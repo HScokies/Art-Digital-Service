@@ -1,9 +1,9 @@
+import './style.scss'
 import { useState, useRef, useEffect } from "react"
-import { Button } from "src/components"
+import { Button, MenuCard } from "src/components"
 import { ICase } from "src/interfaces"
 import { API } from "src/services"
-import Icons from "images/icons.svg"
-import { NavLink, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { UsePermissions } from "src/hooks/usePermissions"
 
 const CasesDashboardPage = () => {
@@ -49,22 +49,23 @@ const CasesDashboardPage = () => {
             <div className="cases-wrapper">
                 {
                     cases.map((c) => (
-                        <div key={c.id} className="cases-wrapper_element">
-                            {c.name}
-                            <div className="icon-wrapper">
-                                <NavLink to={permissions?.updateCases ? `/dashboard/cases/${c.id}` : '/dashboard/cases'}>
-                                    <svg>
-                                        <use xlinkHref={Icons + '#expand'} />
-                                    </svg>
-                                </NavLink>
-                                {
-                                    permissions?.deleteCases &&
-                                    <svg id="drop" onClick={() => OpenDialog(c.id)}>
-                                        <use xlinkHref={Icons + "#trash"} />
-                                    </svg>
-                                }
-                            </div>
-                        </div>
+                        <MenuCard key={c.id} title={c.name} onExpand={() => navigate(permissions?.updateCases? `/dashboard/cases/${c.id}` : '/dashboard/cases')} onDelete={() => permissions?.deleteCases && OpenDialog(c.id)}/>
+                        // <div key={c.id} className="cases-wrapper_element">
+                        //     {c.name}
+                        //     <div className="icon-wrapper">
+                        //         <NavLink to={}>
+                        //             <svg>
+                        //                 <use xlinkHref={Icons + '#expand'} />
+                        //             </svg>
+                        //         </NavLink>
+                        //         {
+                        //              &&
+                        //             <svg id="drop" onClick={() => OpenDialog(c.id)}>
+                        //                 <use xlinkHref={Icons + "#trash"} />
+                        //             </svg>
+                        //         }
+                        //     </div>
+                        // </div>
                     ))
                 }
             </div>

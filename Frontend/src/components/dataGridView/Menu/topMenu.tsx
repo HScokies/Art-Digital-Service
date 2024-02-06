@@ -8,12 +8,12 @@ interface props {
     setHighlightedRows: React.Dispatch<React.SetStateAction<Set<number>>>,
     exportProvider: (ids?: Set<number>) => string,
     searchLabel: string,
-    setSearch: React.Dispatch<React.SetStateAction<string | undefined>>
+    setSearch: React.Dispatch<React.SetStateAction<string | undefined>>,
+    onCreate?: () => void
+    onDelete?: () => void
 }
 
-const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLabel, setSearch }: props) => {
-    const deleteDialog = document.getElementById('delete-row-dialog') as HTMLDialogElement
-    const createDialog = document.getElementById('dialog-create') as HTMLDialogElement
+const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLabel, setSearch, onCreate, onDelete }: props) => {
     const [exportUrl, setUrl] = useState("");
     useEffect(() => {
         const url = exportProvider(highlightedRows);
@@ -40,8 +40,8 @@ const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLa
                         <div className='btn-wrapper'>
                             <Button variant='brand' isActive={true} clickHandler={() => download()}>Экспорт</Button>
                             {
-                                deleteDialog&&
-                                <Button variant='passive' isActive={true} clickHandler={() => deleteDialog.showModal()}>Удалить</Button>
+                                onDelete&&
+                                <Button variant='passive' isActive={true} clickHandler={() => onDelete()}>Удалить</Button>
                             }                            
                         </div>
                     </div>
@@ -50,8 +50,8 @@ const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLa
                         <input className='searchbar' onChange={(e) => setSearch(e.target.value)} type='search' placeholder={searchLabel} />
                         <div className='btn-wrapper'>
                             {
-                                createDialog&&
-                                <Button isActive={true} clickHandler={() => createDialog.showModal()}>Добавить</Button>
+                                onCreate&&
+                                <Button isActive={true} clickHandler={() => onCreate()}>Добавить</Button>//createDialog.showModal()
                             }                            
                             <Button variant='passive' isActive={true} clickHandler={() => download()}>Экспорт</Button>
                         </div>

@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom"
-import { AccessPage, CaseUpsertPage, CasesDashboardPage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage, StaffDashboardPage, UsersDashboardPage } from "./pages"
+import { AccessPage, CaseUpsertPage, CasesDashboardPage, DashboardPage, ForgotPasswordPage, LoginPage, PasswordResetPage, PersonalDataPage, ProfilePage, RegisterPage, StaffDashboardPage, UsersDashboardPage, UtilsDashboardPage } from "./pages"
 import { RequireAuth } from "./components"
 import { Pages, UserTypes } from "./enums"
 import { useEffect } from "react"
@@ -65,6 +65,7 @@ const App = () => {
           <Route path="/dashboard" element={<></>} />
           <Route path="dashboard/users" element={<UsersDashboardPage />} />
           <Route path="dashboard/staff" element={<StaffDashboardPage />} />
+          <Route path="dashboard/utils" element={<UtilsDashboardPage/>} />
           <Route path="dashboard/cases" element={<CasesDashboardPage />} />
           <Route path="dashboard/cases/:id?" element={<CaseUpsertPage />} />
           <Route path="dashboard/cases/add" element={<CaseUpsertPage />} />

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import './style.scss'
 import Icons from 'images/icons.svg'
-import { API } from 'src/services'
 
 interface props {
     initialFileName?: string,
@@ -15,7 +14,7 @@ interface props {
 const FileInput = ({ initialFileName, downloadLink, name, label, required, accept, changeHandler }: props) => {
     const [filename, setFileName] = useState<string>()
     const [id] = useState(name + '-' + Date.now().toString(36))
-    const [showDownload, setShowDownload] = useState(initialFileName != undefined)
+    const [showDownload, setShowDownload] = useState(downloadLink != undefined)
     useEffect(() => {
         setFileName(initialFileName)
     }, [initialFileName])
@@ -45,9 +44,9 @@ const FileInput = ({ initialFileName, downloadLink, name, label, required, accep
                 </svg>
             </div>
             {
-                (showDownload && initialFileName) &&
+                showDownload &&
                 <a href={downloadLink} target='_blank'>
-                    <svg className='fileinput_wrapper-icon download' onClick={() => API.getFile(initialFileName)}>
+                    <svg className='fileinput_wrapper-icon download'>
                         <use xlinkHref={Icons + "#download"} />
                     </svg>
                 </a>

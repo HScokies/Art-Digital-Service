@@ -47,6 +47,15 @@ const DashboardPage = () => {
                     to: 'dashboard/staff'
                 })
         }
+        if (permissions?.utilsAccess){
+            elements.push(
+                {
+                    iconId: '#other',
+                    title: 'Прочее',
+                    to: 'dashboard/utils'
+                }
+            )
+        }
         setNavElements(elements)
     }, [permissions])
 

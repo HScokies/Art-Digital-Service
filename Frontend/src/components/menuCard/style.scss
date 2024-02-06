@@ -1,0 +1,33 @@
+.menuCard {
+    &-wrapper {
+        min-width: 560px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: calc(50% - 1em);
+        border: 0.1vmin solid #e6e8eb;
+        padding: 1em 1.25em;
+        font-size: 1.3em;
+        cursor: default;
+    }
+
+    &-iconwrapper {
+        display: inline-flex;
+        gap: 1em;
+
+        svg {
+            aspect-ratio: 1;
+            height: 1.3em;
+            stroke: #b1b3b6;
+            transition: all ease-in-out 0.3s;
+            cursor: pointer;
+            &:hover{
+                stroke: black;
+            }
+            &.drop:hover {
+                stroke: #DE3341;
+
+            }
+        }
+    }
+}

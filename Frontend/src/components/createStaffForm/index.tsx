@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import { IRole } from "src/interfaces"
+import { ICreateForm, IRole } from "src/interfaces"
 import { Option } from "src/components/combobox"
 import { API, Validator } from "src/services";
 import { Input, Combobox } from "components/index";
 
-const CreateStaffForm = () => {
+const CreateStaffForm = ({formId}: ICreateForm) => {
     const [roleOptions, setRoles] = useState<Option[]>([]);
 
     useEffect(() => {
@@ -24,15 +24,20 @@ const CreateStaffForm = () => {
         fetchRoles();
     }, [])
 
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        await API.createStaff(new FormData(e.target as HTMLFormElement))
+    }
+
     return(
-        <>
+        <form id={formId} onSubmit={(e) => handleSubmit(e)}>
         <Input label='Адрес электронной почты' type='email' name='email'  validator={Validator.validateEmail} required />
         <Input label='Пароль' type='password' name='password'  validator={Validator.validatePassword} required />
         <Input label='Фамилия сотрудника' type='text' name='lastName'  maxlength={20} required />
         <Input label='Имя сотрудника' type='text' name='firstName'  maxlength={20} required />
         <Input label='Отчество сотрудника' type='text' name='patronymic'  maxlength={20} required />
         <Combobox name="roleId" label='Роль' options={roleOptions} />
-        </>
+        </form>
     )
 }
 export default CreateStaffForm

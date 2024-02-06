@@ -61,10 +61,9 @@ const UsersDashboardPage = () => {
         dataSource={API.getUsers}
         exportProvider={API.exportParticipants}
         deleteProvider={permissions?.deleteUsers? API.deleteUsers : undefined}
-        createProvider={API.createUser}
-        createForm={permissions?.createUsers ? CreateUserForm : undefined}
+        CreateForm={permissions?.createUsers ? CreateUserForm: undefined}
         updateProvider={updateProvider()}
-        updateForm={updateForm()}//
+        UpdateForm={updateForm()}
         rowsPerPageOptions={new Set([5, 10, 15, 20, 25])}
         columns={[
             {

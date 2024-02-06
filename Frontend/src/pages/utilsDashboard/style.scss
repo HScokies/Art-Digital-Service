@@ -1,0 +1,15 @@
+.utils {
+    &_wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 1em;
+    }
+
+    &-menu{
+        position: relative;
+        margin-left: auto;
+        height: 100%;    
+        width: 50%;
+        width: 750px;
+    }
+}

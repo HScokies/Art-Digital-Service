@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { IData, orderBy, param } from "src/components/dataGridView/interfaces"
-import ProfileMock from './mock/userProfileMock.json'
 import { IParticipantStatus, IUserData } from "src/interfaces"
 
 
@@ -112,16 +111,26 @@ export class API{
         } else alert("Участник успешно обновлен!")
     }
 
+    static rateUser = async(id: number, data: FormData) => {
+        const url = new URL(`participants/${id}`, API.URL);
+        const response = await this.api.patch(url.toString(), data);
+        if (response.status != 204){
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else alert("Участник успешно обновлен!")
+    } 
+
     static getUserStatuses = async(): Promise<IParticipantStatus[]> => {
         const url = new URL("participants/statuses", API.URL);
 
         return (await this.api.get(url.toString())).data;
     }
 
-    static rateUser = async(id: number, data: FormData) => {
-        const url = new URL(`participants/${id}`, API.URL);
-        await this.api.patch(url.toString(), data);
-    } 
+    static getParticipantStatuses = async(): Promise<IParticipantStatus[]> => {
+        const url = new URL("participants/statuses-participant", API.URL);
+
+        return (await this.api.get(url.toString())).data;
+    }
     //#endregion
 
     //#region Cases dashboard
@@ -277,7 +286,23 @@ export class API{
         const url = new URL("participants/profile", API.URL)
         return await this.api.get(url.toString());
     }
-    static getProfileData = ()=> {
-        return ProfileMock
+
+    //todo
+    static appendLegalFiles = async(data: FormData) =>{
+        const url = new URL("files/legal", API.URL)
+        const response = await this.api.patch(url.toString(), data)
+        if (response.status != 204) {
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else alert("Файлы успешно обновлены!")
+    }
+
+    static getCertificateConfig = async() =>{
+        const url = new URL("files/certificate-config", API.URL);
+        return this.api.get(url.toString())
+
+    }
+    static appendCertificateSettings = async(data: FormData) =>{
+        alert('PATCH: appendCertificateSettings')
     }
 }

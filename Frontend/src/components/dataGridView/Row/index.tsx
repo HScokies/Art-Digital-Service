@@ -4,11 +4,10 @@ import { IRow } from "../interfaces";
 interface props {
     row: IRow,
     setHighlightedRows: React.Dispatch<React.SetStateAction<Set<number>>>,
-    setCurrentRowId: React.Dispatch<React.SetStateAction<number>>
+    onExpand?: () => void
 }
 
-const DatagridRow = ({ row, setHighlightedRows, setCurrentRowId }: props) => {
-    const updateDialog = document.getElementById("dialog-update") as HTMLDialogElement
+const DatagridRow = ({ row, setHighlightedRows, onExpand }: props) => {
 
     const toggleHighlighted = (isChecked: boolean) => {
         !isChecked ?
@@ -18,16 +17,20 @@ const DatagridRow = ({ row, setHighlightedRows, setCurrentRowId }: props) => {
             }) : setHighlightedRows(rows => new Set(rows.add(row.id)))
     }
 
+
     return (
         <tr className='datagrid-row' id={`rowid-${row.id}`}>
             <td className="datagrid-cell">
                 <div className="controll">
                     <input onChange={(e) => toggleHighlighted(e.target.checked)} type='checkbox' />
-                    <button className='datagrid-expand' onClick={() => {setCurrentRowId(row.id); updateDialog.showModal()}}>
+                    {
+                        onExpand&&
+                        <button className='datagrid-expand' onClick={() => onExpand()}>
                         <svg>
                             <use xlinkHref={Icons + "#expand"} />
                         </svg>
                     </button>
+                    }
                 </div>
             </td>
             {

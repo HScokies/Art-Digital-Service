@@ -1,0 +1,36 @@
+.menu_dialog {
+    &-wrapper{
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+    }
+    &-title {
+        width: 100%;
+        background-color: #f1f3f5;
+        font-size: 2em;
+        padding: 1em 1.5em;
+        font-weight: 500;
+        border-bottom: 0.1vmin solid #e6e8eb;
+    }
+    &-content {
+        padding: 1.3em 1.5em;   
+    }
+
+    &-buttons {
+        border-top: 0.1vmin solid #e6e8eb;
+        margin-top: auto;
+        display: flex;        
+        justify-content: space-evenly;
+        padding: 1.5em 1.25em;
+        gap: 1em;
+        & .button{
+            text-transform: capitalize;
+        }
+    }
+    &-filebuttons {
+        width: 100%;
+        display: inline-flex;
+        justify-content: space-evenly;
+        margin-bottom: 1.3em;
+    }
+}

@@ -62,7 +62,9 @@ export interface IPermissions{
     readCases: boolean,
     createCases: boolean,
     updateCases: boolean,
-    deleteCases: boolean
+    deleteCases: boolean,
+
+    utilsAccess: boolean
 }
 
 
@@ -96,4 +98,19 @@ export default interface IProfileStatus{
 export interface IRole{
     id: number,
     name: string
+}
+
+
+export interface ICreateForm{
+    formId: string
+}
+export interface IUpdateForm extends ICreateForm{
+    entityId: number
+}
+
+export interface ICertificateConfig{
+    paddingLeft: number,
+    paddingTop: number,
+    paddingRight: number,
+    paddingBottom: number
 }

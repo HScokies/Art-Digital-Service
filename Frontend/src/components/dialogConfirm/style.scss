@@ -1,0 +1,26 @@
+.confirm_dialog{
+    &-wrapper{
+        background-color: #f8f9fa;
+    }
+    &-title{
+        width: 100%;
+        background-color: #f1f3f5;
+        font-size: 1.5em;
+        padding: 1em 1.5em;
+        font-weight: 500;
+        border-bottom: 0.1vmin solid #e6e8eb;
+    }
+    &-content{
+        border-bottom: 0.1vmin solid #e6e8eb;
+        width: 100%;
+        font-size: 1.3em;
+        padding: 1.3em 1.5em;
+    }
+    &-buttons{
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5em;
+        padding: 1em 1.5em;
+    }
+}

@@ -36,10 +36,8 @@ const StaffDashboardPage = () => {
             dataSource={API.getStaff}
             exportProvider={API.exportStaff}
             deleteProvider={permissions?.deleteStaff ? API.deleteStaff : undefined}
-            updateProvider={API.updateStaff}
-            createProvider={API.createStaff}
-            createForm={permissions?.createStaff? CreateStaffForm : undefined}
-            updateForm={permissions?.updateStaff? UpdateStaffForm : undefined}
+            CreateForm={permissions?.createStaff? CreateStaffForm : undefined}
+            UpdateForm={permissions?.updateStaff? UpdateStaffForm : undefined}
             rowsPerPageOptions={new Set([5, 10, 15, 20, 25])}
             columns={[
                 {

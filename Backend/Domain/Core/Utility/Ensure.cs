@@ -65,6 +65,11 @@ namespace Domain.Core.Utility
             return MimeType == "application/pdf";
         }
 
+        public static bool isValidLegalMimeType(string MimeType)
+        {
+            return MimeType == "application/pdf";
+        }
+
         public static bool isValidFileSize(long size)
         {
             const int MegaByte = 1_048_576;

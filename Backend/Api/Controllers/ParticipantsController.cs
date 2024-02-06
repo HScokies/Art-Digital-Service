@@ -54,6 +54,18 @@ namespace Api.Controllers
             return Ok(statuses);
         }
 
+        [HttpGet("statuses-participant")]
+        public IActionResult GetParticipantOnlyStatuses()
+        {
+            List<ParticipantStatusResponse> statuses = new()
+            {
+                new() { name = "На рассмотрении", id = Roles.ParticipantsStatus.awaitingResults },
+                new() { name = "Приглашен на второй этап", id = Roles.ParticipantsStatus.invited },
+                new() { name = "Выбыл", id = Roles.ParticipantsStatus.droppedOut }
+            };
+            return Ok(statuses);
+        }
+
         [HttpGet, Authorize(Roles = Roles.Permissions.readUsers)]
         public async Task<IActionResult> GetParticipantsList(CancellationToken cancellationToken, int offset = 0, int take = 5, bool asc = true, bool hasScore = true, bool noScore = true, string? orderBy = null, string? search = null, [FromQuery] int[]? excludeType = null, [FromQuery] int[]? excludeCase = null)
         {

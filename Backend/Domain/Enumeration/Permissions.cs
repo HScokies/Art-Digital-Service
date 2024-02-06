@@ -19,6 +19,8 @@
             public const string readCases = "nqIz";
             public const string updateCases = "MTBp";
             public const string deleteCases = "BSeT";
+
+            public const string utilsAccess = "qUX1";
         }
 
         public static class ParticipantsStatus 

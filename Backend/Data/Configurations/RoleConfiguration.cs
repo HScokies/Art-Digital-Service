@@ -35,7 +35,8 @@ namespace Data.Configurations
                             Roles.Permissions.updateCases,
                             Roles.Permissions.deleteUsers,
                             Roles.Permissions.deleteStaff,
-                            Roles.Permissions.deleteCases
+                            Roles.Permissions.deleteCases,
+                            Roles.Permissions.utilsAccess
                         } 
                     },
                     new StaffRoleDto()

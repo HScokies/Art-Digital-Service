@@ -1,11 +1,12 @@
 ﻿using Contracts.File;
 using Domain.Core.Primitives;
+using Domain.Core.Utility;
 using Domain.Enumeration;
+using Domain.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using MimeDetective;
 using System.Diagnostics;
-using System.IO;
+using System.Text.Json;
 
 namespace Infrastructure.Files
 {
@@ -92,6 +93,24 @@ namespace Infrastructure.Files
             }            
         }
 
+        private async Task<Result<string>> UploadFileAsync(string directory, IFormFile file, string fileName, CancellationToken cancellationToken)
+        {
+            try
+            {
+                string path = Path.Combine(directory, fileName);
+                await using (FileStream fs = new(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(fs, cancellationToken);
+                }
+                return new Result<string>(path);
+            }
+            catch (Exception ex)
+            {
+                Debug.Fail(ex.Message);
+                return new Result<string>(CommonErrors.Unknown);
+            }
+        }
+
         private Result<bool> DeleteFile(string directory, string fileName)
         {
             try
@@ -140,6 +159,65 @@ namespace Infrastructure.Files
             {
                 fileStream = streamResult.value,
                 contentType = "application/pdf",
+            };
+
+            return new Result<FileResponse>(fileData);
+        }
+
+        private async Task<Result<string>> UploadLegalFileAsync(IFormFile file, string fileName, CancellationToken cancellationToken) => await UploadFileAsync(legalFiles, file, fileName, cancellationToken);
+
+        public async Task<Result<string>> TryUploadFileAsync(IFormFile file, string fileName, CancellationToken cancellationToken)
+        {
+            var MimeResult = getMimeType(file);
+            if (!MimeResult.isSuccess)
+                return MimeResult;
+
+            if (!Ensure.isValidLegalMimeType(MimeResult.value))
+                return new Result<string>(CommonErrors.File.UnsupportedMediaType);
+
+            return await UploadLegalFileAsync(file, fileName, cancellationToken);
+        }
+
+        public async Task<Result<CertificateModel>> GetCertificateConfigAsync(CancellationToken cancellationToken)
+        {
+            string path = Path.Combine(certificateFiles, "certificatecfg.json");
+            try
+            {
+                using FileStream fs = new FileStream(path, FileMode.Open);
+                CertificateModel? config = await JsonSerializer.DeserializeAsync<CertificateModel>(fs,cancellationToken: cancellationToken);
+                return config is null? new Result<CertificateModel>(CommonErrors.Unknown) : new Result<CertificateModel>(config);
+            }
+            catch (FileNotFoundException)
+            {
+                return new Result<CertificateModel>(CommonErrors.File.NotFound);
+            }
+            catch(Exception ex)
+            {
+                Debug.Fail(ex.Message);
+                return new Result<CertificateModel>(CommonErrors.Unknown);
+            }
+            
+        }
+
+        public async Task<Result<FileResponse>> DownloadCertificateBlank(CancellationToken cancellationToken)
+        {
+            var configResult = await GetCertificateConfigAsync(cancellationToken);
+            if (!configResult.isSuccess)
+                return new Result<FileResponse>(configResult.error);
+
+            var streamResult = await DownloadFileAsync(certificateFiles, configResult.value.blankFilename, cancellationToken);
+            if (!streamResult.isSuccess)
+                return new Result<FileResponse>(streamResult.error);
+
+            var mimeResult = getMimeType(streamResult.value);
+            if (!mimeResult.isSuccess)
+                return new Result<FileResponse>(mimeResult.error);
+            
+            var fileData = new FileResponse()
+            {
+                fileStream = streamResult.value,
+                contentType = mimeResult.value,
+                fileName = "blank"
             };
 
             return new Result<FileResponse>(fileData);

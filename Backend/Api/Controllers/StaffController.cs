@@ -80,6 +80,8 @@ namespace Api.Controllers
                 {"createCases", roles.Any(r => r.Value == Roles.Permissions.createCases) },
                 {"updateCases", roles.Any(r => r.Value == Roles.Permissions.updateCases) },
                 {"deleteCases", roles.Any(r => r.Value == Roles.Permissions.deleteCases) },
+
+                {"utilsAccess", roles.Any(r => r.Value == Roles.Permissions.utilsAccess) }
             };
 
             return Ok(permissions);

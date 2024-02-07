@@ -16,5 +16,7 @@ namespace Data.Interfaces
         Task<bool> isAdult(int userId, CancellationToken cancellationToken);
         Task<GetProfileResponse?> GetProfileAsync(int userId, CancellationToken cancellationToken);
         Task DropAsync(ParticipantDto[] participants, CancellationToken cancellationToken);
+
+        Task<GetCertificateRequest?> GetCertificateContentAsync(int userId, CancellationToken cancellationToken);
     }
 }

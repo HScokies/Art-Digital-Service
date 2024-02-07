@@ -1,4 +1,5 @@
 ﻿using Domain.Enumeration;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 
@@ -11,6 +12,7 @@ namespace Domain.Entities
         public int typeId { get; set; }
         public int? caseId { get; set; }
         public string status { get; set; } = Roles.ParticipantsStatus.justRegistered;
+        [MaxLength(62)]
         public string? parentName { get; set; } = null;
         public string phone { get; set; } = string.Empty;
         public string city { get; set; } = string.Empty;

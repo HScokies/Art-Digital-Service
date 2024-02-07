@@ -1,10 +1,13 @@
 ﻿using Contracts.File;
+using Contracts.Participant;
 using Domain.Core.Primitives;
-using Domain.Core.Utility;
 using Domain.Enumeration;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using MimeDetective;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -164,28 +167,18 @@ namespace Infrastructure.Files
             return new Result<FileResponse>(fileData);
         }
 
-        private async Task<Result<string>> UploadLegalFileAsync(IFormFile file, string fileName, CancellationToken cancellationToken) => await UploadFileAsync(legalFiles, file, fileName, cancellationToken);
-
-        public async Task<Result<string>> TryUploadFileAsync(IFormFile file, string fileName, CancellationToken cancellationToken)
-        {
-            var MimeResult = getMimeType(file);
-            if (!MimeResult.isSuccess)
-                return MimeResult;
-
-            if (!Ensure.isValidLegalMimeType(MimeResult.value))
-                return new Result<string>(CommonErrors.File.UnsupportedMediaType);
-
-            return await UploadLegalFileAsync(file, fileName, cancellationToken);
-        }
+        public async Task<Result<string>> UploadLegalFileAsync(IFormFile file, string fileName, CancellationToken cancellationToken) => await UploadFileAsync(legalFiles, file, fileName, cancellationToken);
 
         public async Task<Result<CertificateModel>> GetCertificateConfigAsync(CancellationToken cancellationToken)
         {
             string path = Path.Combine(certificateFiles, "certificatecfg.json");
             try
             {
-                using FileStream fs = new FileStream(path, FileMode.Open);
-                CertificateModel? config = await JsonSerializer.DeserializeAsync<CertificateModel>(fs,cancellationToken: cancellationToken);
-                return config is null? new Result<CertificateModel>(CommonErrors.Unknown) : new Result<CertificateModel>(config);
+                using (FileStream fs = new FileStream(path, FileMode.Open))
+                {
+                    CertificateModel? config = await JsonSerializer.DeserializeAsync<CertificateModel>(fs, cancellationToken: cancellationToken);
+                    return config is null ? new Result<CertificateModel>(CommonErrors.Unknown) : new Result<CertificateModel>(config);
+                }
             }
             catch (FileNotFoundException)
             {
@@ -199,13 +192,10 @@ namespace Infrastructure.Files
             
         }
 
-        public async Task<Result<FileResponse>> DownloadCertificateBlank(CancellationToken cancellationToken)
+        public async Task<Result<FileResponse>> DownloadCertificateBlankAsync(CancellationToken cancellationToken)
         {
-            var configResult = await GetCertificateConfigAsync(cancellationToken);
-            if (!configResult.isSuccess)
-                return new Result<FileResponse>(configResult.error);
 
-            var streamResult = await DownloadFileAsync(certificateFiles, configResult.value.blankFilename, cancellationToken);
+            var streamResult = await DownloadFileAsync(certificateFiles, "blank", cancellationToken);
             if (!streamResult.isSuccess)
                 return new Result<FileResponse>(streamResult.error);
 
@@ -221,6 +211,60 @@ namespace Infrastructure.Files
             };
 
             return new Result<FileResponse>(fileData);
+        }
+
+        public async Task<Result<string>> UploadCertificateBlankAsync(IFormFile file, CancellationToken cancellationToken) => await UploadFileAsync(certificateFiles, file, "blank", cancellationToken);
+
+        public async Task<Result<bool>> UploadCertificateConfigAsync(AppendCertificateRequest request, CancellationToken cancellationToken)
+        {
+            string path = Path.Combine(certificateFiles, "certificatecfg.json");
+            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                CertificateModel config = new()
+                {
+                    paddingLeft = request.paddingLeft,
+                    paddingTop = request.paddingTop,
+                    paddingRight = request.paddingRight,
+                    paddingBottom = request.paddingBottom,
+                };
+                await JsonSerializer.SerializeAsync<CertificateModel>(fs, config, cancellationToken: cancellationToken);
+            }
+            return new Result<bool>();                
+        }
+
+        public FileResponse DownloadCertificate(GetCertificateRequest request)
+        {
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            string blankFilePath = Path.Combine(certificateFiles, "blank");
+            
+            MemoryStream memoryStream = new MemoryStream();
+            Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Background().Image(blankFilePath).FitArea();
+                    page.Size(PageSizes.A4.Landscape());
+                    page.Content().DefaultTextStyle(style => style.FontFamily(Fonts.Calibri).FontSize(20)).PaddingLeft(50).PaddingTop(45).PaddingRight(200).Text(t =>
+                    {
+                        t.Line("Сертификат").FontSize(50).ExtraBlack().LineHeight(1);
+                        t.Line("подтверждает, что");
+                        t.Line(request.participantName).FontSize(40).Black();
+                        t.Line("Принял(а) участие в олимпиаде");
+                        t.Line("предпрофессиональных навыков «Art.Digital.Service»");
+                        t.Span("по направлению");
+                        t.Span($"«{request.caseName}»");
+                    });
+                });
+            }).GeneratePdf(memoryStream);
+            memoryStream.Position = 0;
+
+            return new FileResponse()
+            {
+                fileStream = memoryStream,
+                contentType = "application/pdf",
+                fileName = "Сертификат участника олимпиады"
+            };
         }
     }
 }

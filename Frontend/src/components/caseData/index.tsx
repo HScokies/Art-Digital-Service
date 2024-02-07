@@ -62,7 +62,7 @@ const CaseData = ({ userStatus, caseData, isPreview = false }: props) => {
                             <p className='profilepage_status-text'>{status.text}</p>
                             {
                                 status.download &&
-                                <a href="#" className='profilepage_status-text link'>
+                                <a href={API.URL+"participants/certificate"} target="_blank" className='profilepage_status-text link'>
                                     Скачать сертификат участника
                                 </a>
                             }

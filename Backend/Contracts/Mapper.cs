@@ -19,6 +19,9 @@ namespace Contracts
 
         public static ParticipantDto appendPersonalData(this ParticipantDto participant, PersonalDataAppendRequest request)
         {
+            if (request.parentName is not null)
+                participant.parentName = request.parentName;
+
             participant.User.firstName = request.firstName;
             participant.User.lastName = request.lastName;
             participant.User.patronymic = request.patronymic;

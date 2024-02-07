@@ -1,4 +1,5 @@
 ﻿using Api.Controllers.Base;
+using Application.Services.File;
 using Application.Services.Participant;
 using Contracts.File;
 using Domain.Core.Primitives;
@@ -14,11 +15,13 @@ namespace Api.Controllers
     {
         private readonly IParticipantService participantService;
         private readonly IFilesProvider filesProvider;
+        private readonly IFileService fileService;
 
-        public FilesController(ILogger<ApiController> logger, IParticipantService participantService, IFilesProvider filesProvider) : base(logger)
+        public FilesController(ILogger<ApiController> logger, IParticipantService participantService, IFilesProvider filesProvider, IFileService fileService) : base(logger)
         {
             this.participantService = participantService;
             this.filesProvider = filesProvider;
+            this.fileService = fileService;
         }
 
         [HttpGet("user-uploaded/{filename}"), Authorize(Roles = Roles.Permissions.readUsers)]
@@ -46,19 +49,7 @@ namespace Api.Controllers
         [HttpPatch("legal"), Authorize(Roles = Roles.Permissions.utilsAccess)]
         public async Task<IActionResult> AppendLegalFiles([FromForm] AppendLegalFilesRequest request, CancellationToken cancellationToken)
         {
-
-            if (request.regulations is not null)
-                await filesProvider.TryUploadFileAsync(request.regulations, "regulations.pdf", cancellationToken);
-            
-            if (request.privacyPolicy is not null)
-                await filesProvider.TryUploadFileAsync(request.privacyPolicy, "privacy_policy.pdf", cancellationToken);
-
-            if (request.youthConsent is not null)
-                await filesProvider.TryUploadFileAsync(request.youthConsent, "y_consent.pdf", cancellationToken);
-
-            if (request.adultConsent is not null)
-                await filesProvider.TryUploadFileAsync(request.adultConsent, "a_consent.pdf", cancellationToken);
-
+            await fileService.UploadLegalFilesAsync(request, cancellationToken);
             return NoContent();
         }
 
@@ -68,14 +59,19 @@ namespace Api.Controllers
             var Result = await filesProvider.GetCertificateConfigAsync(cancellationToken);
             return Result.isSuccess ? Ok(Result.value) : Problem(Result.error);
         }
-
         [HttpGet("certificate"), Authorize(Roles = Roles.Permissions.utilsAccess)]
         public async Task<IActionResult> GetCertificateBlank(CancellationToken cancellationToken)
         {
-            var Result = await filesProvider.DownloadCertificateBlank(cancellationToken);
+            var Result = await filesProvider.DownloadCertificateBlankAsync(cancellationToken);
             if (!Result.isSuccess)
                 return Problem(Result.error);
             return File(Result.value.fileStream, Result.value.contentType, Result.value.fileName);
+        }
+        [HttpPatch("certificate"), Authorize(Roles = Roles.Permissions.utilsAccess)]
+        public async Task<IActionResult> AppendCertificate(AppendCertificateRequest request, CancellationToken cancellationToken)
+        {
+            var res = await fileService.UploadCertificate(request, cancellationToken);
+            return res.isSuccess? NoContent() : Problem(res.error);
         }
     }
 }

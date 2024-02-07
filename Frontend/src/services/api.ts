@@ -303,6 +303,11 @@ export class API{
 
     }
     static appendCertificateSettings = async(data: FormData) =>{
-        alert('PATCH: appendCertificateSettings')
+        const url = new URL("files/certificate", API.URL);
+        const response = await this.api.patch(url.toString(), data)
+        if (response.status != 204) {
+            alert("Произошла ошибка! Проверьте консоль браузера для деталей");
+            console.error(response)
+        } else alert("Конфигурация сертификата успешно обновлена!")
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Services.BackgroundWorkers;
 using Application.Services.Case;
+using Application.Services.File;
 using Application.Services.Participant;
 using Application.Services.Staff;
 using Application.Services.User;
@@ -17,6 +18,7 @@ namespace Application
             services.AddScoped<IParticipantService, ParticipantService>();
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<ICaseService, CaseService>();
+            services.AddScoped<IFileService, FileService>();
 
             return services;
         }

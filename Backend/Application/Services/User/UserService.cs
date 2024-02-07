@@ -61,11 +61,11 @@ namespace Application.Services.User
 
             var createdParticipant = await participantRepository.CreateAsync(ParticipantModel, cancellationToken);
 
-            await jwtProvider.IssueRefreshTokenAsync(createdParticipant.id, cancellationToken);
-            jwtProvider.IssueUserToken(createdParticipant.id, Roles.ParticipantsStatus.justRegistered);
+            await jwtProvider.IssueRefreshTokenAsync(createdParticipant.userId, cancellationToken);
+            jwtProvider.IssueUserToken(createdParticipant.userId, Roles.ParticipantsStatus.justRegistered);
 
 
-            return new Result<int>(createdParticipant.id);
+            return new Result<int>(createdParticipant.userId);
         }
 
         public async Task<Result<string>> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken)

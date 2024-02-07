@@ -70,6 +70,12 @@ namespace Domain.Core.Utility
             return MimeType == "application/pdf";
         }
 
+        public static bool isValidCertificateBlankMimeType(string MimeType)
+        {
+            HashSet<string> validMimeTypes = ["image/jpeg", "image/png"];
+            return validMimeTypes.Contains(MimeType);
+        }
+
         public static bool isValidFileSize(long size)
         {
             const int MegaByte = 1_048_576;

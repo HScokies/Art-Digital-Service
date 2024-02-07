@@ -28,7 +28,6 @@ const UtilsDashboardPage = () => {
             <div className="utils_wrapper">
                 <MenuCard title="Юридические документы" onExpand={() => openMenu("Юридические документы","update-legal",<LegalDocumentsForm/>)}/>
                 <MenuCard title="Настройки сертификата" onExpand={() => openMenu("Настройки сертификата", "update-certificate", <CertificateForm/>)}/>
-                <MenuCard title="Автонабор участников следующего этапа" onExpand={() => alert("")}/>
             </div>
             <dialog ref={dialog} className="utils-menu">
                 <DialogMenu title={title} dialog={dialog.current} form={form}>

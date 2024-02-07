@@ -3,6 +3,7 @@
     public sealed class PersonalDataAppendRequest
     {
 
+        public string? parentName { get; set; } = null;
         public string firstName { get; set; } = null!;
         public string lastName { get; set; } = null!;
         public string patronymic { get; set; } = null!;

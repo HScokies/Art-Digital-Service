@@ -69,8 +69,8 @@ const CreateUserForm = ({formId}: ICreateForm) => {
             <Combobox name="typeId" label='Тип учетной записи' options={userTypeOptions} changeHandler={toggleUserType} />
             {!isAdult && <Input label='Полное имя родителя' type='text' name='parentName' required />}
             <Input onChange={PhoneChange} defaultValue="+7 " maxlength={13} label='Телефон' type='tel' name='phone'  validator={Validator.validatePhoneNumber} required />
-            <Input label='Фамилия участника' type='text' name='lastName'  maxlength={20} required />
-            <Input label='Имя участника' type='text' name='firstName'  maxlength={20} required />
+            <Input label='Фамилия участника' type='text' name='lastName'  maxlength={17} required />
+            <Input label='Имя участника' type='text' name='firstName'  maxlength={17} required />
             <Input label='Отчество участника' type='text' name='patronymic'  maxlength={20} required />
             <Input datalist="Cities" label='Город участника' type='text' name='city' required />
             <datalist id="Cities">

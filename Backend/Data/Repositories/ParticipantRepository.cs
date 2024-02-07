@@ -132,5 +132,11 @@ namespace Data.Repositories
             Case = p.Case
 
         }).FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<GetCertificateRequest?> GetCertificateContentAsync(int userId, CancellationToken cancellationToken) => await ctx.participants.Where(p => p.userId == userId).Select(p => new GetCertificateRequest()
+        {
+            participantName = p.User.firstName + " " + p.User.lastName,
+            caseName = p.Case.name
+        }).FirstOrDefaultAsync(cancellationToken);
     }
 }

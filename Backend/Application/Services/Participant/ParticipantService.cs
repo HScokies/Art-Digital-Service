@@ -340,5 +340,14 @@ namespace Application.Services.Participant
             };
             return new Result<GetProfileResponse>(res);
         }
+
+        public async Task<Result<FileResponse>> GetCertificateAsync(int userId, CancellationToken cancellationToken)
+        {
+            var CertificateDataResult = await participantRepository.GetCertificateContentAsync(userId, cancellationToken);
+            if (CertificateDataResult is null)
+                return new Result<FileResponse>(CommonErrors.User.NotFound);
+
+            return new Result<FileResponse>(filesProvider.DownloadCertificate(CertificateDataResult));
+        }
     }
 }

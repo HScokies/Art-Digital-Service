@@ -192,5 +192,17 @@ namespace Api.Controllers
             var Result = await participantService.GetProfileAsync(userIdResult.value, cancellationToken);
             return Result.isSuccess? Ok(Result.value) : Problem(Result.error);
         }
+
+        [HttpGet("certificate"), Authorize(Roles = $"{Roles.ParticipantsStatus.invited},{Roles.ParticipantsStatus.droppedOut}")]
+        public async Task<IActionResult> Certificate(CancellationToken cancellationToken)
+        {
+            var userIdResult = User.GetUserId();
+            if (!userIdResult.isSuccess) return Problem(userIdResult.error);
+
+            var certificateResult = await participantService.GetCertificateAsync(userIdResult.value, cancellationToken);
+            if (!certificateResult.isSuccess) return Problem(certificateResult.error);
+            var certificate = certificateResult.value;
+            return File(certificate.fileStream, certificate.contentType, certificate.fileName);
+        }
     }
 }

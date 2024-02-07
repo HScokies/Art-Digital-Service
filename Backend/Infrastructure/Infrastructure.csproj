@@ -7,12 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Files\Uploads\**" />
+    <EmbeddedResource Remove="Files\Uploads\**" />
+    <None Remove="Files\Uploads\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="7.3.0.1" />
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
     <PackageReference Include="Mime-Detective" Version="23.10.1" />
     <PackageReference Include="MimeKit" Version="4.3.0" />
     <PackageReference Include="QuestPDF" Version="2023.12.4" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,10 +36,18 @@
     <None Update="Emails\Templates\welcome-message.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Files\Uploads\" />
+    <None Update="Files\Fonts\calibri.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\Fonts\CalibriRegular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\Fonts\opensans.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\Fonts\calibri.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 	
 

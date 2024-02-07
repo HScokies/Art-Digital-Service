@@ -29,6 +29,11 @@ namespace Infrastructure.Files
             Directory.CreateDirectory(userFiles);
             Directory.CreateDirectory(legalFiles);
             Directory.CreateDirectory(certificateFiles);
+
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            string fontPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "Fonts", "calibri.ttf");
+            QuestPDF.Drawing.FontManager.RegisterFontWithCustomName("calibriTTF", File.OpenRead(fontPath));
         }
         private async Task<Result<MemoryStream>> DownloadFileAsync(string directory, string fileName, CancellationToken cancellationToken)
         {
@@ -233,9 +238,7 @@ namespace Infrastructure.Files
         }
 
         public FileResponse DownloadCertificate(GetCertificateRequest request)
-        {
-            QuestPDF.Settings.License = LicenseType.Community;
-
+        {            
             string blankFilePath = Path.Combine(certificateFiles, "blank");
             
             MemoryStream memoryStream = new MemoryStream();
@@ -245,7 +248,7 @@ namespace Infrastructure.Files
                 {
                     page.Background().Image(blankFilePath).FitArea();
                     page.Size(PageSizes.A4.Landscape());
-                    page.Content().DefaultTextStyle(style => style.FontFamily(Fonts.Calibri).FontSize(20)).PaddingLeft(50).PaddingTop(45).PaddingRight(200).Text(t =>
+                    page.Content().DefaultTextStyle(style => style.FontFamily("calibriTTF").FontSize(20)).PaddingLeft(50).PaddingTop(45).PaddingRight(200).Text(t =>
                     {
                         t.Line("Сертификат").FontSize(50).ExtraBlack().LineHeight(1);
                         t.Line("подтверждает, что");

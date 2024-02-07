@@ -1,0 +1,47 @@
+version: '3.4'
+networks:
+  api:
+
+services:
+    database:
+        container_name: ADS-Database
+        image: postgres
+        restart: always
+        ports:
+            - '41400:5432'
+        env_file:
+          - path: ./postgres.env
+            required: true
+        volumes:
+            - ads:/src/data/database
+        networks:
+            - api
+
+    backend:
+        container_name: ADS-Backend
+        image: ${DOCKER_REGISTRY-}ads-backend
+        ports:          
+            - '41401:8080'
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            - database
+        environment:
+            - APP_URL=http://localhost:5174
+        env_file:
+            - path: ./postgres.env
+              required: true
+            - path: ./database.env
+              required: false
+            - path: ./jsonwebtoken.env
+              required: true      
+            - path: ./smtp.env
+              required: true            
+        volumes:
+            - ads:/src/app
+        networks:
+            - api
+
+volumes:
+    ads:

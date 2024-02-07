@@ -10,11 +10,11 @@ namespace Data
     {
         public static IServiceCollection AddDbContext(this IServiceCollection services)
         {
-            var PG_HOST = Environment.GetEnvironmentVariable("PG_HOST") ?? "localhost";
-            var PG_PORT = Environment.GetEnvironmentVariable("PG_PORT") ?? "5432";
-            var PG_DATABASE = Environment.GetEnvironmentVariable("PG_DATABASE") ?? "devdb";
-            var PG_USER = Environment.GetEnvironmentVariable("PG_USER") ?? "SU";
-            var PG_PASSWORD = Environment.GetEnvironmentVariable("PG_PASSWORD") ?? "30LNJUUp4P";            
+            var PG_HOST = Environment.GetEnvironmentVariable("POSTGRES_HOST") ?? "localhost";
+            var PG_PORT = Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? "5432";
+            var PG_DATABASE = Environment.GetEnvironmentVariable("POSTGRES_MAIN_DB") ?? "devdb";
+            var PG_USER = Environment.GetEnvironmentVariable("POSTGRES_USER") ?? "SU";
+            var PG_PASSWORD = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "30LNJUUp4P";            
 
             services.AddDbContext<AppDbContext>(options =>       
                 options.UseNpgsql($"""

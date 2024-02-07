@@ -6,16 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>0e5bc3b0-1aef-478f-b28e-9af19c7c18da</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-  </ItemGroup>
+  </PropertyGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />

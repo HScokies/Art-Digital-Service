@@ -38,6 +38,8 @@ services:
   
   ADS-backend:
     image: ${DOCKER_REGISTRY-}ads-backend
+    ports:
+      - '41401:8080'
     depends_on:
       - nginx-proxy
       - ADS-database
@@ -51,6 +53,8 @@ services:
 
   ADS-frontend:
     image: ${DOCKER_REGISTRY-}ads-frontend
+    ports:
+      - '41402:80'
     depends_on:
       - nginx-proxy
       - ADS-backend

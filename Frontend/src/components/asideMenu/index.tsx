@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './style.scss'
 import Logo from 'images/logo.webp'
 import Icons from 'images/icons.svg'
@@ -22,7 +21,6 @@ const AsideMenu = ({ items }: props) => {
     const handleLogout = async() => {
         const response = await API.logout();
         if (response.status != 204) return;
-        localStorage.removeItem("type");
         setUserType();
     }
     

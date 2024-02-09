@@ -2,9 +2,9 @@
 {
     public class CertificateModel
     {
-        public double paddingLeft {  get; set; }
-        public double paddingTop { get; set; }
-        public double paddingRight { get; set; }
-        public double paddingBottom { get; set; }
+        public float paddingLeft {  get; set; }
+        public float paddingTop { get; set; }
+        public float paddingRight { get; set; }
+        public float paddingBottom { get; set; }
     }
 }

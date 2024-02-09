@@ -1,6 +1,6 @@
 import './style.scss'
 import Icons from 'images/icons.svg'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 interface props {
     setRowsPerPage: React.Dispatch<React.SetStateAction<number>>,

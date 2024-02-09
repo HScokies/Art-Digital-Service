@@ -237,8 +237,12 @@ namespace Infrastructure.Files
             return new Result<bool>();                
         }
 
-        public FileResponse DownloadCertificate(GetCertificateRequest request)
-        {            
+        public async Task<Result<FileResponse>> DownloadCertificateAsync(GetCertificateRequest request, CancellationToken cancellationToken)
+        {
+            var configResult = await GetCertificateConfigAsync(cancellationToken);
+            if (!configResult.isSuccess) return new Result<FileResponse>(CommonErrors.File.NotFound);
+            var config = configResult.value;
+
             string blankFilePath = Path.Combine(certificateFiles, "blank");
             
             MemoryStream memoryStream = new MemoryStream();
@@ -248,26 +252,27 @@ namespace Infrastructure.Files
                 {
                     page.Background().Image(blankFilePath).FitArea();
                     page.Size(PageSizes.A4.Landscape());
-                    page.Content().DefaultTextStyle(style => style.FontFamily("calibriTTF").FontSize(20)).PaddingLeft(50).PaddingTop(45).PaddingRight(200).Text(t =>
+                    page.Content().DefaultTextStyle(style => style.FontFamily("calibriTTF").FontSize(20)).PaddingLeft(config.paddingLeft).PaddingTop(config.paddingTop).PaddingRight(config.paddingRight).PaddingBottom(config.paddingBottom).Text(t =>
                     {
-                        t.Line("Сертификат").FontSize(50).ExtraBlack().LineHeight(1);
+                        t.Line("Сертификат").FontSize(50).ExtraBlack().LineHeight(1.25f);
                         t.Line("подтверждает, что");
-                        t.Line(request.participantName).FontSize(40).Black();
+                        t.Line(request.participantName).FontSize(40).Black().LineHeight(1.5f);
                         t.Line("Принял(а) участие в олимпиаде");
                         t.Line("предпрофессиональных навыков «Art.Digital.Service»");
                         t.Span("по направлению");
-                        t.Span($"«{request.caseName}»");
+                        t.Span($"«{request.caseName}»").Bold();
                     });
                 });
             }).GeneratePdf(memoryStream);
             memoryStream.Position = 0;
 
-            return new FileResponse()
+            FileResponse response= new()
             {
                 fileStream = memoryStream,
                 contentType = "application/pdf",
                 fileName = "Сертификат участника олимпиады"
             };
+            return new Result<FileResponse>(response);
         }
     }
 }

@@ -43,11 +43,6 @@ const UsersDashboardPage = () => {
         createCasesFilter()
     }, [])
 
-    const updateProvider = () => {
-        if (permissions?.updateUsers) return API.updateUser
-        return API.rateUser
-    }
-
     const updateForm = () => {
         if (permissions?.updateUsers) return UpdateUserForm
         if (permissions?.rateUsers) return RateUserForm
@@ -62,7 +57,6 @@ const UsersDashboardPage = () => {
         exportProvider={API.exportParticipants}
         deleteProvider={permissions?.deleteUsers? API.deleteUsers : undefined}
         CreateForm={permissions?.createUsers ? CreateUserForm: undefined}
-        updateProvider={updateProvider()}
         UpdateForm={updateForm()}
         rowsPerPageOptions={new Set([5, 10, 15, 20, 25])}
         columns={[

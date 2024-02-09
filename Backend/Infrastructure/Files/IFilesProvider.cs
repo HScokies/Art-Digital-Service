@@ -16,7 +16,7 @@ namespace Infrastructure.Files
         Task<Result<FileResponse>> DownloadUserFileAsync(string fileName, CancellationToken cancellationToken);
         Result<string> getMimeType(IFormFile file);
         Task<Result<FileResponse>> DownloadLegalFileAsync(string fileName, CancellationToken cancellationToken);
-        FileResponse DownloadCertificate(GetCertificateRequest request);
+        Task<Result<FileResponse>> DownloadCertificateAsync(GetCertificateRequest request, CancellationToken cancellationToken);
         Task<Result<CertificateModel>> GetCertificateConfigAsync(CancellationToken cancellationToken);
         Task<Result<FileResponse>> DownloadCertificateBlankAsync(CancellationToken cancellationToken);
     }

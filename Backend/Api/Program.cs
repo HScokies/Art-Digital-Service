@@ -1,7 +1,7 @@
-using Data;
 using Application;
+using Data;
 using Infrastructure;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +21,7 @@ builder.Services.AddExportService();
 
 builder.Services.AddHttpContextAccessor();
 
-string APP_URL = Environment.GetEnvironmentVariable("APP_URL") ?? "http://localhost:5173";
+string APP_URL = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:5173";
 const string corsPolicyName = "corsPolicy";
 builder.Services.AddCors(
     p => p.AddPolicy(
@@ -40,6 +40,10 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapControllers();

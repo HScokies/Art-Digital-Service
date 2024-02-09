@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { IColumn, filter, param } from "../interfaces"
+import { filter, param } from "../interfaces"
 
 interface props{
     parent: string,

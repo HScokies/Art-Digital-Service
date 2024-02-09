@@ -347,7 +347,7 @@ namespace Application.Services.Participant
             if (CertificateDataResult is null)
                 return new Result<FileResponse>(CommonErrors.User.NotFound);
 
-            return new Result<FileResponse>(filesProvider.DownloadCertificate(CertificateDataResult));
+            return await filesProvider.DownloadCertificateAsync(CertificateDataResult, cancellationToken);
         }
     }
 }

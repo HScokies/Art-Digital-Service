@@ -1,47 +1,67 @@
 version: '3.4'
-networks:
-  api:
 
 services:
-    database:
-        container_name: ADS-Database
-        image: postgres
-        restart: always
-        ports:
-            - '41400:5432'
-        env_file:
-          - path: ./postgres.env
-            required: true
-        volumes:
-            - ads:/src/data/database
-        networks:
-            - api
+  
+  nginx-proxy:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - nginx-config:/etc/nginx-proxy-manager
+      - nginx-data:/data
+      - letsencrypt:/etc/letsencrypt
+    env_file:
+      - nginx-config.env
+    depends_on:
+      - nginx-database
 
-    backend:
-        container_name: ADS-Backend
-        image: ${DOCKER_REGISTRY-}ads-backend
-        ports:          
-            - '41401:8080'
-        build:
-            context: .
-            dockerfile: Dockerfile
-        depends_on:
-            - database
-        environment:
-            - APP_URL=http://localhost:5174
-        env_file:
-            - path: ./postgres.env
-              required: true
-            - path: ./database.env
-              required: false
-            - path: ./jsonwebtoken.env
-              required: true      
-            - path: ./smtp.env
-              required: true            
-        volumes:
-            - ads:/src/app
-        networks:
-            - api
+  nginx-database:
+    image: jc21/mariadb-aria:latest
+    restart: always
+    volumes:
+      - nginx-database:/var/lib/mysql
+    env_file:
+      - nginx-database.env
+
+  ADS-database:
+    image: postgres
+    restart: always
+    ports:
+      - '41400:5432'
+    env_file:
+      - backend-database.env
+    volumes:
+      - ads-database:/var/lib/postgres
+  
+  ADS-backend:
+    image: ${DOCKER_REGISTRY-}ads-backend
+    depends_on:
+      - nginx-proxy
+      - ADS-database
+    env_file:
+      - app-config.env
+      - backend-database.env
+      - JWT-config.env
+      - SMTP-config.env
+    volumes:
+      - ads-backend:/app/backend-files
+
+  ADS-frontend:
+    image: ${DOCKER_REGISTRY-}ads-frontend
+    depends_on:
+      - nginx-proxy
+      - ADS-backend
+    env_file:
+      - app-config.env
+      - JWT-config.env
 
 volumes:
-    ads:
+  nginx-config:
+  nginx-data:
+  letsencrypt:
+  nginx-database:
+  ads-database:
+  ads-backend:

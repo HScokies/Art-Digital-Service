@@ -5,7 +5,6 @@ import { Button, Input, FormMessage } from 'src/components';
 import { API, Validator } from 'src/services';
 import { useEffect, useState } from 'react';
 import { Pages } from 'src/enums';
-import { error } from 'console';
 
 interface IForm{
     password: HTMLInputElement,

@@ -5,6 +5,10 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: true,
+    port: 41402
+  },
   build:{
     outDir: 'dist'
   },
@@ -18,7 +22,4 @@ export default defineConfig({
       'images': path.resolve(__dirname, './src/assets/images')
     },
   },
-  server:{
-    port: 5174
-  }
 })

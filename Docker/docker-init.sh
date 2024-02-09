@@ -2,6 +2,7 @@ cd ../Backend
 docker build . --tag ads-backend --no-cache
 
 cd ../Frontend
+npm run build
 docker build . --tag ads-frontend --no-cache
 
 cd ../Docker

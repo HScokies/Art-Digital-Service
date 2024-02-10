@@ -28,8 +28,8 @@ namespace Infrastructure.Emails
             this.port = port;
             this.sender = new MailboxAddress("Цифра. Дизайн. Сервис", "noreply@midis.ru");
 
-            //var RequestContext = httpContextAccessor.HttpContext?.Request;
-            SERVER_URL = server_url;//RequestContext is null? "https://localhost:7220" : $"{RequestContext.Scheme}://{RequestContext.Host}"
+            var RequestContext = httpContextAccessor.HttpContext?.Request;
+            SERVER_URL = RequestContext is null ? server_url : $"{RequestContext.Scheme}://{RequestContext.Host}";
             this.APP_URL = app_url;
         }
 

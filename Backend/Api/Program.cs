@@ -21,7 +21,7 @@ builder.Services.AddExportService();
 
 builder.Services.AddHttpContextAccessor();
 
-string APP_URL = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:5173";
+string APP_URL = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:32768";
 const string corsPolicyName = "corsPolicy";
 builder.Services.AddCors(
     p => p.AddPolicy(

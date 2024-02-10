@@ -34,7 +34,8 @@ services:
     env_file:
       - backend-database.env
     volumes:
-      - ads-database:/var/lib/postgres
+      - ads-database:/var/lib/postgresql
+      - ads-database-data:/var/lib/postgresql/data
   
   ADS-backend:
     image: ${DOCKER_REGISTRY-}ads-backend
@@ -49,7 +50,7 @@ services:
       - JWT-config.env
       - SMTP-config.env
     volumes:
-      - ads-backend:/app/backend-files
+      - ads-backend:/app/Files
 
   ADS-frontend:
     image: ${DOCKER_REGISTRY-}ads-frontend
@@ -58,14 +59,12 @@ services:
     depends_on:
       - nginx-proxy
       - ADS-backend
-    env_file:
-      - app-config.env
-      - JWT-config.env
 
 volumes:
   nginx-config:
   nginx-data:
   letsencrypt:
   nginx-database:
-  ads-database:
   ads-backend:
+  ads-database:
+  ads-database-data:  

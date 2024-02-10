@@ -20,7 +20,7 @@ namespace Infrastructure.Emails
         private readonly string SERVER_URL;
         private readonly string APP_URL;
 
-        public EmailProvider(string app_url, string login, string password, string host, int port, IHttpContextAccessor httpContextAccessor)
+        public EmailProvider(string app_url, string server_url, string login, string password, string host, int port, IHttpContextAccessor httpContextAccessor)
         {            
             this.login = login;
             this.password = password;
@@ -28,8 +28,8 @@ namespace Infrastructure.Emails
             this.port = port;
             this.sender = new MailboxAddress("Цифра. Дизайн. Сервис", "noreply@midis.ru");
 
-            var RequestContext = httpContextAccessor.HttpContext?.Request;
-            SERVER_URL = RequestContext is null? "https://localhost:7220" : $"{RequestContext.Scheme}://{RequestContext.Host}";
+            //var RequestContext = httpContextAccessor.HttpContext?.Request;
+            SERVER_URL = server_url;//RequestContext is null? "https://localhost:7220" : $"{RequestContext.Scheme}://{RequestContext.Host}"
             this.APP_URL = app_url;
         }
 

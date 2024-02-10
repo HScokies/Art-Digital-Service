@@ -28,7 +28,10 @@ const CaseUpsertPage = () => {
         const form = e.target as HTMLFormElement
         const formData = new FormData(form)
 
-        if (id == undefined || isNaN(+id)) return await API.createCase(formData)
+        if (id == undefined || isNaN(+id)){
+            await API.createCase(formData)
+            return navigate(Pages.cases)
+        } 
         return await API.updateCase(+id, formData);
     }
 

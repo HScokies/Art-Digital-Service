@@ -5,7 +5,7 @@ export enum Pages{
     login = '/login/',    
     form = '/form/',
     dashboard = '/dashboard/',
-    cases = '/case/'
+    cases = '/dashboard/cases'
 }
 
 export enum UserTypes{

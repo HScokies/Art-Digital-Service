@@ -164,7 +164,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
             </div>
             {
                 deleteProvider &&
-                <dialog ref={deleteDialog} className='datagrid_delete-dialog'>
+                <dialog ref={deleteDialog} className='confirm-dialog'>
                     <DialogConfirm title='Подтвердите удаление выбранных строк' acceptText='Удалить' acceptStyle='danger' dialog={deleteDialog.current} onAccept={() => onDelete()}>
                         <p>Вы уверены, что хотите удалить выбранные строки?</p>
                         <p>Это действие не может быть отменено.</p>

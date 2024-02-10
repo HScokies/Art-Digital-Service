@@ -143,10 +143,10 @@ const PersonalDataPage = () => {
                     }
                     <Combobox name='caseId' label='Направление' options={cases} />
                     <Checkbox checkedChanged={validateFields} name='acceptedPrivacyPolicy'>
-                        Ознакомлен с <a target='_blank' href='https://disk.yandex.ru/i/FrvixFf4IKNtwg'>политикой&nbsp;конфиденциальности</a>
+                        Ознакомлен с <a target='_blank' href={`${API.URL}files/legal/privacy_policy.pdf?displayedName=Политика конфиденциальности`}>политикой&nbsp;конфиденциальности</a>
                     </Checkbox>
                     <Checkbox checkedChanged={validateFields} name='acceptedProcessing'>
-                        Даю согласие на обработку <a target='_blank' href='https://disk.yandex.ru/i/brJofU0LLzyn6w'>персональных&nbsp;данных</a>
+                        Даю согласие на обработку <a target='_blank' href={`${API.URL}files/legal/${isAdult?"a_consent.pdf" : "y_consent.pdf"}?displayedName=Согласие на обработку персональных данных`}>персональных&nbsp;данных</a>
                     </Checkbox>
                     <Button isActive={!hasErrors}>Продолжить</Button>
                 </form>

@@ -95,6 +95,7 @@ namespace Infrastructure
         }
         public static IServiceCollection AddEmailService(this IServiceCollection services)
         {
+            string SERVER_URL = Environment.GetEnvironmentVariable("BACKEND_URL") ?? "http://localhost:8080";
             string APP_URL = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:5173";
             string SMTP_HOST = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "smtp.ethereal.email";            
             string SMTP_LOGIN = Environment.GetEnvironmentVariable("SMTP_LOGIN") ?? "earline.howe@ethereal.email";
@@ -118,7 +119,8 @@ namespace Infrastructure
                     host: SMTP_HOST,
                     port: port,
                     httpContextAccessor: httpContextAccessor,
-                    app_url: APP_URL
+                    app_url: APP_URL,
+                    server_url: SERVER_URL
                     );
             });
             return services;

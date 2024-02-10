@@ -5,8 +5,8 @@ import { IParticipantStatus, IUserData } from "src/interfaces"
 
 
 export class API{
-public static readonly URL = new URL(import.meta.env.BACKEND_URL || "http://localhost:41401")
-    
+    public static readonly URL = new URL(import.meta.env.VITE_BACKEND_URL)
+
     private static api = axios.create({
         withCredentials: true,
         validateStatus: () => true

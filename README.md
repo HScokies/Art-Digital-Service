@@ -54,7 +54,7 @@ SMTP_PASSWORD="string"
 ```
 
 ### app-config.env
-Содержит информация для контейнеров с **Frontend**, **Backend**
+Содержит информацию для контейнеров с **Frontend**, **Backend**
 ```
 POSTGRES_HOST="string" # Имя контейнера с PostgreSQL
 POSTGRES_PORT=5432

@@ -9,11 +9,11 @@
 VITE_ACCESS_EXPIRY_MINUTES=5 # Продолжительность жизни access токена в минутах
 VITE_BACKEND_URL=http://localhost:41401 # Ссылка на Backend
 ```
-- Запустить bash - скрипт ```Docker/docker-init.sh```. Скрипт создаст изображения Frontend, Backend и выгрузит их в .tar файлы текущей директории, а также создаст ```.env``` файлы
+- Запустить bash - скрипт ```Docker/docker-init.sh```. Данный скрипт создаст изображения Frontend и Backend, а также файлы с переменными окружения для всего остального
 - Установить переменные окружения в созданных ```.env``` файлах
-- Перекинуть папку Docker на сервер с помощью ```SCP -r```
-- Распаковать ```.tar``` файлы с помощью ```sudo docker load -i ~/filename.tar```
-- Запустить контейнер с помощью ```docker-compose up [-d]```
+- Перенести папку Docker на удаленный сервер (например с помощью ```SCP -r```)
+- Распаковать ```.tar``` изображения с помощью ```docker load -i image.tar```
+- Запустить с помощью ```docker compose up [-d]```
 
 Про установку Docker можно почитать на [digitalocean.com](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04)
 ## Переменные окружения

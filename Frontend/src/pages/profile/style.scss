@@ -191,7 +191,7 @@
             }
         }
         &-text{
-            white-space: pre;
+            white-space: pre-wrap;
             display: block;
             font-size: 2em; 
             &.link{

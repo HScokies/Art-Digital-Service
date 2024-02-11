@@ -26,7 +26,7 @@ namespace Infrastructure.Emails
             this.password = password;
             this.host = host;
             this.port = port;
-            this.sender = new MailboxAddress("Цифра. Дизайн. Сервис", "noreply@midis.ru");
+            this.sender = new MailboxAddress("Цифра. Дизайн. Сервис", login);
 
             var RequestContext = httpContextAccessor.HttpContext?.Request;
             SERVER_URL = RequestContext is null ? server_url : $"{RequestContext.Scheme}://{RequestContext.Host}";

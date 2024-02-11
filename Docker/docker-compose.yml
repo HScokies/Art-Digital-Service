@@ -1,7 +1,6 @@
 version: '3.4'
 
 services:
-  
   nginx-proxy:
     image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped

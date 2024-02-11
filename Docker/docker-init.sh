@@ -7,6 +7,9 @@ docker build . --tag ads-frontend --no-cache
 
 cd ../Docker
 
+docker save -o ads-backend.tar ads-backend
+docker save -o ads-frontend.tar ads-frontend
+
 touch nginx-database.env
 echo MYSQL_DATABASE="string" >> nginx-database.env
 echo MYSQL_USER="string" >> nginx-database.env
@@ -44,3 +47,5 @@ echo POSTGRES_HOST="ADS-database" >> app-config.env
 echo POSTGRES_PORT=5432 >> app-config.env
 echo FRONTEND_URL="string" >> app-config.env
 echo BACKEND_URL="string" >> app-config.env
+
+rm -- "$0"

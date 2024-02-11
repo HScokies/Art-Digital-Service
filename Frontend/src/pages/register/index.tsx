@@ -43,10 +43,8 @@ const RegisterPage = () => {
         const UserData = new FormData(e.target as HTMLFormElement)
         
         const response = await API.register(UserData)
-        console.debug(response)
         const data = response.data;
         if (response.status != 201){
-            console.debug("STATUS IS NOT 201")
             return setFormError({isActive: true, text: data.title})
         }
         setUserType(UserTypes.newUser);

@@ -21,7 +21,6 @@ const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLa
     }, [highlightedRows])
 
     const download = () => {
-        console.debug(exportUrl)
         location.href = exportUrl;
     }
     return (

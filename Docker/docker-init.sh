@@ -48,8 +48,5 @@ echo POSTGRES_HOST="ADS-database" >> app-config.env
 echo POSTGRES_PORT=5432 >> app-config.env
 echo FRONTEND_URL="string" >> app-config.env
 echo BACKEND_URL="string" >> app-config.env
-<<<<<<< HEAD
 
 rm -- "$0"
-=======
->>>>>>> 2883e5a5e955d19681ae8dcb97e3c4b3162ec5e5

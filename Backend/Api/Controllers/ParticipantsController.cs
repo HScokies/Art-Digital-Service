@@ -202,7 +202,7 @@ namespace Api.Controllers
             var certificateResult = await participantService.GetCertificateAsync(userIdResult.value, cancellationToken);
             if (!certificateResult.isSuccess) return Problem(certificateResult.error);
             var certificate = certificateResult.value;
-            return File(certificate.fileStream, certificate.contentType, certificate.fileName);
+            return File(certificate);
         }
     }
 }

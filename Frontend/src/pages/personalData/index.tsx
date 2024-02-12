@@ -110,7 +110,7 @@ const PersonalDataPage = () => {
     return (
         <div className="authpage">
             <div className="authpage_modal">
-                <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
+                <img alt='logo' loading="lazy" src={Logo} draggable={false} className='authpage_modal-logo' />
                 <h1 className='authpage_modal-title'>Персональные данные</h1>
                 <form id='personaldata-form' onSubmit={(e) => onSubmit(e)}>
                     {

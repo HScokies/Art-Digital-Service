@@ -27,7 +27,7 @@ const AsideMenu = ({ items }: props) => {
     return (
         <aside className='aside'>
             <div className="aside_menu">
-                <NavLink to='/dashboard'><img className='aside_menu-logo' draggable={false} src={Logo} alt='logo' /></NavLink>
+                <NavLink to='/dashboard'><img loading="lazy" className='aside_menu-logo' draggable={false} src={Logo} alt='logo' /></NavLink>
                 {
                     items.map((e, i) => {
                         const id = (Date.now() * (i+1)).toString(36);

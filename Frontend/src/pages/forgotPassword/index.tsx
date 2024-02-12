@@ -62,7 +62,7 @@ const ForgotPasswordPage = () => {
     return (
         <div className="authpage">
             <div className="authpage_modal">
-                <Link to={Pages.auth}><img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' /></Link>
+                <Link to={Pages.auth}><img loading="lazy" alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' /></Link>
                 <FormMessage type='error' text={formError.text} isActive={formError.isActive} />
                 <FormMessage type='info' text={"Проверьте свою электронную почту на наличие ссылки для сброса пароля. Если оно не появится в течение нескольких минут, проверьте папку «Спам»."} isActive={showFormMessage}/>                
                 <h1 className='authpage_modal-title'>Забыли пароль?</h1>

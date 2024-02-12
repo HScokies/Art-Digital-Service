@@ -31,7 +31,7 @@ const AccessPage = () => {
     return (
         <div className='authpage'>
             <div className="authpage_modal">
-                <img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
+                <img loading="lazy" alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
                 <h1 className='authpage_modal-title'>Войдите или зарегистрируйтесь</h1>
                 <form id='access-form'>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={email} />

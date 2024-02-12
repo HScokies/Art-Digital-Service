@@ -51,7 +51,7 @@ const ProfilePage = () => {
         <div className='profilepage' >
             <header className='profilepage_header'>
                 <div className='profilepage_header_logocontainer'>
-                    <img src={Logo} alt='Logo.webp' className='profilepage_header_logocontainer-logo image' />
+                    <img src={Logo} loading="lazy" alt='Logo.webp' className='profilepage_header_logocontainer-logo image' />
                     <h1 className='profilepage_header_logocontainer-logo text'>Цифра&bull;Дизайн&bull;Сервис</h1>
                 </div>
                 <div className='profilepage_header-user_container usermenu' onClick={() => setMenuActive(!menuActive)}>

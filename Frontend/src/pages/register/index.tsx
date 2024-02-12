@@ -67,7 +67,7 @@ const RegisterPage = () => {
     return (
         <div className="authpage">
             <div className="authpage_modal">
-                <Link to={Pages.auth}><img alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' /></Link>
+                <Link to={Pages.auth}><img loading="lazy" alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' /></Link>
                 <FormMessage type='error' text={formError.text} isActive={formError.isActive} />
                 <h1 className='authpage_modal-title'>Зарегистрироваться</h1>
                 <form id='register-form' onSubmit={(e) => handleSubmit(e)}>

@@ -37,8 +37,8 @@ const RateUserForm = ({ formId, entityId }: IUpdateForm): React.JSX.Element=> {
         !userData? <></>:
             <form id={formId} onSubmit={(e) => onSubmit(e)}>
                 <div className="menu_dialog-filebuttons">
-                    <Button type="button" clickHandler={() => location.href = `${API.URL}files/user-uploaded/${userData?.consentFilename}?displayedName="Согласие_${userData.lastName}"`} isActive={true} variant='passive'>Согласие</Button>
-                    <Button type="button" clickHandler={() => location.href = `${API.URL}files/user-uploaded/${userData?.solutionFilename}?displayedName="Решение_${userData.lastName}"`} isActive={true} variant='passive'>Работа</Button>
+                    <Button type="button" clickHandler={() => location.href = `${API.URL}files/user-uploaded/${userData?.consentFilename}?displayedName=Согласие_${userData.lastName}`} isActive={true} variant='passive'>Согласие</Button>
+                    <Button type="button" clickHandler={() => location.href = `${API.URL}files/user-uploaded/${userData?.solutionFilename}?displayedName=Решение_${userData.lastName}`} isActive={true} variant='passive'>Работа</Button>
                 </div>
                 <Input min={0} defaultValue={userData.rating} label='Балл' type='number' name='rating' />
                 <Combobox name="status" defaultValue={userData.status} label='Статус' options={userStatusOptions} />

@@ -102,8 +102,8 @@ const UpdateUserForm = ({formId, entityId}: IUpdateForm): React.JSX.Element => {
                     <Input defaultValue={userData.grade} required label='Класс' type='number' name='grade' min={1} max={11} />
             }
             <Combobox name="caseId" defaultValue={userData.caseId} label='Направление' options={cases} />
-            <FileInput initialFileName={userData?.consentFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.consentFilename}?displayedName="Согласие_${userData.lastName}"`} label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />
-            <FileInput initialFileName={userData?.solutionFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.solutionFilename}?displayedName="Решение_${userData.lastName}"`} label='Выполненное задание' name='solution' accept={['.pdf']} />
+            <FileInput initialFileName={userData?.consentFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.consentFilename}?displayedName=Согласие_${userData.lastName}`} label='Согласие на обработку персональных данных' name='consent' accept={['.pdf', '.jpg', '.bmp', '.png']} />
+            <FileInput initialFileName={userData?.solutionFilename} downloadLink={`${API.URL}files/user-uploaded/${userData?.solutionFilename}?displayedName=Решение_${userData.lastName}`} label='Выполненное задание' name='solution' accept={['.pdf']} />
             <Input defaultValue={userData?.rating} min={0} label='Балл' type='number' name='rating' />
             <Combobox name="status" defaultValue={userData.status} label='Статус' options={userStatusOptions} />
         </form>

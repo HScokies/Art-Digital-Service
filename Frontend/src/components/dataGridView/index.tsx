@@ -36,10 +36,14 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
     const [_trigger, setTrigger] = useState(false);
     const trigger = () => setTrigger(!_trigger);
 
+    const upsertDialog = useRef<HTMLDialogElement>(null)
+    const [upsertFormTitle, setUpsertFormTitle] = useState("")
+    const [upsertFormId, setUpsertFormId] = useState<string>()
+    const [upsertForm, setUpsertForm] = useState<React.JSX.Element>()
+
     //Handle data
     useEffect(() => {
         let search = activeSearch?.trim()
-
         //exclude column from filter
         let params: param[] = []
         activeFilters.forEach((f) => params.push(f.param))
@@ -53,8 +57,7 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
             setData(data)
         }
         fetch();
-
-    }, [activeSort, activeFilters, activeSearch, rowsPerPage, currentPage, _trigger])
+    }, [activeSort, activeFilters, activeSearch, rowsPerPage, currentPage, _trigger, upsertForm])
 
     // handle highlightedRows
     useEffect(() => {
@@ -68,10 +71,12 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
     }, [highlightedRows, data])
 
     //#region Update / Create dialog
-    const upsertDialog = useRef<HTMLDialogElement>(null)
-    const [upsertFormTitle, setUpsertFormTitle] = useState("")
-    const [upsertFormId, setUpsertFormId] = useState<string>()
-    const [upsertForm, setUpsertForm] = useState<React.JSX.Element>()
+    useEffect(() => {
+        const onClose = () => {
+            setUpsertForm(undefined)            
+        }
+        upsertDialog.current?.addEventListener('close', onClose)
+    }, [])
 
     const showUpsertForm = (title: string, id?: string, form?: React.JSX.Element) => {
         setUpsertFormTitle(title)
@@ -82,20 +87,13 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
     const OpenCreateDialog = () => {
         if (!CreateForm) return;
         const formID = "CreateEntityForm";
-        showUpsertForm('Создание записи', formID, <CreateForm formId={formID} />)
+        showUpsertForm('Создание записи', formID, <CreateForm dialog={upsertDialog.current} formId={formID} />)
     }
     const OpenUpdateDialog = (id: number) => {
         if (!UpdateForm) return;
         const formID = "updateEntityForm";
         showUpsertForm('Обновление записи', formID, <UpdateForm formId={formID} entityId={id} />)
     }
-    useEffect(() => {
-        const onClose = () => {
-            setUpsertForm(undefined)
-            trigger()
-        }
-        upsertDialog.current?.addEventListener('close', onClose)
-    }, [])
     //#endregion
 
     //#region  Delete dialog
@@ -105,11 +103,8 @@ const DataGridView = ({ columns, rowsPerPageOptions, dataSource, searchLabel, ex
         await deleteProvider(highlightedRows)
         setHighlightedRows(new Set<number>)
         deleteDialog.current?.close()
+        trigger()
     }
-    
-    useEffect(() => {
-        deleteDialog.current?.addEventListener('close', trigger)
-    }, [])
     //#endregion
     return (
         <>

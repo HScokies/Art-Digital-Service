@@ -11,8 +11,8 @@ const LegalDocumentsForm = () => {
         <form id="update-legal" onSubmit={(e) => onSubmit(e)}>
             <FileInput name="regulations" label="Положение об Олимпиаде" accept={[".pdf"]} downloadLink={API.URL+"files/legal/regulations.pdf?displayedName=Положение об Олимпиаде"} />
             <FileInput name="privacyPolicy" label="Политика конфиденциальности" accept={[".pdf"]} downloadLink={API.URL+"files/legal/privacy_policy.pdf?displayedName=Политика конфиденциальности"} />
-            <FileInput name="adultConsent" label="Согласие на обработку персональных данных (взрослые)" accept={[".pdf"]} downloadLink={API.URL+"files/legal/a_consent.pdf?displayedName=Согласие на обработку персональных данных"} />
-            <FileInput name="youthConsent" label="Согласие на обработку персональных данных (дети)" accept={[".pdf"]} downloadLink={API.URL+"files/legal/y_consent.pdf?displayedName=Согласие на обработку персональных данных"} />
+            <FileInput name="adultConsent" label="Согласие (взрослые)" accept={[".pdf"]} downloadLink={API.URL+"files/legal/a_consent.pdf?displayedName=Согласие на обработку персональных данных"} />
+            <FileInput name="youthConsent" label="Согласие (дети)" accept={[".pdf"]} downloadLink={API.URL+"files/legal/y_consent.pdf?displayedName=Согласие на обработку персональных данных"} />
         </form>
     )
 }

@@ -5,7 +5,7 @@ import { API, PhoneChange, Validator } from "src/services"
 import { Combobox, Input, FileInput } from "components/index"
 
 
-const CreateUserForm = ({formId}: ICreateForm) => {
+const CreateUserForm = ({formId, dialog}: ICreateForm) => {
     const [isAdult, setIsAdult] = useState(true)
     const [cases, setCases] = useState<Option[]>([])
     const [userTypes, setUserTypes] = useState<IUserType[]>()
@@ -59,7 +59,10 @@ const CreateUserForm = ({formId}: ICreateForm) => {
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        await API.createUser(new FormData(e.target as HTMLFormElement))
+        const res = await API.createUser(new FormData(e.target as HTMLFormElement))
+        if (!res) return;
+        dialog?.close();
+        
     }
     
     return (       
@@ -90,7 +93,7 @@ const CreateUserForm = ({formId}: ICreateForm) => {
                     <Input label='Класс' type='number' name='grade' validator={Validator.validateGradeSchool} min={1} max={11} required />
             }
             <Combobox name="caseId" label='Направление' options={cases} />
-            <FileInput label='Согласие на обработку персональных данных' name='consent' accept={['.pdf']} />
+            <FileInput label='Согласие на обработку персональных данных' name='consent' accept={['.pdf', '.jpg', '.bmp', '.png']} />
             <FileInput label='Выполненное задание' name='solution' accept={['.pdf']} />
         </form>
     )

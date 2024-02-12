@@ -32,21 +32,29 @@ const CaseData = ({ userStatus, caseData, isPreview = false }: props) => {
         return file.size < (megaByte * 3)
     }
 
-    const onSubmit = async(e : React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         const response = await API.appendFiles(new FormData(e.target as HTMLFormElement))
-        if (response.status != 200) return;
+        if (response.status != 200) return;        
         setStatus({
             text: "Ваша заявки принята и находится на рассмотрении.\nОжидайте результатов!",
             download: false
-        });
+        });            
+        setTimeout(() => {
+            window.scrollTo(0,  0);
+        },  0);
+    }
+
+    const chooseColor = (i: number) => {
+        const colors = ["#FFF", "#E3E5F3"]
+        return status? colors[i] : colors[(i+1)%colors.length]
     }
 
 
 
     return (
         <>
-            <section className='profilepage_task'>
+            <section className='profilepage_task' style={{backgroundColor: "#FFF"}} id="task">
                 <h2 className='profilepage_task-title'>
                     Задание
                 </h2>
@@ -54,40 +62,26 @@ const CaseData = ({ userStatus, caseData, isPreview = false }: props) => {
                     {parse(caseInfo.task)}
                 </p>
             </section>
-            <section className='profilepage_status'>
-                {
-                    status != null ?
-                        <>
-                            <h2 className='profilepage_status-title_results'>Результаты</h2>
-                            <p className='profilepage_status-text'>{status.text}</p>
-                            {
-                                status.download &&
-                                <a href={API.URL+"participants/certificate"} target="_blank" className='profilepage_status-text link'>
-                                    Скачать сертификат участника
-                                </a>
-                            }
-                        </>
-                        :
-                        <>
-                            <h2 className='profilepage_status-title'>Отправить задание</h2>
-                            <form className='profilepage_status-form' id='task-form' onSubmit={(e) => onSubmit(e)}>
-                                <FileInput changeHandler={handleFileChange} label='Согласие на обработку персональных данных' required={true} name='conscent' accept={['.pdf', '.jpg', '.bmp', '.png']} />
-                                <FileInput changeHandler={handleFileChange} label='Выполненное задание' name='solution' required={true} accept={['.pdf']} />
-                                <Button isActive={buttonActive && !isPreview}>
-                                    Отправить
-                                </Button>
-                            </form>
-                        </>
-
-                }
-            </section>
-            <section className='profilepage_guide'>
+            {
+                status &&
+                <section className="profilepage_status" style={{backgroundColor: chooseColor(1)}}>
+                    <h2 className='profilepage_status-title_results'>Результаты</h2>
+                    <p className='profilepage_status-text'>{status.text}</p>
+                    {
+                        status.download &&
+                        <a href={API.URL + "participants/certificate"} target="_blank" className='profilepage_status-text link'>
+                            Скачать сертификат участника
+                        </a>
+                    }
+                </section>
+            }
+            <section className='profilepage_guide' style={{backgroundColor: chooseColor(0)}}>
                 <h2 className='profilepage_guide-title'>
                     Мастер-класс
                 </h2>
                 <iframe className='profilepage_guide-video' frameBorder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowFullScreen={true} src={`https://www.youtube.com/embed/${caseData.youtubeId}`}></iframe>
             </section>
-            <section className='profilepage_stages'>
+            <section className='profilepage_stages' style={{backgroundColor: chooseColor(1)}}>
                 <h2 className='profilepage_stages-title'>
                     Порядок выполнения
                 </h2>
@@ -97,7 +91,21 @@ const CaseData = ({ userStatus, caseData, isPreview = false }: props) => {
                     ))
                 }
             </section>
-            <section className='profilepage_criterias'>
+            {
+                !status &&
+                <section className='profilepage_send' style={{backgroundColor: "#E3E5F3"}}>
+                    <h2 className='profilepage_send-title'>Отправить задание</h2>
+                    <form className='profilepage_send-form' id='task-form' onSubmit={(e) => onSubmit(e)}>
+                        <FileInput changeHandler={handleFileChange} label='Согласие на обработку персональных данных' required={true} name='conscent' accept={['.pdf', '.jpg', '.bmp', '.png']} />
+                        <FileInput changeHandler={handleFileChange} label='Выполненное задание' name='solution' required={true} accept={['.pdf']} />
+                        <Button isActive={buttonActive && !isPreview}>
+                            Отправить
+                        </Button>
+                    </form>
+                </section>
+            }
+
+            <section className='profilepage_criterias' style={{backgroundColor: "#FFF"}}>
                 <h2 className='profilepage_criterias-title'>
                     Критерии
                 </h2>

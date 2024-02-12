@@ -5,7 +5,7 @@ import { IParticipantStatus, IUserData } from "src/interfaces"
 
 
 export class API{
-    public static readonly URL = new URL(import.meta.env.VITE_BACKEND_URL)
+    public static readonly URL = new URL(import.meta.env.VITE_BACKEND_URL || "http://localhost:8080")
 
     private static api = axios.create({
         withCredentials: true,
@@ -79,8 +79,10 @@ export class API{
         if (response.status != 201){
             alert("Произошла ошибка! Проверьте консоль браузера для деталей");
             console.error(response)
-        } else alert("Участник успешно создан!")
-        
+            return false;
+        } 
+        alert("Участник успешно создан!")
+        return true
     }
 
     static getUser = async(id: number): Promise<IUserData | undefined> => {
@@ -198,7 +200,10 @@ export class API{
         if (response.status != 201){
             alert("Произошла ошибка! Проверьте консоль браузера для деталей");
             console.error(response)
-        } else alert("Сотрудник успешно создан!")
+            return false
+        } 
+        alert("Сотрудник успешно создан!")
+        return true;
     }
 
     static getStaffById = async(id: number) => {
@@ -285,7 +290,6 @@ export class API{
         return await this.api.get(url.toString());
     }
 
-    //todo
     static appendLegalFiles = async(data: FormData) =>{
         const url = new URL("files/legal", API.URL)
         const response = await this.api.patch(url.toString(), data)

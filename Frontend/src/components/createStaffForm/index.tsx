@@ -4,7 +4,7 @@ import { Option } from "src/components/combobox"
 import { API, Validator } from "src/services";
 import { Input, Combobox } from "components/index";
 
-const CreateStaffForm = ({formId}: ICreateForm) => {
+const CreateStaffForm = ({formId, dialog}: ICreateForm) => {
     const [roleOptions, setRoles] = useState<Option[]>([]);
 
     useEffect(() => {
@@ -26,7 +26,9 @@ const CreateStaffForm = ({formId}: ICreateForm) => {
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await API.createStaff(new FormData(e.target as HTMLFormElement))
+        const res = await API.createStaff(new FormData(e.target as HTMLFormElement))
+        if (!res) return;
+        dialog?.close();
     }
 
     return(

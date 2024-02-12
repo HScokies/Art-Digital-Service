@@ -22,7 +22,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const JWT_ACCESS_EXPIRY_MINUTES = import.meta.env.VITE_ACCESS_EXPIRY_MINUTES;
+    const JWT_ACCESS_EXPIRY_MINUTES = import.meta.env.VITE_ACCESS_EXPIRY_MINUTES || 5;
     const MS_IN_MINUTE = 60_000;
     const LIFETIME = JWT_ACCESS_EXPIRY_MINUTES * MS_IN_MINUTE - MS_IN_MINUTE
     const TOKEN_LIFETIME_MS = LIFETIME < MS_IN_MINUTE ? MS_IN_MINUTE : LIFETIME;

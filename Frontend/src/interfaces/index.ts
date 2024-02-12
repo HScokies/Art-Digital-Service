@@ -102,9 +102,11 @@ export interface IRole{
 
 
 export interface ICreateForm{
-    formId: string
+    formId: string,
+    dialog: HTMLDialogElement | null
 }
-export interface IUpdateForm extends ICreateForm{
+export interface IUpdateForm{
+    formId: string,
     entityId: number
 }
 

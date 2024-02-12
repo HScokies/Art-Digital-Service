@@ -97,7 +97,7 @@ const ProfilePage = () => {
                             <a href={`${API.URL}files/legal/privacy_policy.pdf?displayedName=Политика конфиденциальности`} target='_blank' className="profilepage_footer_top-container_right-element">
                                 Политика конфиденциальности
                             </a>
-                            <a href={`${API.URL}files/legal/${data.isAdult?"a_consent.pdf" : "y_consent.pdf"}?displayedName=Согласие на обработку персональных данных`} className="profilepage_footer_top-container_right-element">
+                            <a href={`${API.URL}files/legal/${data.isAdult?"a_consent.pdf" : "y_consent.pdf"}?displayedName=Согласие на обработку персональных данных`} target='_blank' className="profilepage_footer_top-container_right-element">
                                 Согласие на обработку персональных данных
                             </a>
                         </div>

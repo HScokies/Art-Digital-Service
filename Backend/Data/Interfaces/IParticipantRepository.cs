@@ -18,5 +18,6 @@ namespace Data.Interfaces
         Task DropAsync(ParticipantDto[] participants, CancellationToken cancellationToken);
 
         Task<GetCertificateRequest?> GetCertificateContentAsync(int userId, CancellationToken cancellationToken);
+        Task<List<string>> GetFilenamesAsync(CancellationToken cancellationToken);
     }
 }

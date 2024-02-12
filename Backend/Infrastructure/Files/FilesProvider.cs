@@ -274,5 +274,19 @@ namespace Infrastructure.Files
             };
             return new Result<FileResponse>(response);
         }
+
+        public void DeleteUnusedUserFiles(List<string> filesInUse)
+        {
+            var files = Directory.GetFiles(userFiles);
+            foreach(var file in files)
+            {
+                var filename = Path.GetFileName(file);
+
+                if (!filesInUse.Contains(filename))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
     }
 }

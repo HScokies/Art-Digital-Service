@@ -138,5 +138,16 @@ namespace Data.Repositories
             participantName = p.User.firstName + " " + p.User.lastName,
             caseName = p.Case.name
         }).FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<List<string>> GetFilenamesAsync(CancellationToken cancellationToken)
+        {
+            var filenames = new List<string>();
+
+            List<string> consentFiles = await ctx.participants.Where(c => c.consentFilename != null).Select(c => c.consentFilename!).ToListAsync(cancellationToken);
+            List<string> solutionFiles = await ctx.participants.Where(c => c.solutionFilename != null).Select(c => c.solutionFilename!).ToListAsync(cancellationToken);
+            filenames.AddRange(consentFiles);            
+            filenames.AddRange(solutionFiles);
+            return filenames;
+        }
     }
 }

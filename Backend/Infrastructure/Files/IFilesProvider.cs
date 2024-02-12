@@ -19,5 +19,6 @@ namespace Infrastructure.Files
         Task<Result<FileResponse>> DownloadCertificateAsync(GetCertificateRequest request, CancellationToken cancellationToken);
         Task<Result<CertificateModel>> GetCertificateConfigAsync(CancellationToken cancellationToken);
         Task<Result<FileResponse>> DownloadCertificateBlankAsync(CancellationToken cancellationToken);
+        void DeleteUnusedUserFiles(List<string> filesInUse);
     }
 }

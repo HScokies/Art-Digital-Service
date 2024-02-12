@@ -39,6 +39,13 @@ namespace Application
                 return new ClearExpiredTokens(refreshExpiry, serviceProvider);
             });
 
+            int refreshRate_HOURS = 24;
+            services.AddHostedService<ClearUnusedUserFiles>(options =>
+            {
+                var serviceProvider = options.GetRequiredService<IServiceProvider>();
+                return new ClearUnusedUserFiles(refreshRate_HOURS, serviceProvider);
+            });
+
             return services;
         }
     }

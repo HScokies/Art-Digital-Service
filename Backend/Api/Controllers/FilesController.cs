@@ -2,8 +2,6 @@
 using Application.Services.File;
 using Application.Services.Participant;
 using Contracts.File;
-using Domain.Core.Primitives;
-using Domain.Core.Utility;
 using Domain.Enumeration;
 using Infrastructure.Files;
 using Microsoft.AspNetCore.Authorization;
@@ -29,10 +27,10 @@ namespace Api.Controllers
         {
             var res = await participantService.GetParticipantFileAsync(filename, cancellationToken);
             if (!res.isSuccess)
-                return Problem(res.error);
-
+                return Problem(res.error);            
             var filedata = res.value;
-            return File(filedata.fileStream, filedata.contentType, displayedName is null? filename : displayedName);
+            filedata.fileName = displayedName is null ? filename : displayedName;
+            return File(filedata);
         }
 
         [HttpGet("legal/{filename}")]
@@ -42,8 +40,8 @@ namespace Api.Controllers
             if (!res.isSuccess)
                 return Problem(res.error);
             var filedata = res.value;
-
-            return File(filedata.fileStream, filedata.contentType, displayedName is null ? filename : displayedName);
+            filedata.fileName = displayedName is null ? filename : displayedName;
+            return File(filedata);
         }
 
         [HttpPatch("legal"), Authorize(Roles = Roles.Permissions.utilsAccess)]
@@ -65,7 +63,7 @@ namespace Api.Controllers
             var Result = await filesProvider.DownloadCertificateBlankAsync(cancellationToken);
             if (!Result.isSuccess)
                 return Problem(Result.error);
-            return File(Result.value.fileStream, Result.value.contentType, Result.value.fileName);
+            return File(Result.value);
         }
         [HttpPatch("certificate"), Authorize(Roles = Roles.Permissions.utilsAccess)]
         public async Task<IActionResult> AppendCertificate(AppendCertificateRequest request, CancellationToken cancellationToken)

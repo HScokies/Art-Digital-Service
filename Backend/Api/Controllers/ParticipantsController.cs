@@ -170,7 +170,8 @@ namespace Api.Controllers
         public async Task<IActionResult> ExportParticipants([FromQuery] int[] id, CancellationToken cancellationToken)
         {
             var res = await participantService.ExportParticipantsAsync(id, cancellationToken);
-            return File(res.fileStream, res.contentType, $"Участники {DateTime.UtcNow}");
+            res.fileName = $"Участники {DateTime.UtcNow}";
+            return File(res);
         }
 
         [HttpGet("isAdult"), Authorize(Roles = Roles.ParticipantsStatus.justRegistered)]

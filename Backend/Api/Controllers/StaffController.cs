@@ -91,7 +91,8 @@ namespace Api.Controllers
         public async Task<IActionResult> Export([FromQuery] int[]? id, CancellationToken cancellationToken)
         {
             var res = await staffService.ExportStaffAsync(id, cancellationToken);
-            return File(res.fileStream, res.contentType, $"Сотрудники {DateTime.UtcNow}");
+            res.fileName = $"Сотрудники {DateTime.UtcNow}";
+            return File(res);
         }
     }
 }

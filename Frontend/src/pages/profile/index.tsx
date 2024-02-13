@@ -59,7 +59,7 @@ const ProfilePage = () => {
                         {data.firstName}
                     </span>
                     <svg className='profilepage_header-user_container-dropdown usermenu'>
-                        <use xlinkHref={Icons + "#downarrow"} />
+                        <use xlinkHref={Icons + "#downarrow"} href={Icons + "#downarrow"} />
                     </svg>
                     <ul className={`profilepage_header-user_container-menu ${menuActive ? 'active' : ''}`}>
                         <li className="profilepage_header-user_container-menu-item">
@@ -108,12 +108,12 @@ const ProfilePage = () => {
                     <div className='profilepage_footer_bottom-socials'>
                         <a className='profilepage_footer_bottom-socials-link' href='https://vk.com/midis' target='_blank'>
                             <svg>
-                                <use xlinkHref={Icons + '#vk'} />
+                                <use xlinkHref={Icons + '#vk'} href={Icons + '#vk'} />
                             </svg>
                         </a>
                         <a className='profilepage_footer_bottom-socials-link' href='https://t.me/midisru' target='_blank'>
                             <svg>
-                                <use xlinkHref={Icons + '#telegram'} />
+                                <use xlinkHref={Icons + '#telegram'} href={Icons + '#telegram'} />
                             </svg>
                         </a>
                     </div>
@@ -121,7 +121,7 @@ const ProfilePage = () => {
             </footer>
             <span className={`scroll-top ${scrollActive ? 'active' : ''}`} onClick={() => window.scrollTo(0, 0)}>
                 <svg>
-                    <use xlinkHref={Icons + "#uparrow"} />
+                    <use xlinkHref={Icons + "#uparrow"} href={Icons + "#uparrow"} />
                 </svg>
             </span>
         </div>

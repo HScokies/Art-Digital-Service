@@ -56,13 +56,13 @@ const BottomMenu = ({ setRowsPerPage, setPage, currentPage, rowsPerPageOptions, 
             <div className='container'>
                 <button id='datagrid-prev' disabled={currentPage==1} onClick={() => handlePageChange('dec')}>
                     <svg>
-                        <use xlinkHref={Icons + '#downarrow'} />
+                        <use xlinkHref={Icons + '#downarrow'} href={Icons + '#downarrow'} />
                     </svg>
                 </button>
 
                 <button id='datagrid-next' disabled={currentPage==pageCount} onClick={() => handlePageChange('inc')}>
                     <svg>
-                        <use xlinkHref={Icons + '#downarrow'} />
+                        <use xlinkHref={Icons + '#downarrow'} href={Icons + '#downarrow'} />
                     </svg>
                 </button>
             </div>

@@ -60,17 +60,17 @@ const HeaderCell = ({ index, sizePx, columnData, setSort, activeSort, setActiveF
             <div className='title-wrapper' onClick={() => handleSortChange()}>
                 {columnData.title}
                 <svg className={filtersActive ? 'active' : 'inactive'}>
-                    <use xlinkHref={Icons + '#filter'} />
+                    <use xlinkHref={Icons + '#filter'} href={Icons + '#filter'} />
                 </svg>
 
                 <svg className={sortClassName()}>
-                    <use xlinkHref={Icons + '#arrow_SM'} />
+                    <use xlinkHref={Icons + '#arrow_SM'} href={Icons + '#arrow_SM'} />
                 </svg>
             </div>
             <div className='filters'>
                 <span id={columnData.id} className={`datagrid-cell icon-wrapper ${columnData.filters ? 'active' : ''}`}>
                     <svg id={columnData.id} onClick={() => setMenuActive(true)}>
-                        <use id={columnData.id} xlinkHref={Icons + "#burger"} />
+                        <use id={columnData.id} xlinkHref={Icons + "#burger"} href={Icons + "#burger"} />
                     </svg>
                 </span>
                 <div className={`datagrid-cell menu ${menuActive ? 'active' : ''}`}>

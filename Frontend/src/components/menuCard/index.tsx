@@ -13,12 +13,12 @@ const MenuCard = ({ title, onExpand, onDelete }: props) => {
         {title}
         <span className='menuCard-iconwrapper'>
             <svg onClick={() => onExpand()}>
-                <use xlinkHref={Icons + '#expand'} />
+                <use xlinkHref={Icons + '#expand'} href={Icons + '#expand'} />
             </svg>
             {
                 onDelete &&
                 <svg className="drop" onClick={() => onDelete()}>
-                    <use xlinkHref={Icons + "#trash"} />
+                    <use xlinkHref={Icons + "#trash"} href={Icons + "#trash"} />
                 </svg>
             }
         </span>

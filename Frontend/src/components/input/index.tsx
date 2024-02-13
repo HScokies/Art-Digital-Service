@@ -67,8 +67,8 @@ const Input = ({ label, type, name, required = undefined, validator, onChange, o
                         <svg className='input_wrapper-show'>
                             {
                                 showPassword ?
-                                    <use xlinkHref={Icons + "#hidePassword"} onClick={() => setShowPassword(false)} /> :
-                                    <use xlinkHref={Icons + "#showPassword"} onClick={() => setShowPassword(true)} />
+                                    <use xlinkHref={Icons + "#hidePassword"} href={Icons + "#hidePassword"} onClick={() => setShowPassword(false)} /> :
+                                    <use xlinkHref={Icons + "#showPassword"} href={Icons + "#showPassword"} onClick={() => setShowPassword(true)} />
                             }
                         </svg>
                         : null

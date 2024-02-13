@@ -27,7 +27,7 @@ const DatagridRow = ({ row, setHighlightedRows, onExpand }: props) => {
                         onExpand&&
                         <button className='datagrid-expand' onClick={() => onExpand()}>
                         <svg>
-                            <use xlinkHref={Icons + "#expand"} />
+                            <use xlinkHref={Icons + "#expand"} href={Icons + "#expand"} />
                         </svg>
                     </button>
                     }

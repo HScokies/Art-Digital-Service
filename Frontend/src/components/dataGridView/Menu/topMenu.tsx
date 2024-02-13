@@ -31,7 +31,7 @@ const TopMenu = ({ highlightedRows, setHighlightedRows, exportProvider, searchLa
                         <div className='highlighted-menu rows-controll'>
                             <button className='rows-controll-btn' onClick={() => setHighlightedRows(new Set<number>([]))}>
                                 <svg>
-                                    <use xlinkHref={Icons + '#close_md'} />
+                                    <use xlinkHref={Icons + '#close_md'} href={Icons + '#close_md'} />
                                 </svg>
                             </button>
                             <span className='rows-controll-label'>Выделено строк: {highlightedRows.size}</span>

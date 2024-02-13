@@ -40,14 +40,14 @@ const FileInput = ({ initialFileName, downloadLink, name, label, required, accep
                     <span className='fileinput_wrapper_text-file'>{filename}</span>
                 </div>
                 <svg className='fileinput_wrapper-icon fileinput_wrapper-icon-upload'>
-                    <use xlinkHref={Icons + "#upload"} />
+                    <use xlinkHref={Icons + "#upload"} href={Icons + "#upload"} />
                 </svg>
             </div>
             {
                 showDownload &&
                 <a href={downloadLink} target='_blank'>
                     <svg className='fileinput_wrapper-icon download'>
-                        <use xlinkHref={Icons + "#download"} />
+                        <use xlinkHref={Icons + "#download"} href={Icons + "#download"} />
                     </svg>
                 </a>
             }

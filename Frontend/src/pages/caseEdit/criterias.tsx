@@ -45,7 +45,7 @@ const Criterias = ({ _criterias= [] }: props) => {
                         <div key={i} className='upsert-form-multiple_element'>
                             <TextArea key={i} onBlur={(e) => setStage(i, e)} label={`Критерий №${i + 1}`} name='criteria' defaultValue={s} />
                             <svg onClick={() => deleteStage(i)}>
-                                <use xlinkHref={Icons + '#trash'} />
+                                <use xlinkHref={Icons + '#trash'} href={Icons + '#trash'} />
                             </svg>
                         </div>
                     ))

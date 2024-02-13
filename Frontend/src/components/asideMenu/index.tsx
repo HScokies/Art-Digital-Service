@@ -34,7 +34,7 @@ const AsideMenu = ({ items }: props) => {
                         return (
                             <NavLink to={e.to} key={i} className='aside_menu-element' title={e.title} id={id}>
                                 <svg>
-                                    <use xlinkHref={Icons + e.iconId} />
+                                    <use xlinkHref={Icons + e.iconId} href={Icons + e.iconId} />
                                 </svg>
                             </NavLink>
                         )
@@ -43,7 +43,7 @@ const AsideMenu = ({ items }: props) => {
                 }
                 <span className='aside_menu-element' title='Выйти' id='logout' onClick={() => handleLogout()}>
                     <svg>
-                        <use xlinkHref={Icons + "#logout"} />
+                        <use xlinkHref={Icons + "#logout"} href={Icons + "#logout"}/>
                     </svg>
                 </span>
             </div>

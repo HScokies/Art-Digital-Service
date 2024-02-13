@@ -13,8 +13,8 @@ const FormMessage = ({isActive, text, type}: props) => {
             <svg focusable="false" aria-hidden="true">                
                 {
                    type == 'error'?
-                   <use xlinkHref={Icons+'#error'}/> :
-                   <use xlinkHref={Icons+'#info'}/>
+                   <use xlinkHref={Icons+'#error'} href={Icons+'#error'}/> :
+                   <use xlinkHref={Icons+'#info'} href={Icons+'#info'}/>
                 }
             </svg>
             <p>{text}</p>

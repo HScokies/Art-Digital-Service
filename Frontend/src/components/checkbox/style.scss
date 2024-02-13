@@ -23,9 +23,10 @@
                 width: 1.5em;
                 min-width: 1.5em;
             }
-            background: $Lavender;
+            background: $Lavender;z
             &>svg{
                 height: 50%;
+                fill: #6B74B2;
             }
         }
     }

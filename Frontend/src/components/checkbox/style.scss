@@ -12,14 +12,16 @@
         position: absolute;
         visibility: collapse;
         &_box{
-            margin-left: .1vw;
             display: flex;
             align-items: center;
             justify-content: center;
             aspect-ratio: 1;
+            width: 2.5em;
             height: 2.5em;
             @media (max-width: 799px) {
                 height: 1.5em;    
+                width: 1.5em;
+                min-width: 1.5em;
             }
             background: $Lavender;
             &>svg{
@@ -37,7 +39,10 @@
         } 
         
         @media (max-width: 799px) {
-            font-size: 4.5vw;
+            font-size: 1.1em;
+        }
+        @media (max-width: 365px) {
+            font-size: .9em;
         }
     }
 }

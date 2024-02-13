@@ -54,19 +54,20 @@ $RowHeight: 3em;
     &-row {
         &.error {
             text-align: center;
-            font-size: calc(.5em + 1vw);
+            font-size: 2em;
         }
     }
 
     & input[type=checkbox] {
         aspect-ratio: 1;
         accent-color: #e6e8eb;
-        width: calc(.5em + .5vw);
+        width: 1em;
+        height: 1em;
     }
 
     &-cell {
         min-width: 45px;
-        font-size: calc(.7em + .5vw);
+        font-size: 1.3em;
 
         & .controll {
             display: flex;

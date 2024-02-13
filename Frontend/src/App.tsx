@@ -41,6 +41,7 @@ const App = () => {
 
   return (
     <Routes>
+
       <Route element={<RequireAuth allowed={undefined} />}>
         <Route path="/auth" element={<AccessPage />} />
         <Route path="/login/:Email?" element={<LoginPage />} />

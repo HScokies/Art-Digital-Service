@@ -1,8 +1,6 @@
 @import 'styles/variables.scss';
 
 .authpage {
-    width: 100vw;
-    min-height: 100vh;
     height: 100%;
     background: linear-gradient(270deg, #e3e5f3, #d8dbf3);
     background-size: 400% 400%;
@@ -30,7 +28,7 @@
         
         @media (max-width: 799px) {
             width: 100%;
-            min-height: 100vh;
+            height: 100%;
             padding: .5em .5em;
         }
         &-logo {
@@ -41,14 +39,14 @@
 
         &-title {
             margin-top: .5em;
-            margin-bottom: calc(.5em + 1vh); 
+            margin-bottom: .7em; 
             text-align: center;
             font-size: 3em;
             font-style: normal;
             font-weight: 500;
             line-height: normal;
             @media (max-width: 799px) {
-                font-size: calc(1.5em + 1vw);
+                font-size: 1.7em;
             }
         }
         & .button{     

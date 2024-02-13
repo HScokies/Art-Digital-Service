@@ -24,17 +24,18 @@
     justify-content: center;
     align-items: center;
     position: fixed;
-    right: 3vw;
-    bottom: -100vh;
+    right: 1em;
     transition: bottom ease-in-out .5s;
     aspect-ratio: 1;
+    height: 3em;
     width: 3em;
     border-radius: 50%;
     background-color: $Glaucous;
 
     & svg {
         aspect-ratio: 1;
-        height: 2em;
+        width: 2em;
+        height: 2em;        
         fill: white;
     }
 
@@ -47,7 +48,7 @@
 .profilepage {
     display: flex;
     flex-flow: column nowrap;
-    min-height: 100vh;
+    min-height: 100%;
     overflow: hidden;
 
     &_header {

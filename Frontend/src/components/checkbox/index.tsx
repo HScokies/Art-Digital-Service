@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './style.scss'
 import Icons from 'images/icons.svg'
 
@@ -11,6 +11,10 @@ interface props {
 
 const Checkbox = ({ children, name, defaultValue = false, checkedChanged }: props) => {
     const [checked, setChecked] = useState(defaultValue)
+    useEffect(() => {
+        if (checkedChanged)
+            checkedChanged()
+    },[checked])
 
     return (
         <div className='checkbox' onClick={() => {if (checkedChanged) checkedChanged()}}>
@@ -20,11 +24,11 @@ const Checkbox = ({ children, name, defaultValue = false, checkedChanged }: prop
                 }
             </label>
             <input onChange={() => setChecked(!checked)} className='checkbox-input' type='checkbox' id={name} name={name} checked={checked} />
-            <span onClick={async() => {await setChecked(!checked); if (checkedChanged) checkedChanged()}} className={'checkbox-input_box'}>
+            <span onClick={() => setChecked(!checked)} className={'checkbox-input_box'}>
                 {
                     checked ?
                         <svg>
-                            <use xlinkHref={Icons+'#check'} />
+                            <use xlinkHref={Icons+'#check'} href={Icons+'#check'} />
                         </svg> :
                         null
                 }

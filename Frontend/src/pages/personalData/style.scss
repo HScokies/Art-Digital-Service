@@ -1,8 +1,10 @@
 #personaldata-form{
     .button{
-        margin-top: 1vh;
+        margin-top: .5em;
     }
-    & .combobox_wrapper-input{
-        background-color: #EEF0FB;
+    @media (min-width: 800px) {
+        & .combobox_wrapper-input{
+            background-color: #EEF0FB;
+        }   
     }
 }

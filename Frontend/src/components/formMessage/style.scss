@@ -11,15 +11,16 @@
     justify-content: space-evenly;
     align-items: center;
     background-color: $Lavender;
-    gap: 2vw;
+    gap: .5em;
     padding: 1em;
     user-select: none;
     & svg{
-        width: calc(2.5em + 1vw);
+        width: 2.5em;
+        height: 2.5em;
         aspect-ratio: 1;
     }
     & p{
-        font-size: calc(1em + .5vw);
+        font-size: 1.1em;
         width: 70%;
     }
     &.active{

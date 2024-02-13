@@ -13,9 +13,6 @@
         gap: 1em;
         height: 3em;
         margin-bottom: 1em;
-        & .searchbar, & .button{
-            font-size: calc(1em + 0.7vw);
-        }
         & .button{
             font-size: 1.3em;
             text-transform: capitalize;

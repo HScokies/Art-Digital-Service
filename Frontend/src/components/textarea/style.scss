@@ -11,14 +11,15 @@
         position: relative;        
         min-height: 4em;
         padding: .3em .5em;
-        outline: .1vmin solid rgba(0, 0, 0, 0.32);
+        border: .1vmin solid rgba(0, 0, 0, 0.32);
+        outline: none;
         border-radius: 5px;
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
         &.error{
-            outline-color: #DE3341;
+            border-color: #DE3341;
         }
         &-field {
             overflow-y: hidden;

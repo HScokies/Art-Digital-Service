@@ -55,6 +55,9 @@
             height: 2.5em;
         }
     }
+    @media (max-width: 799px) {
+        background: $Anti-Flash-White;
+    }
 }
 
 @-webkit-keyframes BackgroundAnimation {

@@ -24,7 +24,8 @@
         }
         &-show{
             aspect-ratio: 1;
-            height: 100%;
+            height: 4em;
+            width: 4em;
             transition: all ease-in-out 1S;
             cursor: pointer;
         }

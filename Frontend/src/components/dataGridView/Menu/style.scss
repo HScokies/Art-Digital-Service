@@ -58,6 +58,7 @@
                 & svg {
                     aspect-ratio: 1;
                     height: 1.35em;
+                    width: 1.35em;
                 }
             }
         }
@@ -92,7 +93,8 @@
         }
         & svg{
             aspect-ratio: 1;
-            height: 1em;                            
+            height: 1em;      
+            width: 1em;                      
         }
         & #datagrid-prev, & #datagrid-next{
             border-radius: 50%;

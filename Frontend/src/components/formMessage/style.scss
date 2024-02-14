@@ -20,7 +20,10 @@
         aspect-ratio: 1;
     }
     & p{
-        font-size: 1.1em;
+        font-size: 1.7em;
+        @media (max-width: 799px) {
+            font-size: 1.1em;    
+        }
         width: 70%;
     }
     &.active{

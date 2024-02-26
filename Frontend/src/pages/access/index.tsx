@@ -20,7 +20,8 @@ const AccessPage = () => {
 
     }
 
-    const handleSubmit = async() => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         const response = await API.emailExists(email)
         if (response.status != 200) return;
 
@@ -33,9 +34,9 @@ const AccessPage = () => {
             <div className="authpage_modal">
                 <img loading="lazy" alt='logo' src={Logo} draggable={false} className='authpage_modal-logo' />
                 <h1 className='authpage_modal-title'>Войдите или зарегистрируйтесь</h1>
-                <form id='access-form'>
+                <form id='access-form' onSubmit={async(e) => await handleSubmit(e)}>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={email} />
-                    <Button type='button' isActive={!hasErrors} clickHandler={handleSubmit}>Продолжить</Button>
+                    <Button type='button' isActive={!hasErrors}>Продолжить</Button>
                 </form>
             </div>
         </div>

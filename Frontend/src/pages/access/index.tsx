@@ -36,7 +36,7 @@ const AccessPage = () => {
                 <h1 className='authpage_modal-title'>Войдите или зарегистрируйтесь</h1>
                 <form id='access-form' onSubmit={async(e) => await handleSubmit(e)}>
                     <Input label='Адрес электронной почты' type='email' name='email' required={true} validator={Validator.validateEmail} onChange={handleChange} defaultValue={email} />
-                    <Button type='button' isActive={!hasErrors}>Продолжить</Button>
+                    <Button type='submit' isActive={!hasErrors}>Продолжить</Button>
                 </form>
             </div>
         </div>

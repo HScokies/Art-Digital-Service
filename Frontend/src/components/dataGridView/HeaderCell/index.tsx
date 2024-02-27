@@ -2,6 +2,7 @@ import Icons from 'images/icons.svg'
 import { useEffect, useRef, useState } from 'react'
 import { IHeaderCell, orderBy } from '../interfaces';
 import ParameterElement from './parameterElement';
+import ToggleAllParameterElement from './toggleAllParameterElement';
 
 
 
@@ -52,7 +53,17 @@ const HeaderCell = ({ index, sizePx, columnData, setSort, activeSort, setActiveF
     }, [])
     //#endregion
     const [filtersActive, setFiltersActive] = useState(false)
+    const [parmStates, setParamStates] = useState<boolean[]>([])
+    useEffect(() => {
+        if (columnData.filters === undefined) return;
+        setParamStates(columnData.filters.map(() => true))
+    }, [columnData.filters])
 
+    const toggleParam = (index: number, state: boolean) => {
+        const newParams = [...parmStates]
+        newParams[index] = state
+        setParamStates(newParams)
+    }    
 
     return (
         <th className={`datagrid-cell col_${index}`} style={{width: sizePx}}>
@@ -74,10 +85,11 @@ const HeaderCell = ({ index, sizePx, columnData, setSort, activeSort, setActiveF
                     </svg>
                 </span>
                 <div className={`datagrid-cell menu ${menuActive ? 'active' : ''}`}>
-                    {
+                    <ToggleAllParameterElement filterStates={parmStates.map((e) => e)} updateFilters={setParamStates}/>
+                    {                        
                         columnData.filters?.map((e, i) => {
                             return (
-                                <ParameterElement key={i} parent={columnData.id} setHasActiveFilters={setFiltersActive} parameter={e} activeFilters={activeFilters} setActiveFilters={setActiveFilters} />
+                                <ParameterElement key={i} isActive={parmStates[i]} toggleActive={(state: boolean) => toggleParam(i, state)} parent={columnData.id} setHasActiveFilters={setFiltersActive} parameter={e} activeFilters={activeFilters} setActiveFilters={setActiveFilters} />
                             )
                         })
                     }

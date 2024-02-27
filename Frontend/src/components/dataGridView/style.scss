@@ -194,6 +194,10 @@ $RowHeight: 3em;
                         font-size: 1em;
                         padding: .3em .5em;
 
+                        &.select-all{
+                            font-weight: 600;
+                        }
+
                         & input {
                             margin-right: .5em;
 

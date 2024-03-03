@@ -13,7 +13,7 @@ interface props {
     isActive: boolean
 }
 
-const ParameterElement = ({ parent, parameter, setHasActiveFilters, activeFilters, setActiveFilters, toggleActive, isActive }: props) => {
+const ParameterElement = ({ parent, parameter, setHasActiveFilters, activeFilters, setActiveFilters, toggleActive, isActive = true }: props) => {
     const [id] = useState((Date.now() * Math.random()).toString(36))
     const [filter] = useState<filter>({ column: parent, param: parameter })
 

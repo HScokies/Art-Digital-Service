@@ -53,7 +53,7 @@ const HeaderCell = ({ index, sizePx, columnData, setSort, activeSort, setActiveF
     }, [])
     //#endregion
     const [filtersActive, setFiltersActive] = useState(false)
-    const [parmStates, setParamStates] = useState<boolean[]>([])
+    const [parmStates, setParamStates] = useState<boolean[]>(columnData.filters?.map(() => true) || [])
     useEffect(() => {
         if (columnData.filters === undefined) return;
         setParamStates(columnData.filters.map(() => true))
